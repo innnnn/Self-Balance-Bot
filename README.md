@@ -1,2 +1,2 @@
 # SelfBalanceBot
-The creative project of Control System Design
+This is the creative project of Control System Design.
