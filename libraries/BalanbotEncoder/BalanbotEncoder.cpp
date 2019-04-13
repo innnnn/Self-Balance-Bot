@@ -46,7 +46,7 @@ int BalanbotEncoder::GetPPR(){
 
 float BalanbotEncoder::GetSpeed(float dT){
     float newAngle = 2 * PI * ((float)mPosition / (float)PPR) * RAD_TO_DEG;
-    speed = (lastAngle - newAngle) / dT;
+    speed = (newAngle - lastAngle) / dT;
     lastAngle = newAngle;
     pre_v[4] = pre_v[3];
     pre_v[3] = pre_v[2];
