@@ -7,7 +7,7 @@
 
 # include <SoftwareSerial.h>
 
-SoftwareSerial BT(12, 13);
+SoftwareSerial BTSerial(12, 13);
 char val;
 String receiveData = "";
 bool startReceive = false;
@@ -58,7 +58,7 @@ void Encoder_B_Interrupt(){
 
 void setup(){
     Serial.begin(9600);
-    BT.begin(115200);
+    BTSerial.begin(115200);
     SetupMotor();
     SetupEncoder();
     SetupMPU6050();
