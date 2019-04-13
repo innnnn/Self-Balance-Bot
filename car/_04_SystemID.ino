@@ -9,6 +9,6 @@ void StableVoltage_MotorInput(int dir, int voltage){
         motor_A.InverseRotationDirectionDefinition(false);
         motor_B.InverseRotationDirectionDefinition(true);
     }
-    motor_A.rotate(output_vol);
-    motor_B.rotate(output_vol);
+    motor_A.Rotate(output_vol);
+    motor_B.Rotate(output_vol);
 }
