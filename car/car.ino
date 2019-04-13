@@ -35,18 +35,18 @@ void TimerInterrupt(){
 
     float speed_L = encoder_A.GetSpeed(dT);
     float speed_R = encoder_B.GetSpeed(dT);
-    double phi = GetPhi();
+    double psi = GetPsi();
 
     Serial.print("speed_left  = ");
     Serial.print(speed_L);
     Serial.print(", speed_right = ");
     Serial.print(speed_R);
-    Serial.print(", phi = ");
-    Serial.println(phi);
+    Serial.print(", psi = ");
+    Serial.println(psi);
 
     //BT.println(speed_L);
     //BT.println(speed_R);
-    //BT.println(phi);
+    //BT.println(psi);
 }
 
 void Encoder_A_Interrupt(){
