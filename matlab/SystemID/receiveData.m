@@ -49,18 +49,21 @@ plot(t, data(:, 1));
 xlabel("t");
 ylabel("speed (cpr/s)");
 title("Left speed");
+save('left_speed.mat', data(:, 1));
 
 figure;
 plot(t, data(:, 2));
 xlabel("t (s)");
 ylabel("speed (cpr/s)");
 title("Right speed");
+save('right_speed.mat', data(:, 2));
 
 figure;
 plot(t, data(:, 3));
 xlabel("t (s)");
 ylabel("angle (degree)");
-title("phi");
+title("psi");
+save('psi.mat', data(:, 3));
 
 % instrfind: Read serial port objects from memory to MATLAB workspace
 objs = instrfind;
