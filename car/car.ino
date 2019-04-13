@@ -33,7 +33,7 @@ uint8_t i2cData[14]; // Buffer for I2C data
 void TimerInterrupt(){
     sei();
 
-    float speed_L = encoder_A.GetSpeed(dT);
+    float speed_L = encoder_A.GetSpeed(dT) * (-1);
     float speed_R = encoder_B.GetSpeed(dT);
     double psi = GetPsi();
 
