@@ -30,6 +30,8 @@ double kalAngle; // Calculated angle using a Kalman filter
 uint32_t timer;
 uint8_t i2cData[14]; // Buffer for I2C data
 
+int serial_input;
+
 void TimerInterrupt(){
     sei();
 
@@ -69,4 +71,8 @@ void setup(){
 
 void loop(){
     //updateBT();
+    if(Serial.available()){
+        serial_input = Serial.read();
+        StableVoltage_MotorInput(0, serial_input);
+    }
 }
