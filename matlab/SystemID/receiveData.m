@@ -23,23 +23,24 @@ fopen(b);
 % Collect Data
 % imformation of raw data
 dT = 0.01;        % sampling frequency
-time = 10;        % record 10 second of data
+time = 30;        % record 10 second of data
 length = time/dT; % # of raw data
 t = 0 : dT : time - dT;  
 rawData = strings(length, 1);
+fopen(s);
 for i = 1:length
     rawData(i) = fscanf(s);     % receive data from serial port
 %    rawData(i) = fscanf(b);     % receive data from bluetooth    
 end
 
-
 % **** Part 2: process raw data ****
 % parse the raw data
 data = zeros(length, 3);
-for i = 1:1000
-    data(i, 1) = str2double( extractBetween(rawData(i), "speed_left  = ", ", speed_right = ") );   % left speed
-    data(i, 2) = str2double( extractBetween(rawData(i), ", speed_right = ", ", phi = ") );         % right speed
-    data(i, 3) = str2double( extractAfter  (rawData(i), ", phi = ") );                             % phi
+for i = 1:length
+    x = strsplit(rawData(i), ",");
+    data(i, 1) = str2double( x(1) );   % left speed
+    data(i, 2) = str2double( x(2) );   % right speed
+    data(i, 3) = str2double( x(3) );   % psi
 end
 
 % plot left speed, right speed, phi with respect to t
@@ -49,21 +50,22 @@ plot(t, data(:, 1));
 xlabel("t");
 ylabel("speed (cpr/s)");
 title("Left speed");
-save('left_speed.mat', data(:, 1));
+save_thetad = data(:, 1);
+save('thetad_5v.mat', 'save_thetad');
 
-figure;
+hold on;
 plot(t, data(:, 2));
 xlabel("t (s)");
 ylabel("speed (cpr/s)");
 title("Right speed");
-save('right_speed.mat', data(:, 2));
+%save('right_speed.mat', data(:, 2));
 
-figure;
 plot(t, data(:, 3));
 xlabel("t (s)");
 ylabel("angle (degree)");
 title("psi");
-save('psi.mat', data(:, 3));
+save_psi = data(:, 3);
+save('psi_5v.mat', 'save_psi');
 
 % instrfind: Read serial port objects from memory to MATLAB workspace
 objs = instrfind;

@@ -15,7 +15,7 @@ BalanbotMotor motor_B;
 BalanbotEncoder encoder_A;
 BalanbotEncoder encoder_B;
 
-float dT = 0.1;
+float dT = 0.01;
 
 Kalman kalman; // Create the Kalman instances
 
@@ -36,7 +36,7 @@ void TimerInterrupt(){
     float speed_R = encoder_B.GetSpeed(dT);
     double psi = GetPsi();
     String data = String(speed_L) + "," + String(speed_R) + "," + String(psi);
-//    Serial.println(data);
+    Serial.println(data);
 }
 
 void setup(){
