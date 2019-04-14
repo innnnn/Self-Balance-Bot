@@ -8,16 +8,14 @@
 # include <SoftwareSerial.h>
 
 SoftwareSerial BTSerial(12, 13);
-char val;
-String receiveData = "";
-bool startReceive = false;
+
 
 BalanbotMotor motor_A;
 BalanbotMotor motor_B;
 BalanbotEncoder encoder_A;
 BalanbotEncoder encoder_B;
 
-float dT = 0.01;
+float dT = 0.1;
 
 Kalman kalman; // Create the Kalman instances
 
@@ -30,36 +28,22 @@ double kalAngle; // Calculated angle using a Kalman filter
 uint32_t timer;
 uint8_t i2cData[14]; // Buffer for I2C data
 
-int serial_input;
+int serial_input = 0;
 
 void TimerInterrupt(){
     sei();
     float speed_L = encoder_A.GetSpeed(dT) * (-1);
     float speed_R = encoder_B.GetSpeed(dT);
     double psi = GetPsi();
-
-    Serial.print("speed_left  = ");
-    Serial.print(speed_L);
-    Serial.print(", speed_right = ");
-    Serial.print(speed_R);
-    Serial.print(", psi = ");
-    Serial.println(psi);
-
-    //BT.println(speed_L);
-    //BT.println(speed_R);
-    //BT.println(psi);
-}
-
-void Encoder_A_Interrupt(){
-    encoder_A.Update();
-}
-void Encoder_B_Interrupt(){
-    encoder_B.Update();
+    String data = String(speed_L) + "," + String(speed_R) + "," + String(psi);
+//    Serial.println(data);
 }
 
 void setup(){
     Serial.begin(9600);
     BTSerial.begin(115200);
+
+    // initialization
     SetupMotor();
     SetupEncoder();
     SetupMPU6050();
@@ -69,9 +53,5 @@ void setup(){
 }
 
 void loop(){
-    //updateBT();
-    if(Serial.available()){
-        serial_input = Serial.read();
-        StableVoltage_MotorInput(1, serial_input);
-    }
+   StableVoltage_MotorInput(1, 5);
 }

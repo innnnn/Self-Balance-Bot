@@ -12,7 +12,7 @@ class BalanbotEncoder{
     float speed;
     int lastPosition;
     float lastAngle;
-    float *pre_v;  //save previous velocity data
+    float *pre_v;      //save previous velocity data
    
   public:
     BalanbotEncoder(); 

@@ -11,16 +11,3 @@ void SetupMotor(){
     motor_A.SetMotorPins(PWMA, AIN1, AIN2, STBY);
     motor_B.SetMotorPins(PWMB, BIN1, BIN2, STBY);
 }
-
-void SetupEncoder(){
-    const int INTA = 2, INTB = 3;
-    const int DIRA = A3, DIRB = 8;
-
-    encoder_A.SetInterruptPin(INTA);
-    encoder_B.SetInterruptPin(INTB);
-    encoder_A.SetDirectionPin(DIRA);
-    encoder_B.SetDirectionPin(DIRB);
-
-    attachInterrupt(digitalPinToInterrupt(encoder_A.GetInterruptPin()), Encoder_A_Interrupt, RISING);
-    attachInterrupt(digitalPinToInterrupt(encoder_B.GetInterruptPin()), Encoder_B_Interrupt, RISING);
-}

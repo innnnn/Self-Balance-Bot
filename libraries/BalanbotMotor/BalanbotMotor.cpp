@@ -13,22 +13,19 @@ BalanbotMotor::BalanbotMotor() :
 
 inline void BalanbotMotor::SetPWMPin(const int pin){
     mPwmPin = pin;
-    //TODO
     pinMode(mPwmPin, OUTPUT);
 }
 
 inline void BalanbotMotor::SetDirectionPins( const int pinA, 
                                              const int pinB ){
 	mDirectionPinA = pinA;
-	mDirectionPinB = pinB; 
-	//TODO
+	mDirectionPinB = pinB;
 	pinMode(mDirectionPinA, OUTPUT);
 	pinMode(mDirectionPinB, OUTPUT);
 }
 
 inline void BalanbotMotor::SetStandbyPin(const int pin){
     mStandbyPin = pin;
-    //TODO
     pinMode(mStandbyPin, OUTPUT);
 }
 
@@ -85,13 +82,15 @@ void BalanbotMotor::Rotate(const int voltage){
     digitalWrite(mDirectionPinA, pin1);
     digitalWrite(mDirectionPinB, pin2);
     analogWrite(mPwmPin, voltage);
-
+    
+/*
     Serial.println(mPwmPin); 
     Serial.println(voltage); 
     Serial.println(mDirectionPinA); 
     Serial.println(pin1); 
     Serial.println(mDirectionPinB); 
     Serial.println(pin2); 
+    */
 }
 
 void BalanbotMotor::Brake(){
