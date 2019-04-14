@@ -63,7 +63,8 @@ void BalanbotEncoder::ClearPosition(){
 }
 
 void BalanbotEncoder::Update(){
-	//TODO
-	if(digitalRead(mDirectionPin) == HIGH) mPosition++;
-	else mPosition--;
+	if(digitalRead(mDirectionPin) == HIGH)
+		mPosition++;
+	else
+		mPosition--;
 }

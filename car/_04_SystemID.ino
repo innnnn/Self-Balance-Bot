@@ -4,10 +4,10 @@ void StableVoltage_MotorInput(int dir, int voltage){
     float output_vol = 255 * (voltage / 12);
     if(dir == 0){
         motor_A.InverseRotationDirectionDefinition(true);
-        motor_B.InverseRotationDirectionDefinition(false);
+        motor_B.InverseRotationDirectionDefinition(true);
     }else{
         motor_A.InverseRotationDirectionDefinition(false);
-        motor_B.InverseRotationDirectionDefinition(true);
+        motor_B.InverseRotationDirectionDefinition(false);
     }
     motor_A.Rotate(output_vol);
     motor_B.Rotate(output_vol);

@@ -34,7 +34,6 @@ int serial_input;
 
 void TimerInterrupt(){
     sei();
-
     float speed_L = encoder_A.GetSpeed(dT) * (-1);
     float speed_R = encoder_B.GetSpeed(dT);
     double psi = GetPsi();
@@ -73,6 +72,6 @@ void loop(){
     //updateBT();
     if(Serial.available()){
         serial_input = Serial.read();
-        StableVoltage_MotorInput(0, serial_input);
+        StableVoltage_MotorInput(1, serial_input);
     }
 }
