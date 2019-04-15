@@ -7,10 +7,10 @@ ro = zeros(10, 1);
 % get ro2 ro4 ro8 ro9
 % *****************************
 % load data wiht zero input
-data = save_psi;
-psi = data(:,1)/180*pi;  % psi is rad
-dT = 0.01;
-time = 10;
+load("psi.mat");
+psi = save_psi/180*pi;  % psi is rad
+dT = 0.05;
+time = 30;
 t = 0 : dT : time-dT;
 length = length(psi);
 
@@ -31,12 +31,95 @@ psidf(end-2) = psidf(end-4);
 psidf(end-1) = psidf(end-4);
 psidf(end)   = psidf(end-4);
 
-% plot psid and psidf
+% psi double dot
+psidd = zeros(length, 1);
+for i = 2 : length
+    psidd(i-1) = ( psidf(i) - psidf(i-1) )/dT;
+end
+psidd(end) = psidd(end-1);
+
+% psi double dot filter
+psiddf = zeros(length, 1);
+for i = 5:length
+    psiddf(i-4) = ( psidd(i) + psidd(i-1) + psidd(i-2) + psidd(i-3) + psidd(i-4)) / 5;
+end
+psiddf(end-3) = psiddf(end-4);
+psiddf(end-2) = psiddf(end-4);
+psiddf(end-1) = psiddf(end-4);
+psiddf(end)   = psiddf(end-4);
+
+% plot psi, psid and psidf
 figure;
 plot(t, psi, t, psid, t, psidf);
 xlabel("t (s)");
-title("psi & ");
+title("psi & psid & psidf");
 legend("psi", "psid", "psidf");
+
+% plot psidf, psidd and psiddf
+figure;
+plot(t, psidf, t, psidd, t, psiddf);
+xlabel("t (s)");
+title("psidf & psidd & psiddf");
+legend("psidf", "psidd", "psiddf");
+
+% plot psi, psidf, psiddf
+figure;
+plot(t, psi, t, psidf, t, psiddf);
+xlabel("t (s)");
+title("psi & psidf & psiddf");
+legend("psi", "psidf", "psiddf");
+
+% ro2 ro4
+range = 80:90;  % 4~4.5s
+r_psi   = psi  (range);
+r_psid  = psid (range);
+r_psidd = psidd(range);
+
+A = [ sin(2*r_psi).* sec(r_psi).*r_psid.*r_psid - 2*cos(r_psi).*r_psidd  r_psid ];
+b = r_psidd;
+x = (A'*A) \ ((A')*b);
+ro(2) = x(1);
+ro(4) = x(2);
+
+% ro8 ro9
+A = [ -r_psid  sin(r_psi) ];
+b = r_psidd;
+x = (A'*A) \ ((A')*b);
+ro(8) = x(1);
+ro(9) = x(2);
+
+save("ro.mat", "ro");
+clear;
+
+% **** Part 2 : 5v ****
+% get ro1 ro3 ro5 ro6 ro7 ro10
+% *****************************
+load("ro.mat");
+load("psi_5v");
+psi = save_psi_5v/180*pi;     % psi is rad
+load("thetad_5v");
+thetad = save_thetad_5v/180*pi; % theta is rad
+dT = 0.05;
+time = 100;
+t = 0 : dT : time-dT;
+length = length(psi);
+
+% psi dot
+psid = zeros(length, 1);
+for i = 2:length
+    psid(i-1) = ( psi(i) - psi(i-1) )/dT;
+end
+psid(end) = psid(end-1);
+
+% psi dot filter
+psidf = zeros(length, 1);
+for i = 5:length
+    psidf(i-4) = ( psid(i) + psid(i-1) + psid(i-2) + psid(i-3) + psid(i-4)) / 5;
+end
+psidf(end-3) = psidf(end-4);
+psidf(end-2) = psidf(end-4);
+psidf(end-1) = psidf(end-4);
+psidf(end)   = psidf(end-4);
 
 % psi double dot
 psidd = zeros(length, 1);
@@ -55,46 +138,26 @@ psiddf(end-2) = psiddf(end-4);
 psiddf(end-1) = psiddf(end-4);
 psiddf(end)   = psiddf(end-4);
 
-% ro2 ro4
-range = 1:20;
-r_psi   = psi  (range);
-r_psid  = psid (range);
-r_psidd = psidd(range);
+% plot psi, psid and psidf
+figure;
+plot(t, psi, t, psid, t, psidf);
+xlabel("t (s)");
+title("psi & psid & psidf");
+legend("psi", "psid", "psidf");
 
-A = [ sin(2*r_psi).* sec(r_psi).*r_psid.*r_psid - 2*cos(r_psi).*r_psidd  r_psid ];
-b = r_psidd;
-x = (A'*A) \ ((A')*b);
-ro(2) = x(1);
-ro(4) = x(2);
+% plot psidf, psidd and psiddf
+figure;
+plot(t, psidf, t, psidd, t, psiddf);
+xlabel("t (s)");
+title("psidf & psidd & psiddf");
+legend("psidf", "psidd", "psiddf");
 
-% ro8 ro9
-A = [ -r_psid  sin(r_psi) ];
-b = r_psidd;
-x = (A'*A) \ ((A')*b);
-ro(8) = x(1);
-ro(9) = x(2);
-
-% **** Part 2 : 5v ****
-% get ro1 ro3 ro5 ro6 ro7 ro10
-% *****************************
-data = load('v50.mat');
-data = data.buf;
-psi = data(:,1)/180*pi;     % psi is rad
-thetad = data(:, 2)/180*pi; % theta is rad
-
-% psi dot
-psid = zeros(length, 1);
-for i = 2:length
-    psid(i-1) = ( psi(i) - psi(i-1) )/dT;
-end
-psid(end) = psid(end-1);
-
-% psi double dot
-psidd = zeros(length, 1);
-for i = 2 : length
-    psidd(i-1) = ( psid(i) - psid(i-1) )/dT;
-end
-psidd(end) = psidd(end-1);
+% plot psi, psidf, psiddf
+figure;
+plot(t, psi, t, psidf, t, psiddf);
+xlabel("t (s)");
+title("psi & psidf & psiddf");
+legend("psi", "psidf", "psiddf");
 
 % theta double dot
 thetadd = zeros(length, 1);
@@ -103,14 +166,15 @@ for i = 2:length
 end
 thetadd(end) = thetadd(end-1);
 
-% Filter
-for k=1:5
-    for i=1:length(thetad)-4
-        thetad(i)=sum(thetad(i:i+4))/5;
-    end
-    thetad(length(thetad)-3:length(thetad))=thetad(end-3:end);
+% theta double dot filter
+thetaddf = zeros(length, 1);
+for i = 5:length
+    thetaddf(i-4) = ( thetadd(i) + thetadd(i-1) + thetadd(i-2) + thetadd(i-3) + thetadd(i-4)) / 5;
 end
-
+thetaddf(end-3) = thetaddf(end-4);
+thetaddf(end-2) = thetaddf(end-4);
+thetaddf(end-1) = thetaddf(end-4);
+thetaddf(end)   = thetaddf(end-4);
 
 % ro1 ro3 ro5
 range=39:60;
