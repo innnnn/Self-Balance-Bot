@@ -8,7 +8,6 @@
 # include <SoftwareSerial.h>
 
 SoftwareSerial BTSerial(12, 13);
-int count = 0;
 
 BalanbotMotor motor_A;
 BalanbotMotor motor_B;
@@ -31,18 +30,6 @@ double kalAngle; // Calculated angle using a Kalman filter
 uint32_t timer;
 uint8_t i2cData[14]; // Buffer for I2C data
 
-int serial_input = 0;
-
-void TimerInterrupt(){A
-    sei();
-    count++;
-    float speed_L = encoder_A.GetSpeed(dT) * (-1);
-    float speed_R = encoder_B.GetSpeed(dT);
-    double psi = GetPsi();
-    String data = String(speed_L) + "," + String(speed_R) + ", " + String(psi) + " ," + String(count);
-    Serial.println(data);
-}
-
 void setup(){
     Serial.begin(9600);
     BTSerial.begin(115200);
@@ -51,11 +38,9 @@ void setup(){
     SetupMotor();
     SetupEncoder();
     SetupMPU6050();
-
-    MsTimer2::set(dT*1000, TimerInterrupt);
-    MsTimer2::start();
+    SetupMsTimer2();
 }
 
 void loop(){
-   StableVoltage_MotorInput(1, 1);
+    StableVoltage_MotorInput(1, 1);
 }
