@@ -72,8 +72,8 @@ legend("psi", "psidf", "psiddf");
 % ro2 ro4
 range = 80:90;  % 4~4.5s
 r_psi   = psi  (range);
-r_psid  = psid (range);
-r_psidd = psidd(range);
+r_psid  = psidf (range);
+r_psidd = psiddf(range);
 
 A = [ sin(2*r_psi).* sec(r_psi).*r_psid.*r_psid - 2*cos(r_psi).*r_psidd  r_psid ];
 b = r_psidd;
@@ -176,16 +176,23 @@ thetaddf(end-2) = thetaddf(end-4);
 thetaddf(end-1) = thetaddf(end-4);
 thetaddf(end)   = thetaddf(end-4);
 
+% plot thetad thetaddf
+figure;
+plot(t, thetad, t, thetaddf);
+xlabel("t (s)");
+title("thetad & thetaddf");
+legend("thetad", "thetaddf");
+
 % ro1 ro3 ro5
-range=39:60;
+range=240:250;
 r_psi   = psi  (range);
-r_psid  = psid (range);
-r_psidd = psidd(range);
+r_psid  = psidf (range);
+r_psidd = psiddf(range);
 
 r_thetad  = thetad (range);
-r_thetadd = thetadd(range);
+r_thetadd = thetaddf(range);
 
-A = [ -r_thetadd  -r_thetad  5 ];
+A = [ -r_thetadd  -r_thetad  5*ones(11, 1) ];
 b = r_psidd - ro(2)*[sin(2*r_psi).* sec(r_psi).*r_psid.*r_psid - 2*cos(r_psi).*r_psidd] - ro(4)*r_psid;
 x = (A'*A) \ ((A')*b);
 ro(1) = x(1);
@@ -193,7 +200,7 @@ ro(3) = x(2);
 ro(5) = x(3);
 
 % ro6 ro7 ro8
-A = [ -r_thetadd  -cos(r_psi).*r_thetad.*r_thetadd  -5 ];
+A = [ -r_thetadd  -cos(r_psi).*r_thetad.*r_thetadd  -5*ones(11, 1) ];
 b = r_psidd - ro(8)*(r_thetad-r_psid) - ro(9)*sin(r_psi);
 x = (A'*A) \ ((A')*b);
 ro(6) = x(1);

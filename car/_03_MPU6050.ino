@@ -1,3 +1,16 @@
+// Goal: psi
+
+Kalman kalman; // Create the Kalman instances
+
+/* IMU Data */
+double accX, accY, accZ;
+double gyro;
+
+double kalAngle; // Calculated angle using a Kalman filter
+
+uint32_t timer;
+uint8_t i2cData[14]; // Buffer for I2C data
+
 void SetupMPU6050(){
     Wire.begin();
     #if ARDUINO >= 157
