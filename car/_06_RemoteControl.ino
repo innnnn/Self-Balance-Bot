@@ -1,5 +1,6 @@
-/*
-void parseCmd(){
+float maxPowerRemap = 255/100;
+
+void ParseCmd(){
   int commaAt = -1;
   int cmdLen = cmd.length();
   for(int i=0; i<cmdLen; ++i){
@@ -20,10 +21,8 @@ void parseCmd(){
     float rRatio = forward - diff;
 
     //give command to wheels
-    moveMotor(LEFT, lRatio * Power * maxPowerRemap);
-    motor_A.Rotate();
-    moveMotor(RIGHT, rRatio * Power * maxPowerRemap);
+    LeftMotorMove ((int)lRatio * Power * maxPowerRemap);
+    RightMotorMove((int)rRatio * Power * maxPowerRemap);
   }
   cmd = "";
 }
-*/
