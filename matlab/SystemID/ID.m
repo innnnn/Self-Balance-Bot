@@ -7,10 +7,11 @@ ro = zeros(10, 1);
 % get ro2 ro4 ro8 ro9
 % *****************************
 % load data wiht zero input
-data = load('psi.mat');
-data = data.buf;
+data = save_psi;
 psi = data(:,1)/180*pi;  % psi is rad
 dT = 0.01;
+time = 10;
+t = 0 : dT : time-dT;
 length = length(psi);
 
 % psi dot
@@ -20,12 +21,39 @@ for i = 2:length
 end
 psid(end) = psid(end-1);
 
+% psi dot filter
+psidf = zeros(length, 1);
+for i = 5:length
+    psidf(i-4) = ( psid(i) + psid(i-1) + psid(i-2) + psid(i-3) + psid(i-4)) / 5;
+end
+psidf(end-3) = psidf(end-4);
+psidf(end-2) = psidf(end-4);
+psidf(end-1) = psidf(end-4);
+psidf(end)   = psidf(end-4);
+
+% plot psid and psidf
+figure;
+plot(t, psi, t, psid, t, psidf);
+xlabel("t (s)");
+title("psi & ");
+legend("psi", "psid", "psidf");
+
 % psi double dot
 psidd = zeros(length, 1);
 for i = 2 : length
-    psidd(i-1) = ( psid(i) - psid(i-1) )/dT;
+    psidd(i-1) = ( psidf(i) - psidf(i-1) )/dT;
 end
 psidd(end) = psidd(end-1);
+
+% psi double dot filter
+psiddf = zeros(length, 1);
+for i = 5:length
+    psiddf(i-4) = ( psidd(i) + psidd(i-1) + psidd(i-2) + psidd(i-3) + psidd(i-4)) / 5;
+end
+psiddf(end-3) = psiddf(end-4);
+psiddf(end-2) = psiddf(end-4);
+psiddf(end-1) = psiddf(end-4);
+psiddf(end)   = psiddf(end-4);
 
 % ro2 ro4
 range = 1:20;

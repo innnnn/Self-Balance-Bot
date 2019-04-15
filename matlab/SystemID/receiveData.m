@@ -22,10 +22,10 @@ fopen(b);
 
 % Collect Data
 % imformation of raw data
-dT = 0.01;        % sampling frequency
-time = 30;        % record 10 second of data
+dT = 0.05;        % sampling time
+time = 100;        % record 30 second of data
 length = time/dT; % # of raw data
-t = 0 : dT : time - dT;  
+t = 0 : dT : time - dT;
 rawData = strings(length, 1);
 fopen(s);
 for i = 1:length
@@ -45,28 +45,27 @@ end
 
 % plot left speed, right speed, phi with respect to t
 % 390 cpr =  360 degree  ==>  1 cpr = 360/390 degree
+
 figure;
-plot(t, data(:, 1));
+plot(t, data(:, 1), t, data(:, 2));
 xlabel("t");
 ylabel("speed (cpr/s)");
-title("Left speed");
-save_thetad = data(:, 1);
-save('thetad_5v.mat', 'save_thetad');
+title("wheel speed");
+legend("left speed", "right speed");
 
-hold on;
-plot(t, data(:, 2));
-xlabel("t (s)");
-ylabel("speed (cpr/s)");
-title("Right speed");
-%save('right_speed.mat', data(:, 2));
-
+figure;
 plot(t, data(:, 3));
 xlabel("t (s)");
 ylabel("angle (degree)");
 title("psi");
-save_psi = data(:, 3);
-save('psi_5v.mat', 'save_psi');
 
+
+% save data
+
+save_thetad = data(:, 1);
+save('thetad_5v.mat', 'save_thetad');
+save_psi_5v = data(:, 3);
+save('psi_5v.mat', 'save_psi_5v');
 % instrfind: Read serial port objects from memory to MATLAB workspace
 objs = instrfind;
 fclose(objs);
