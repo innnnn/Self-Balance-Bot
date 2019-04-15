@@ -1,15 +1,15 @@
 %For (sigma4,5)  (rho2,4,5)
 clear;clc;
-x=load('car2.mat');
-x=x.buf;
+x = save_psi;
 phi=x(:,1)/180*pi;  % phi is rad
-time=50;
+time=10;
 
+
+phid = zeros
 for i=2:length(phi)
     phid(i-1)=(phi(i)-phi(i-1))/time*1000;
 end
-phid(length(phi))=phid(end);
-phid=phid'; % rad/s
+phid(length(phi))=phid(end);  % rad/s
 
 for i=2:length(phid)
     phidd(i-1)=(phid(i)-phid(i-1))/time*1000;
@@ -17,8 +17,16 @@ end
 phidd(length(phid))=phidd(end);
 phidd=phidd';   % rad/s^2
 
+t = 0:0.01:30-0.01;
+plot(t, phi, t, phid, t, phidd);
+xlabel("t (s)");
+%ylabel("angle (degree)");
+title("psi");
+legend;
+
+
 %%%%% 需調整
-range=1:20;
+range=300;350;
 A=[-phid(range) sin(phi(range))];
 coe=pinv(A'*A)*A'*phidd(range);
 sigma4=coe(1)
@@ -32,11 +40,12 @@ rho5 = coe2(3)
 
 %for sigma1
 clear coe A C phidd phid phi time x i range
-x=load('v50.mat');
-x=x.buf;
-phi=x(:,1)/180*pi;  % phi is rad
-time=50
-thetad=x(:,2);  % rad/s
+x = save_psi;
+phi=x/180*pi;  % phi is rad
+time=50;
+x = save_thetad;
+thetad=x;  % rad/s
+
 %消除peak
 %%%%% 需調整
 head=44;
@@ -60,6 +69,13 @@ end
 phidd(length(phid))=phidd(end);
 phidd=phidd';
 
+figure;
+plot(t, phi, t, phid, t, phidd);
+xlabel("t (s)");
+%ylabel("angle (degree)");
+title("psi");
+legend;
+
 % 平滑化
 for k=1:5
     for i=1:length(thetad)-4
@@ -74,9 +90,16 @@ end
 thetadd(length(thetad))=thetadd(end);
 thetadd=thetadd';
 
+figure;
+plot(t, thetad, t, thetadd);
+xlabel("t (s)");
+%ylabel("angle (degree)");
+title("thetad");
+legend;
+
 %%%%% 需調整
-range=39:60;
-A=[thetadd(range) cos(phi(range)).*thetadd(range) -thetad(range) -50*ones(22, 1)];
+range=80:100;
+A=[thetadd(range) cos(phi(range)).*thetadd(range) -thetad(range) -50*ones(21, 1)];
 B=-1*phidd(range) - sigma4*phid(range) + sigma5*sin(phi(range));
 coe=pinv(A'*A)*A'*B;
 sigma1 = coe(1)
@@ -84,7 +107,7 @@ sigma2 = coe(2)
 sigma3 = coe(3)
 sigma6 = coe(4)
 
-C = [thetadd(range) thetad(range) -50*ones(22, 1)];
+C = [thetadd(range) thetad(range) -50*ones(21, 1)];
 D = (-phidd(range))+(-cos(phi(range)).*phidd(range))+(sin(2*phi(range)).*sec(phi(range)).*phid(range).*phid(range))+(phid(range));
 coe2=pinv(C'*C)*C'*D;
 rho1 = coe2(1)
