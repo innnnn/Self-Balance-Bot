@@ -7,10 +7,11 @@ bool isFinished = false;
 
 void UpdateSerial(){
     if(Serial.available()){
-        
+        // To do
     }
 }
 
+// To do
 void UpdateBlueTooth(){
     while(BTSerial.available()){
         char c = BTSerial.read();

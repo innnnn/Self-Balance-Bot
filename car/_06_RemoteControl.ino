@@ -1,5 +1,8 @@
 float maxPowerRemap = 255/100;
 
+// robust remoteControl
+// Sometimes the bluetooth will not receive all data, it may contain noise, such as garbled data.
+// if data is lost, then use the previous data
 void RemoteControl(String data){
   int commaAt = -1;
   int cmdLen = data.length();
