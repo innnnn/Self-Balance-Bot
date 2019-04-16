@@ -67,7 +67,7 @@ float BalanbotMotor::GetAngle() {
   	return mAngle;
 }
 
-void BalanbotMotor::Rotate(const int voltage){
+void BalanbotMotor::Rotate(const int pwm){
     //motor: 0-> left(A), 1-> right(B)
     //speed: 0 ~ 255
     //direction: 0-> clockwise, 1-> counter-clockwise

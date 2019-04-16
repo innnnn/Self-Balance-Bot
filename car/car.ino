@@ -9,10 +9,13 @@
 
 SoftwareSerial BTSerial(12, 13);
 
+// 
 BalanbotMotor motor_A;
 BalanbotMotor motor_B;
 BalanbotEncoder encoder_A;
 BalanbotEncoder encoder_B;
+
+const int voltage2Pwm = 255/12.0;
 
 void setup(){
     Serial.begin(9600);
