@@ -1,8 +1,9 @@
 // Goal: system id need constant 5v input 
+const int voltage2Pwm = 255/12.0;
 
 void StableVoltage_MotorInput(const int voltage){
     // voltage>0  --> move forward
     // voltage<0  --> move backward
-    LeftMotorMove ( 255 * (voltage / 12.0) );
-    RightMotorMove( 255 * (voltage / 12.0) );
+    LeftMotorMove ( voltage * voltage2Pwm );
+    RightMotorMove( voltage * voltage2Pwm );
 } 

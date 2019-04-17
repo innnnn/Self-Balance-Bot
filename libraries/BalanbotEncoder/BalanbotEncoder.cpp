@@ -20,7 +20,6 @@ void BalanbotEncoder::SetInterruptPin(const int pin){
 
 void BalanbotEncoder::SetDirectionPin(const int pin){
     mDirectionPin = pin;
-    //TODO
     pinMode(mDirectionPin, INPUT);
 }
 

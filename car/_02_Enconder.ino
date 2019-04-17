@@ -1,20 +1,22 @@
 void SetupEncoder(){
-    const int INTA = 2, INTB = 3;
-    const int DIRA = A3, DIRB = 8;
 
-    encoder_A.SetInterruptPin(INTA);
-    encoder_B.SetInterruptPin(INTB);
-    encoder_A.SetDirectionPin(DIRA);
-    encoder_B.SetDirectionPin(DIRB);
+    const int INTA = 2, INTB = 3;               // Encoder interrupt
+    const int DIRA = A3, DIRB = 8;              // Encoder direction
 
-    attachInterrupt(digitalPinToInterrupt(encoder_A.GetInterruptPin()), Encoder_A_Interrupt, RISING);
-    attachInterrupt(digitalPinToInterrupt(encoder_B.GetInterruptPin()), Encoder_B_Interrupt, RISING);
+    motor_A.SetEncoderPins(INTA, DIRA);
+    motor_B.SetEncoderPins(INTB, DIRB);
+    
+    motor_A.SetSamplingTime(dT);
+    motor_B.SetSamplingTime(dT);
+
+    attachInterrupt(digitalPinToInterrupt(motor_A.GetEncoderInterruptPin()), Encoder_A_Interrupt, RISING);
+    attachInterrupt(digitalPinToInterrupt(motor_B.GetEncoderInterruptPin()), Encoder_B_Interrupt, RISING);
 }
 
 void Encoder_A_Interrupt(){
-    encoder_A.Update();
+    motor_A.UpdateEncoder();
 }
 
 void Encoder_B_Interrupt(){
-    encoder_B.Update();
+    motor_B.UpdateEncoder();
 }

@@ -15,6 +15,7 @@ class BalanbotMotor{
     int mControlMode;
     float mSpeed;
     float mAngle;
+    float mSamplingTime;
     
     void UpdateAngle();
     void UpdateSpeed();
@@ -34,6 +35,7 @@ class BalanbotMotor{
     void SetEncoderPins(const int interruptPin, 
                         const int directionPin);
     void SetControl(int mode, float reference);
+    void SetSamplingTime(int dT);
     
     void InverseRotationDirectionDefinition(const bool ifInverse);
     

@@ -1,15 +1,13 @@
 #include "BalanbotMotor.h"
 
-/*
-BalanbotMotor::BalanbotMotor() :
-  mDirectionCoefficient (1.0),
-  mSpeed (0.0),
-  mAngle (0.0),
-  mControlMode (0)
+BalanbotMotor::BalanbotMotor(): 
+            mDirectionCoefficient(0.0), 
+            mSpeed(0.0), 
+            mAngle(0.0), 
+            mControlMode(0)
 {
 
 }
-*/
 
 inline void BalanbotMotor::SetPWMPin(const int pin){
     mPwmPin = pin;
@@ -48,6 +46,10 @@ void BalanbotMotor::SetControl(int mode, float reference){
   //TODO
 }
 
+void BalanbotMotor::SetSamplingTime(int dT){
+    mSamplingTime = dT;
+}
+
 void BalanbotMotor::InverseRotationDirectionDefinition(const bool ifInverse){
     if( ifInverse )
         mDirectionCoefficient = -1.0;
@@ -60,6 +62,7 @@ int BalanbotMotor::GetEncoderInterruptPin(){
 }
 
 float BalanbotMotor::GetSpeed(){
+    mSpeed = mEncoder.GetSpeed(mSamplingTime);
   	return mSpeed;
 } 
 
@@ -81,11 +84,11 @@ void BalanbotMotor::Rotate(const int pwm){
     digitalWrite(mStandbyPin, HIGH);
     digitalWrite(mDirectionPinA, pin1);
     digitalWrite(mDirectionPinB, pin2);
-    analogWrite(mPwmPin, voltage);
+    analogWrite(mPwmPin, pwm);
     
-/*
+    /*
     Serial.println(mPwmPin); 
-    Serial.println(voltage); 
+    Serial.println(pwm); 
     Serial.println(mDirectionPinA); 
     Serial.println(pin1); 
     Serial.println(mDirectionPinB); 
