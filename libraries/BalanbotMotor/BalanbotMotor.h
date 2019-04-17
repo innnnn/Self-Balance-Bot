@@ -41,7 +41,7 @@ class BalanbotMotor{
     float GetSpeed();
     float GetAngle();
     
-    void Rotate(const int voltage);
+    void Rotate(const int pwm);
     void Brake();
     void UpdateEncoder();
     void Update();

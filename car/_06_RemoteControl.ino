@@ -1,18 +1,21 @@
 float maxPowerRemap = 255/100;
 
-void ParseCmd(){
+// robust remoteControl
+// Sometimes the bluetooth will not receive all data, it may contain noise, such as garbled data.
+// if data is lost, then use the previous data
+void RemoteControl(String data){
   int commaAt = -1;
-  int cmdLen = cmd.length();
+  int cmdLen = data.length();
   for(int i=0; i<cmdLen; ++i){
-    if(cmd[i] == ','){
+    if(data[i] == ','){
       commaAt = i;
       break;
     }
   }
 
   if(commaAt != -1){
-    float Power = cmd.substring(0, commaAt).toFloat();
-    float Angle = cmd.substring(commaAt+1).toFloat();
+    float Power = data.substring(0, commaAt).toFloat();
+    float Angle = data.substring(commaAt+1).toFloat();
     float Sin = sin(Angle * DEG_TO_RAD);
     float Cos = cos(Angle * DEG_TO_RAD);
     float forward = Sin * Sin * (Sin<0?-1.0:1.0);
@@ -24,5 +27,5 @@ void ParseCmd(){
     LeftMotorMove ((int)lRatio * Power * maxPowerRemap);
     RightMotorMove((int)rRatio * Power * maxPowerRemap);
   }
-  cmd = "";
+  data = "";
 }

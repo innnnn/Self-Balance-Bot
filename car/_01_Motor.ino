@@ -12,7 +12,7 @@ void SetupMotor(){
     motor_B.SetMotorPins(PWMB, BIN1, BIN2, STBY);
 }
 
-// 
+// left motor movement
 void LeftMotorMove(const int pwm){
     if(pwm>0){
         motor_A.InverseRotationDirectionDefinition(true);
@@ -24,7 +24,7 @@ void LeftMotorMove(const int pwm){
     } 
 }
 
-// 
+// right motor movement
 void RightMotorMove(const int pwm){
     if(pwm>0){
         motor_B.InverseRotationDirectionDefinition(true);
