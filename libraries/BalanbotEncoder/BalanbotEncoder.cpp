@@ -47,14 +47,15 @@ float BalanbotEncoder::GetSpeed(float dT){
     float newAngle = 2 * PI * ((float)mPosition / (float)PPR) * RAD_TO_DEG;
     speed = (newAngle - lastAngle) / dT;
     lastAngle = newAngle;
-    pre_v[4] = pre_v[3];
-    pre_v[3] = pre_v[2];
-    pre_v[2] = pre_v[1];
-    pre_v[1] = pre_v[0];
-    pre_v[0] = speed;
+    // pre_v[4] = pre_v[3];
+    // pre_v[3] = pre_v[2];
+    // pre_v[2] = pre_v[1];
+    // pre_v[1] = pre_v[0];
+    // pre_v[0] = speed;
 
-    float avg_v = (pre_v[0] + pre_v[1] + pre_v[2] + pre_v[3] + pre_v[4]) / 5;
-    return (avg_v);
+    // float avg_v = (pre_v[0] + pre_v[1] + pre_v[2] + pre_v[3] + pre_v[4]) / 5;
+    // return (avg_v);
+    return speed;
 }
 
 void BalanbotEncoder::ClearPosition(){
