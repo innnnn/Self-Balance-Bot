@@ -31,5 +31,6 @@ void setup(){
 
 void loop(){
     //UpdateSerial();
-    UpdateBlueTooth();
+    //UpdateBlueTooth();
+    StableVoltage_MotorInput(-5);
 }
