@@ -62,10 +62,10 @@ title("psi");
 
 % save data
 
-save_thetad = data(:, 1);
-save('thetad_5v.mat', 'save_thetad');
+save_thetad_5v = data(:, 1);
+save('thetad_5v_10.mat', 'save_thetad_5v');
 save_psi = data(:, 3);
-save('psi_13.mat', 'save_psi');
+save('psi_35.mat', 'save_psi');
 % instrfind: Read serial port objects from memory to MATLAB workspace
 objs = instrfind;
 fclose(objs);
