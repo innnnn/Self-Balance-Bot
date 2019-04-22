@@ -35,7 +35,7 @@ class BalanbotMotor{
     void SetEncoderPins(const int interruptPin, 
                         const int directionPin);
     void SetControl(int mode, float reference);
-    void SetSamplingTime(int dT);
+    void SetSamplingTime(float dT);
     
     void InverseRotationDirectionDefinition(const bool ifInverse);
     

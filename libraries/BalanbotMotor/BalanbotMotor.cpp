@@ -46,7 +46,7 @@ void BalanbotMotor::SetControl(int mode, float reference){
   //TODO
 }
 
-void BalanbotMotor::SetSamplingTime(int dT){
+void BalanbotMotor::SetSamplingTime(float dT){
     mSamplingTime = dT;
 }
 

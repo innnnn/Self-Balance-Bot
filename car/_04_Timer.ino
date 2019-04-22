@@ -11,4 +11,5 @@ void TimerInterrupt(){
     float speed_R = motor_B.GetSpeed();
     double psi = GetPsi();
     String data = String(speed_L) + "," + String(speed_R) + ", " + String(psi);
+    Serial.println(data);
 }
