@@ -10,7 +10,7 @@ clear;
 % set terminator to CR
 % CR: carriage return, /r
 % LF: line feed, /n
-s = serial('COM11', 'BaudRate', 9600, 'Terminator', 'CR');
+s = serial('COM3', 'BaudRate', 9600, 'Terminator', 'CR');
 fopen(s);
 
 % Method 2
@@ -23,14 +23,14 @@ fopen(b);
 % Collect Data
 % imformation of raw data
 dT = 0.05;        % sampling time
-time = 100;        % record 30 second of data
+time = 30;        % record 30 second of data
 length = time/dT; % # of raw data
 t = 0 : dT : time - dT;
 rawData = strings(length, 1);
 fopen(s);
 for i = 1:length
     rawData(i) = fscanf(s);     % receive data from serial port
-%    rawData(i) = fscanf(b);     % receive data from bluetooth    
+%    rawData(i) = fscanf(b);     % receive data from bluetooth
 end
 
 % **** Part 2: process raw data ****
@@ -62,10 +62,10 @@ title("psi");
 
 % save data
 
-save_thetad = data(:, 1);
-save('thetad_5v.mat', 'save_thetad');
-save_psi_5v = data(:, 3);
-save('psi_5v.mat', 'save_psi_5v');
+save_thetad_5v = data(:, 1);
+save('thetad_5v_10.mat', 'save_thetad_5v');
+save_psi = data(:, 3);
+save('psi_35.mat', 'save_psi');
 % instrfind: Read serial port objects from memory to MATLAB workspace
 objs = instrfind;
 fclose(objs);

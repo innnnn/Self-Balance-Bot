@@ -1,3 +1,5 @@
 # matlab
 *.mat
 *.asv
+*.xml
+*.slxc
