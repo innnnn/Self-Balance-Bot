@@ -3,7 +3,7 @@
 % *****************************
 load("ro_ave.mat");
 psi = save_psi_5v/180*pi;       % psi is rad
-thetad = save_thetad_5v/390; % theta is rad
+thetad = save_thetad_5v/180*pi; % theta is rad
 
 dT = 0.05;
 time = 10;
@@ -57,70 +57,37 @@ xlabel("t (s)");
 title("thetad & thetadd");
 legend("thetad", "thetadd");
 
-% ro1 ro3 ro5
-first =(0.3)*20+1;
-last = (3.1)*20+1;
-range = first:last; % 
 
+first =(6.8)*20+1;
+last = (7.1)*20+1;
+range = first:last;
 L = length(range);
-A = zeros(L, 3);
-b = zeros(L, 1);
-for i = range
-    A(i-first+1, :) = [g1(thetadd(i)) g3(thetad(i)) g5(-5)];
-    b(i-first+1)    = psidd(i) - ro(2)*g2(psi(i), psid(i), psidd(i)) - ro(4)*g4(psid(i));
-end
+
+g1 = -thetadd(range);
+g2 = sin(psi(range)).*psid(range).^2 - cos(psi(range)).*psidd(range);
+g3 = -thetad(range);
+g4 = psid(range);
+g5 = -5*ones(L, 1);
+g6 = -thetadd(range);
+g7 = -cos(psi(range)).*thetadd(range);
+g8 = thetad(range)-psid(range);
+g9 = sin(psi(range));
+g10 = -5*ones(L, 1);
+e = psidd(range);
+
+% ro1 ro3 ro5
+A = [g1 g3 g5];
+b = e - ro(2)*g2 - ro(4)*g4;
 x = (A'*A) \ ((A')*b);
 ro(1) = x(1);
 ro(3) = x(2);
 ro(5) = x(3);
 
-% ro6 ro7 ro8
-for i = range
-    A(i-first+1, :) = [g6(thetadd(i)) g7(psi(i),thetadd(i)) g10(-5)];
-    b(i-first+1)    = psidd(i) - ro(8)*g8(psid(i), thetad(i)) - ro(9)*g9(psi(i));
-end
+% ro6 ro7 ro10
+A = [g6 g7 g10];
+b = e - ro(8)*g8 - ro(9)*g9;
 x = (A'*A) \ ((A')*b);
 ro(6) = x(1);
 ro(7) = x(2);
 ro(10) = x(3);
-save("ro_final_02", "ro");
-
-function y = g1(thetadd)
-    y = -thetadd;
-end
-
-function y = g2(psi, psid, psidd)
-    y = sin(2*psi)*sec(psi)*psid^2 - 2*cos(psi)*psidd;
-end
-
-function y = g3(thetad)
-    y = -thetad;
-end
-
-function y = g4(psid)
-    y = psid;
-end
-
-function y = g5(u)
-    y = u;
-end
-
-function y = g6(thetadd)
-    y = -thetadd;
-end
-
-function y = g7(psi, thetadd)
-    y = -cos(psi)*thetadd;
-end
-
-function y = g8(psid, thetad)
-    y = thetad-psid;
-end
-
-function y = g9(psi)
-    y = sin(psi);
-end
-
-function y = g10(u)
-    y = -u;
-end
+save("ro_final_10", "ro");

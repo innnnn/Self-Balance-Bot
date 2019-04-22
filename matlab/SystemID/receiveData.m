@@ -23,7 +23,7 @@ fopen(b);
 % Collect Data
 % imformation of raw data
 dT = 0.05;        % sampling time
-time = 10;        % record 30 second of data
+time = 30;        % record 30 second of data
 length = time/dT; % # of raw data
 t = 0 : dT : time - dT;
 rawData = strings(length, 1);
