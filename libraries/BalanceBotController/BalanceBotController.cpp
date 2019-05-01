@@ -1,33 +1,33 @@
 #include "BalancebotController.h"
 
-PIDController::PIDController(){
+BalanceBotController::BalanceBotController(){
 	Kp = 0;
 	Ki = 0;
 	Kd = 0;
 	reference = 0;
 }
 
-void PIDController::SetPID(const float Kp, const float Ki, const float Kd){
-	this.Kp = Kp;
-	this.Ki = Ki;
-	this.Kd = Kd;
+void BalanceBotController::SetSamplingTime(const float dt){
+	this->dt = dt;
 }
 
-void PIDController::SetReference(const float reference){
-	this.reference = reference;
+void BalanceBotController::SetPID(const float Kp, const float Ki, const float Kd){
+	this->Kp = Kp;
+	this->Ki = Ki;
+	this->Kd = Kd;
 }
 
-void PIDController::SetSamplingTime(const float dt){
-	this.dt = dt;
+void BalanceBotController::SetReference(const float reference){
+	this->reference = reference;
 }
 
-void PIDController::GetIfSteady(){
+bool BalanceBotController::GetIfSteady(){
 	if(preError < ERROR_TOLERANCE)
 		return true;
 	return false;
 }
 
-float PIDController::Update(float feedback){
+float BalanceBotController::Update(const float feedback){
 	float error = reference - feedback;
 
 	// Proportional term

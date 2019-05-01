@@ -6,25 +6,30 @@
 
 class BalanceBotEncoder{
   private:
+    int motorSide;
     int interruptPin;
     int directionPin;
     int position;
+
+    float dt;
     float speed;
-	float samplingTime;
+
     float lastAngle;
    
   public:
     BalanceBotEncoder(); 
+    void SetMotorSide(const int side);
     void SetInterruptPin(const int pin);
     void SetDirectionPin(const int pin);
     void SetPosition(const int pos);
     void SetSamplingTime(const float dt);
     
+    int GetMotorSide();
     int GetInterruptPin();
     int GetDirectionPin();
     int GetPosition();
-    int GetPPR();
     float GetSpeed();
+    int GetPPR();
     void ClearPosition();
     void Update();
 };
