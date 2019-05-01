@@ -28,6 +28,7 @@ psidd(1) = psidd(2);
 figure;
 plot(t, psi);
 xlabel("t (s)");
+ylabel("rad");
 title("psi");
 legend("psi");
 
@@ -48,6 +49,7 @@ thetadd(1) = thetadd(2);
 figure;
 plot(t, thetad);
 xlabel("t (s)");
+ylabel("rad/s");
 title("thetad");
 legend("thetad");
 
@@ -59,7 +61,7 @@ legend("thetad", "thetadd");
 
 
 first =(6.8)*20+1;
-last = (7.1)*20+1;
+last = (7.15)*20+1;
 range = first:last;
 L = length(range);
 
@@ -90,4 +92,4 @@ x = (A'*A) \ ((A')*b);
 ro(6) = x(1);
 ro(7) = x(2);
 ro(10) = x(3);
-save("ro_final_10", "ro");
+save("ro_final_08", "ro");

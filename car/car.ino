@@ -1,7 +1,7 @@
 # include <I2Cdev.h>
 # include <MPU6050.h>
 # include <MsTimer2.h>
-# include <BalanbotMotor.h>
+# include <BalancebotMotor.h>
 # include <Wire.h>
 # include <Kalman.h>
 # include <SoftwareSerial.h>
@@ -10,7 +10,7 @@ SoftwareSerial BTSerial(12, 13);    //tx, rx
 // sampling time
 // max sampling time: 0.025s
 // max sampling rate: 40Hz
-// sampling time: 0.05
+// sampling time: 0.05s
 // sampling rate: 20Hz
 # define dT 0.05
 
@@ -32,5 +32,5 @@ void setup(){
 void loop(){
     //UpdateSerial();
     //UpdateBlueTooth();
-    StableVoltage_MotorInput(-5);
+    StableVoltage_MotorInput(5);
 }
