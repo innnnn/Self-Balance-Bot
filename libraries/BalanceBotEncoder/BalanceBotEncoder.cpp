@@ -1,24 +1,24 @@
 #include "BalanceBotEncoder.h"
 
 BalanceBotEncoder::BalanceBotEncoder(){
-    mPosition = 0;
+    position = 0;
     lastAngle = 0;
 }
 
 void BalanceBotEncoder::SetInterruptPin(const int pin){
-    mInterruptPin = pin;
+    interruptPin = pin;
 }
 
 void BalanceBotEncoder::SetDirectionPin(const int pin){
-    mDirectionPin = pin;
+    directionPin = pin;
     pinMode(mDirectionPin, INPUT);
 }
 
 void BalanceBotEncoder::SetPosition(const int pos){
-    mPosition = pos;
+    position = pos;
 }
 
-void BalanceBotEncoder::SetSamplingTime(const float dT){
+void BalanceBotEncoder::SetSamplingTime(const float dt){
 	this.dt = dt;
 }
 
@@ -39,7 +39,7 @@ int BalanceBotEncoder::GetPPR(){
 }
 
 float BalanceBotEncoder::GetSpeed(){
-    float newAngle = 2 * PI * ((float)mPosition / (float)PPR) * RAD_TO_DEG;
+    float newAngle = 2 * PI * ((float)position / (float)PPR) * RAD_TO_DEG;
     speed = (newAngle - lastAngle) / dT;
     lastAngle = newAngle;
     return speed;
@@ -50,5 +50,5 @@ void BalanceBotEncoder::ClearPosition(){
 }
 
 void BalanceBotEncoder::Update(){
-	digitalRead(mirectionPin) == HIGH ? position++ : position--;
+	digitalRead(directionPin) == HIGH ? position++ : position--;
 }

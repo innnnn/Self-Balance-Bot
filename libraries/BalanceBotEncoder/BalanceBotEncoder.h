@@ -18,7 +18,7 @@ class BalanceBotEncoder{
     void SetInterruptPin(const int pin);
     void SetDirectionPin(const int pin);
     void SetPosition(const int pos);
-    void SetSamplingTime(const float dT);
+    void SetSamplingTime(const float dt);
     
     int GetInterruptPin();
     int GetDirectionPin();

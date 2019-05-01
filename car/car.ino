@@ -12,11 +12,14 @@ SoftwareSerial BTSerial(12, 13);    //tx, rx
 // max sampling rate: 40Hz
 // sampling time: 0.05s
 // sampling rate: 20Hz
-# define dT 0.05
+const float dt 0.05
 
 // create new objects(motors)
 BalanbotMotor motor_A;
 BalanbotMotor motor_B;
+
+// voltage to pwm
+const int voltage2Pwm = 255/12.0;
 
 void setup(){
     Serial.begin(9600);
@@ -32,5 +35,5 @@ void setup(){
 void loop(){
     //UpdateSerial();
     //UpdateBlueTooth();
-    StableVoltage_MotorInput(5);
+    StableVoltage(5);
 }
