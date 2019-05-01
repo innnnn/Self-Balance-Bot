@@ -1,14 +1,14 @@
 % Goal System ID
 
-ro = zeros(10, 1);
+rho = zeros(10, 1);
 
 % **** Part 1 : zero input ****
 % get ro2 ro4 ro8 ro9
 % *****************************
 % load data wiht zero input
-psi = data(:, 1)/180*pi;  % psi is rad
+psi = save_psi/180*pi;  % psi is rad
 dT = 0.05;
-time = 25;
+time = 10;
 t = 0 : dT : time-dT;
 L = length(psi);
 
@@ -41,8 +41,8 @@ title("psi & psid & psidd");
 legend("psi", "psid", "psidd");
 
 % ro2 ro4
-first =(2.9)*20+1;
-last = (3.25)*20+1;
+first =(4.3)*20+1;
+last = (5.65)*20+1;
 range = first:last;
 
 %g1 = -thetadd(range);
@@ -61,15 +61,15 @@ L = length(range);
 A = [g2 g4];
 b = e;
 x = (A'*A) \ ((A')*b);
-ro(2) = x(1);
-ro(4) = x(2);
+rho(2) = x(1);
+rho(4) = x(2);
 
 % ro8 ro9
 A = [g8 g9];
 b = e;
 x = (A'*A) \ ((A')*b);
-ro(8) = x(1);
-ro(9) = x(2);
+rho(8) = x(1);
+rho(9) = x(2);
 
-save("ro_29", "ro");
+save("rho_21", "rho");
 %clear;

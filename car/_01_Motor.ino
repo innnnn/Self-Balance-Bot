@@ -8,11 +8,22 @@ void SetupMotor(){
     const int AIN2 = 4, BIN2 = 10;              // Direction -
     const int STBY = 7;                         // standby(停止)
 
-    motor_A.SetMotorPins(PWMA, AIN1, AIN2, STBY);
-    motor_B.SetMotorPins(PWMB, BIN1, BIN2, STBY);
+    // left motor
+    motor_A.SetPwmPin(PWMA);
+    motor_A.SetDirectionPins(AIN1, AIN2);
+    motor_A.SetStandbyPin(STBY);
+    
+
+    // right motor
+    motor_B.SetPwmPin(PWMB);
+    motor_B.SetDirectionPins(BIN1, BIN2);
+    motor_B.SetStandbyPin(STBY);
+    
 }
 
 // left motor movement
+// move forward: need to inverse ==> true
+// move backward: does not inverse ==> false
 void LeftMotorMove(const int pwm){
     if(pwm > 0){
         motor_A.InverseRotationDirectionDefinition(true);
@@ -21,17 +32,19 @@ void LeftMotorMove(const int pwm){
     else{
         motor_A.InverseRotationDirectionDefinition(false);
         motor_A.Rotate(-pwm);
-    } 
+    }
 }
 
 // right motor movement
+// move forward: does not inverse ==> false
+// move backward: need to inverse ==> true
 void RightMotorMove(const int pwm){
     if(pwm > 0){
-        motor_B.InverseRotationDirectionDefinition(true);
+        motor_B.InverseRotationDirectionDefinition(false);
         motor_B.Rotate(pwm);
     }
     else{
-        motor_B.InverseRotationDirectionDefinition(false);
+        motor_B.InverseRotationDirectionDefinition(true);
         motor_B.Rotate(-pwm);
     }
 }

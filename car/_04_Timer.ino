@@ -1,4 +1,4 @@
-// Goal: Get left speed, right speed, psi
+// Goal: Update left speed, right speed, psi
 
 void SetupMsTimer2(){
     MsTimer2::set(dT * 1000, TimerInterrupt);

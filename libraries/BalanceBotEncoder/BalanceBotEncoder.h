@@ -1,32 +1,32 @@
-#ifndef BALANBOTENCODER_H
-#define BALANBOTENCODER_H
+#ifndef BALANCEBOTENCODER_H
+#define BALANCEBOTENCODER_H
 
 #include <Arduino.h>
 #define PPR 390
 
-class BalanbotEncoder{
+class BalanceBotEncoder{
   private:
-    int mInterruptPin;
-    int mDirectionPin;
-    int mPosition;
+    int interruptPin;
+    int directionPin;
+    int position;
     float speed;
-    int lastPosition;
+	float samplingTime;
     float lastAngle;
-    float *pre_v;      //save previous velocity data
    
   public:
-    BalanbotEncoder(); 
+    BalanceBotEncoder(); 
     void SetInterruptPin(const int pin);
     void SetDirectionPin(const int pin);
     void SetPosition(const int pos);
-    //void SetPins();
+    void SetSamplingTime(const float dt);
+    
     int GetInterruptPin();
     int GetDirectionPin();
     int GetPosition();
     int GetPPR();
-    float GetSpeed(float dT);
+    float GetSpeed();
     void ClearPosition();
     void Update();
 };
 
-#endif //BALANBOTENCODER_H
+#endif //BALANCEBOTENCODER_H

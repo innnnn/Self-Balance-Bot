@@ -1,4 +1,4 @@
-// Goal: Receive data from serial port and bluetooth
+// Goal: Receive data from serial port and Bluetooth
 
 // For any kinds of input
 String data = "";
