@@ -3,7 +3,7 @@
 
 #include <NumericalTool.h>
 
-class PIDController{
+class BalanceBotController{
 	const float ERROR_TOLERANCE = 0.5;
 	const float MAX_OUTPUT = 12.0;
 	const float MIN_OUTPUT = -12.0;
@@ -19,12 +19,12 @@ class PIDController{
     	Integrator mIntegrator;  
 
 	public: 
-		PIDController();
+		BalanceBotController();
+		void SetSamplingTime(const float dT);
 		void SetPID(const float Kp, const float Ki, const float Kd);
 		void SetReference(const float reference); // the desire output
-		void SetSamplingTime(const float dT);
-		void GetIfSteady();
-		float Update(float feedback);
+		bool GetIfSteady();
+		float Update(const float feedback);
 };
 
 #endif //BALANCEBOTCONTROLLER_H
