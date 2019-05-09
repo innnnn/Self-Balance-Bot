@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,25 +35,22 @@ public class BluetoothConnectionService {
     private BluetoothDevice mmDevice;
     private UUID deviceUUID;
     ProgressDialog mProgressDialog;
-    private Boolean connected = false;
 
     private ConnectedThread mConnectedThread;
     private TextView connectedText;
 
-    public BluetoothConnectionService(Context context, BluetoothDevice device, TextView textView) {
+    // for ui control
+    BluetoothFragment bluetoothFragment;
+
+    public BluetoothConnectionService(Context context, BluetoothDevice device, TextView textView, BluetoothFragment bluetoothFragment) {
         mContext = context;
         connectedText = textView;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         Log.d(TAG, "startClient: Started.");
         mmDevice = device;
-        if(connected){
-            mConnectedThread.cancel();
-        }
         new ConnectBT().execute();
-    }
 
-    public Boolean isConnected() {
-        return connected;
+        this.bluetoothFragment = bluetoothFragment;
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {
@@ -69,14 +67,16 @@ public class BluetoothConnectionService {
         protected Void doInBackground (Void... devices) {
             try {
                 dispositivo = mBluetoothAdapter.getRemoteDevice(mmDevice.getAddress());
-                btSocket = dispositivo.createInsecureRfcommSocketToServiceRecord(MY_UUID_SECURE);
+                // for bluetooth 4.1
+                btSocket = dispositivo.createRfcommSocketToServiceRecord(MY_UUID_SECURE);
+
                 BluetoothAdapter.getDefaultAdapter().cancelDiscovery();
                 btSocket.connect();
+
             } catch (IOException e) {
                 ConnectSuccess = false;
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -90,18 +90,18 @@ public class BluetoothConnectionService {
             }catch (NullPointerException e){
                 e.printStackTrace();
             }
-            connectedText.setText("Connected to : " + mmDevice.getName());
+
             if (!ConnectSuccess) {
-                connectedText.setText("");
+                Toast.makeText(bluetoothFragment.mainActivity, "Fail to connect", Toast.LENGTH_LONG).show();
+                connectedText.setText("Unconnected");
                 Log.d(TAG,"Connection Failed. Is it a SPP Bluetooth? Try again.");
             } else {
                 startCommunication(btSocket,dispositivo);
+                connectedText.setText("Connected to : " + mmDevice.getName()+"\n"+ mmDevice.getAddress());
             }
 
         }
     }
-
-
 
     /**
      Finally the ConnectedThread which is responsible for maintaining the BTConnection, Sending the data, and
@@ -162,8 +162,8 @@ public class BluetoothConnectionService {
         /* Call this from the main activity to shutdown the connection */
         public void cancel() {
             try {
-                connectedText.setText("");
-                connected = false;
+                connectedText.setText("Unconnected");
+                bluetoothFragment.bluetoothConnect = false;
                 mmSocket.close();
             } catch (IOException e) { }
         }
@@ -171,7 +171,7 @@ public class BluetoothConnectionService {
 
     private void startCommunication(BluetoothSocket mmSocket, BluetoothDevice mmDevice) {
         Log.d(TAG, "connected: Starting.");
-        connected = true;
+        bluetoothFragment.bluetoothConnect = true;
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread = new ConnectedThread(mmSocket);
         mConnectedThread.start();
@@ -185,5 +185,4 @@ public class BluetoothConnectionService {
         if(mConnectedThread!=null)
             mConnectedThread.write(bytes);
     }
-
 }
