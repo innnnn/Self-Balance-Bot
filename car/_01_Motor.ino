@@ -12,13 +12,13 @@ void SetupMotor(){
     motor_A.SetPwmPin(PWMA);
     motor_A.SetDirectionPins(AIN1, AIN2);
     motor_A.SetStandbyPin(STBY);
-    
+    motor_A.SetDirectionCoefficient();
 
     // right motor
     motor_B.SetPwmPin(PWMB);
     motor_B.SetDirectionPins(BIN1, BIN2);
     motor_B.SetStandbyPin(STBY);
-    
+    motor_B.SetDirectionCoefficient();
 }
 
 // left motor movement

@@ -27,8 +27,6 @@ import java.util.UUID;
 
 public class BluetoothFragment extends Fragment implements AdapterView.OnItemClickListener{
     private static final String TAG = " fragment_bluetooth";
-    private static final UUID MY_UUID_INSECURE =
-            UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
     MainActivity mainActivity;
 
     // bluetooth
@@ -51,8 +49,10 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
     public void setActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
+
     // Create a BroadcastReceiver for ACTION_FOUND
     private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
+        @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             // When discovery finds a device
@@ -136,9 +136,9 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
     public void onDestroy() {
         Log.d(TAG, "onDestroy: called.");
         super.onDestroy();
-        getActivity().unregisterReceiver(mBroadcastReceiver1);
-        getActivity().unregisterReceiver(mBroadcastReceiver2);
-        getActivity().unregisterReceiver(mBroadcastReceiver3);
+        mainActivity.unregisterReceiver(mBroadcastReceiver1);
+        mainActivity.unregisterReceiver(mBroadcastReceiver2);
+        mainActivity.unregisterReceiver(mBroadcastReceiver3);
     }
 
     @Nullable
@@ -188,7 +188,7 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
         // part3: connect to device
         // Broadcasts when bond state changes (ie:pairing)
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-        getActivity().registerReceiver(mBroadcastReceiver3, filter);
+        mainActivity.registerReceiver(mBroadcastReceiver3, filter);
         listViewShowDevice.setOnItemClickListener(BluetoothFragment.this);
 
         return view;
@@ -209,7 +209,7 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
             startActivity(enableBTIntent);
 
             IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            getActivity().registerReceiver(mBroadcastReceiver1, BTIntent);
+            mainActivity.registerReceiver(mBroadcastReceiver1, BTIntent);
         }
 
         if (mBluetoothAdapter.isEnabled() && !open) {
@@ -217,7 +217,7 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
             mBluetoothAdapter.disable();
 
             IntentFilter BTIntent = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
-            getActivity().registerReceiver(mBroadcastReceiver1, BTIntent);
+            mainActivity.registerReceiver(mBroadcastReceiver1, BTIntent);
         }
     }
 
@@ -235,7 +235,7 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
 
             mBluetoothAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            getActivity().registerReceiver(mBroadcastReceiver2, discoverDevicesIntent);
+            mainActivity.registerReceiver(mBroadcastReceiver2, discoverDevicesIntent);
         }
 
         if(!mBluetoothAdapter.isDiscovering()){
@@ -244,7 +244,7 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
 
             mBluetoothAdapter.startDiscovery();
             IntentFilter discoverDevicesIntent = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-            getActivity().registerReceiver(mBroadcastReceiver2, discoverDevicesIntent);
+            mainActivity.registerReceiver(mBroadcastReceiver2, discoverDevicesIntent);
         }
     }
 
@@ -273,11 +273,8 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
 
         // connect to device
         mBTDevice = mBluetoothAdapter.getRemoteDevice(deviceAddress);
-        mBluetoothConnection = new BluetoothConnectionService(getActivity(), mBTDevice, textViewShowBluetooth, this);
+        mBluetoothConnection = new BluetoothConnectionService(mainActivity, mBTDevice, textViewShowBluetooth, this);
         bluetoothDeviceArrayList.clear();
         listViewShowDevice.setAdapter(null);
     }
-
-    // part4: disconnect the device
-
 }

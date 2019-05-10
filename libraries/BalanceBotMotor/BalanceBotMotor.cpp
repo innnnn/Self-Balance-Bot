@@ -68,7 +68,7 @@ void BalanceBotMotor::Rotate(const int pwm){
     //direction: 0-> clockwise, 1-> counter-clockwise
     boolean pin1 = LOW;   //initial rotate direction: clockwise
     boolean pin2 = HIGH;
-    if(mDirectionCoefficient == 1){ // ??????
+    if(directionCoefficient == 1){ // ??????
         pin1 = HIGH;
         pin2 = LOW;
     }

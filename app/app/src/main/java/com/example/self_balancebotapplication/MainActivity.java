@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
     private HomeFragment homeFragment = new HomeFragment();
     private BluetoothFragment bluetoothFragment = new BluetoothFragment();
+    private PIDControlFragment pidControlFragment = new PIDControlFragment();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,12 +40,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        // set the current fragment to homeFragment
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
-
         // add navigation item select listener
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, homeFragment).commit();
+            navigationView.setCheckedItem(R.id.nav_home);
+        }
     }
 
     @Override
@@ -56,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_bluetooth:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, bluetoothFragment).commit();
+                break;
+            case R.id.nav_pidcontrol:
+                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, pidControlFragment).commit();
                 break;
         }
 

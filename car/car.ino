@@ -19,7 +19,7 @@ BalanbotMotor motor_A;
 BalanbotMotor motor_B;
 
 // voltage to pwm
-const int voltage2Pwm = 255/12.0;
+const  voltage2Pwm = 255/12.0;
 
 void setup(){
     Serial.begin(9600);

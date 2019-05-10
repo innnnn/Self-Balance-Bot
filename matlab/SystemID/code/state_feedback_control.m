@@ -17,19 +17,23 @@ C = [1 0 0 0;  %psi
 D = [0;
      0];
  
-%convert state-space representation to transfer funciton
+ pole = eig(A);
+ 
+% convert state-space description into transfer funciton
 [n,d] = ss2tf(A,B,C,D);
 
 % psi
-h = tf(n(1,:), d);
+h_psi = tf(n(1,:), d);
+[p1,z1] = pzmap(h_psi);
 figure;
-rlocus(h);
+rlocus(h_psi);
 figure;
-bode(h);
+bode(h_psi);
 
 % theta
-h = tf(n(2,:), d);
+h_theta = tf(n(2,:), d);
+[p2,z2] = pzmap(h_theta);
 figure;
-rlocus(h);
+rlocus(h_theta);
 figure;
-bode(h);
+bode(h_theta);
