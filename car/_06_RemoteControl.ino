@@ -24,8 +24,8 @@ void RemoteControl(String data){
     float rRatio = forward - diff;
 
     //give command to wheels
-    LeftMotorMove ((int)lRatio * Power * maxPowerRemap);
-    RightMotorMove((int)rRatio * Power * maxPowerRemap);
+    motor_A.Rotate((int)lRatio * Power * maxPowerRemap);
+    motor_B.Rotate((int)rRatio * Power * maxPowerRemap);
   }
   data = "";
 }

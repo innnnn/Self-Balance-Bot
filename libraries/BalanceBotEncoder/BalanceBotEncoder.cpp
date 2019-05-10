@@ -5,13 +5,17 @@ BalanceBotEncoder::BalanceBotEncoder(){
     lastAngle = 0;
 }
 
+void BalanceBotEncoder::SetMotorSide(const int side){
+    motorSide = side;
+}
+
 void BalanceBotEncoder::SetInterruptPin(const int pin){
     interruptPin = pin;
 }
 
 void BalanceBotEncoder::SetDirectionPin(const int pin){
     directionPin = pin;
-    pinMode(mDirectionPin, INPUT);
+    pinMode(directionPin, INPUT);
 }
 
 void BalanceBotEncoder::SetPosition(const int pos){
@@ -19,7 +23,11 @@ void BalanceBotEncoder::SetPosition(const int pos){
 }
 
 void BalanceBotEncoder::SetSamplingTime(const float dt){
-	this.dt = dt;
+	this->dt = dt;
+}
+
+int BalanceBotEncoder::GetMotorSide(){
+    return motorSide;
 }
 
 int BalanceBotEncoder::GetInterruptPin(){
@@ -31,18 +39,18 @@ int BalanceBotEncoder::GetDirectionPin(){
 }
 
 int BalanceBotEncoder::GetPosition(){
-    return position;
-}
-
-int BalanceBotEncoder::GetPPR(){
-    return PPR;
+    return position * motorSide;
 }
 
 float BalanceBotEncoder::GetSpeed(){
     float newAngle = 2 * PI * ((float)position / (float)PPR) * RAD_TO_DEG;
-    speed = (newAngle - lastAngle) / dT;
+    speed = (newAngle - lastAngle) / dt;
     lastAngle = newAngle;
-    return speed;
+    return speed * motorSide;
+}
+
+int BalanceBotEncoder::GetPPR(){
+    return PPR;
 }
 
 void BalanceBotEncoder::ClearPosition(){

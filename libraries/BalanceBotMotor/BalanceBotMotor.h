@@ -8,19 +8,21 @@
 
 class BalanceBotMotor{
   private:
+    const float voltage2Pwm = 255/12.0;
+    
     BalanceBotEncoder encoder; 
     Differentiator mDifferentiator;
-    float directionCoefficient;
+    BalanceBotController psiController;
     
-	int pwmPin, directionPinA, directionPinB, standbyPin;
+	  int pwmPin, directionPinA, directionPinB, standbyPin;
     float angle;
     float speed;
-    float dt; // sampling time
-	int controlMode;
+    float dt;           // sampling time
+	  int controlMode;
     
     void UpdateAngle();
     void UpdateSpeed();
-    void UpdateControl();
+    void UpdateControl(const float psi);
 
   public:  
     BalanceBotMotor();
@@ -29,25 +31,23 @@ class BalanceBotMotor{
     void SetDirectionPins( const int pinA, 
                                   const int pinB );
     void SetStandbyPin(const int pin);
-    void SetDirectionCoefficient(const float directionCoefficient);
-    void SetEncoderPins(const int interruptPin, 
-                        const int directionPin);
     void SetSamplingTime(const float dt);
+    void SetEncoder(const int side,
+                    const int interruptPin, 
+                    const int directionPin);
     void SetControl(int mode, float reference);
-    
-    void InverseRotationDirectionDefinition(const bool ifInverse);
     
     int GetEncoderInterruptPin();
     float GetSpeed();
     float GetAngle();
     
-    void Rotate(const int pwm);
+    void Rotate(int pwm);
     void Brake();
     void UpdateEncoder();
-    void Update();
+    void Update(const float psi);
 
-    PIDController angleController;
-    PIDController speedController;
+    // PIDController angleController;
+    // PIDController speedController;
 };
 
 #endif /* BALANCEBOTMOTOR_H */
