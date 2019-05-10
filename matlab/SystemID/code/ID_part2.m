@@ -1,7 +1,7 @@
 % **** Part 2 : 5v ****
 % get ro1 ro3 ro5 ro6 ro7 ro10
 % *****************************
-load("ro_ave.mat");
+load("rho_ave.mat");
 psi = save_psi_5v/180*pi;       % psi is rad
 thetad = save_thetad_5v/180*pi; % theta is rad
 
@@ -69,27 +69,27 @@ g1 = -thetadd(range);
 g2 = sin(psi(range)).*psid(range).^2 - cos(psi(range)).*psidd(range);
 g3 = -thetad(range);
 g4 = psid(range);
-g5 = -5*ones(L, 1);
+g5 = (-5)*ones(L, 1);
 g6 = -thetadd(range);
 g7 = -cos(psi(range)).*thetadd(range);
 g8 = thetad(range)-psid(range);
 g9 = sin(psi(range));
-g10 = -5*ones(L, 1);
+g10 = -(-5)*ones(L, 1);
 e = psidd(range);
 
 % ro1 ro3 ro5
 A = [g1 g3 g5];
-b = e - ro(2)*g2 - ro(4)*g4;
+b = e - rho(2)*g2 - rho(4)*g4;
 x = (A'*A) \ ((A')*b);
-ro(1) = x(1);
-ro(3) = x(2);
-ro(5) = x(3);
+rho(1) = x(1);
+rho(3) = x(2);
+rho(5) = x(3);
 
 % ro6 ro7 ro10
 A = [g6 g7 g10];
-b = e - ro(8)*g8 - ro(9)*g9;
+b = e - rho(8)*g8 - rho(9)*g9;
 x = (A'*A) \ ((A')*b);
-ro(6) = x(1);
-ro(7) = x(2);
-ro(10) = x(3);
-save("ro_final_08", "ro");
+rho(6) = x(1);
+rho(7) = x(2);
+rho(10) = x(3);
+save("rho_final_10", "rho");
