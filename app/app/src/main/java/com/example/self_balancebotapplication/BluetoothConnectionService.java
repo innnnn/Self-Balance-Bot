@@ -91,6 +91,7 @@ public class BluetoothConnectionService {
                 connectedText.setText("Unconnected");
                 Log.d(TAG,"Connection Failed. Is it a SPP Bluetooth? Try again.");
             } else {
+                bluetoothFragment.bluetoothConnect = true;
                 startCommunication(btSocket,dispositivo);
                 connectedText.setText("Connected to : " + mmDevice.getName()+"\n"+ mmDevice.getAddress());
             }

@@ -20,10 +20,10 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
     private DrawerLayout drawer;
-    private HomeFragment homeFragment = new HomeFragment();
-    private BluetoothFragment bluetoothFragment = new BluetoothFragment();
-    private JoystickControlFragment joystickControlFragment = new JoystickControlFragment();
-    private PIDControlFragment pidControlFragment = new PIDControlFragment();
+    public HomeFragment homeFragment = new HomeFragment();
+    public BluetoothFragment bluetoothFragment = new BluetoothFragment();
+    public JoystickControlFragment joystickControlFragment = new JoystickControlFragment();
+    public PIDControlFragment pidControlFragment = new PIDControlFragment();
     private StatefeedbackControlFragment statefeedbackControlFragment = new StatefeedbackControlFragment();
     private CarStateFragment carStateFragment = new CarStateFragment();
     private Fragment lastFragment;
@@ -34,10 +34,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
-        // set mainActivity to each fragment
-        bluetoothFragment.setActivity(this);
-
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -59,6 +55,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.setCheckedItem(R.id.nav_home);
             lastFragment = homeFragment;
         }
+
+        // set mainActivity to each fragment
+        bluetoothFragment.setActivity(this);
+        pidControlFragment.setActivity(this);
     }
 
     @Override
