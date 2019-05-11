@@ -1,10 +1,10 @@
 #include "BalancebotController.h"
 
 BalanceBotController::BalanceBotController(){
+	reference = 0;
 	Kp = 0;
 	Ki = 0;
 	Kd = 0;
-	reference = 0;
 }
 
 void BalanceBotController::SetSamplingTime(const float dt){
@@ -30,7 +30,7 @@ bool BalanceBotController::GetIfSteady(){
 float BalanceBotController::Update(const float feedback){
 	float error = reference - feedback;
 
-	// Proportional term
+	// Proportional termW
 	float pOut = Kp * error;
 	
 	// Integral term
@@ -42,7 +42,7 @@ float BalanceBotController::Update(const float feedback){
 	float dOut = Kd * derivative;
 	
 	// Total output
-	float output = pOut + iOut + dOut; 
+	float output = pOut + iOut + dOut;
 	
 	// Saturation
 	// Max output: 12v

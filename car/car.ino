@@ -27,7 +27,6 @@ void setup(){
 
     // initialization
     SetupMotor();
-    SetupEncoder();
     SetupMPU6050();
     SetupMsTimer2();
 }
@@ -35,5 +34,5 @@ void setup(){
 void loop(){
     //UpdateSerial();
     //UpdateBlueTooth();
-    StableVoltage(-5);
+    //StableVoltage(-5);
 }

@@ -3,7 +3,7 @@
 void StableVoltage(const int voltage){
     // voltage>0  --> move forward
     // voltage<0  --> move backward
-    motor_A.Rotate ( voltage * voltage2Pwm );
+    motor_A.Rotate( voltage * voltage2Pwm );
     motor_B.Rotate( voltage * voltage2Pwm );
 
 }
