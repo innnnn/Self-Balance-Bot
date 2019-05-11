@@ -283,6 +283,9 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
     public void bluetoothSendData(String data){
         if( this.mBluetoothConnection!=null && bluetoothConnect) {
             try {
+                /*for(int i=0; i<data.length(); i++){
+                    this.mBluetoothConnection.write(data.substring(i, i+1));
+                }*/
                 this.mBluetoothConnection.write(data);
             } catch (NullPointerException except) {
                 Toast.makeText(mainActivity, "Fial to Send Data", Toast.LENGTH_LONG).show();

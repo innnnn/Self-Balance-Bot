@@ -10,8 +10,8 @@ class BalanceBotStateFeedbackController{
   	
   public:
   	BalanceBotStateFeedbackController();
-  	void SetK(k1, k2, k3, k4);
-  	float Update(float psi, float pdid, float theta, float thetad);
+  	void SetK(float k1, float k2, float k3, float k4);
+  	float Update(float psi, float psid, float theta, float thetad);
 };
 
 #endif //BALANCEBOTSTATEFEEDBACKCONTROLLER_H

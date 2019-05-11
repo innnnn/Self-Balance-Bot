@@ -33,6 +33,5 @@ void setup(){
 
 void loop(){
     //UpdateSerial();
-    UpdateBlueTooth();
     //StableVoltage(-5);
 }
