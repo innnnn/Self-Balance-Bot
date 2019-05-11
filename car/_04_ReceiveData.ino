@@ -27,6 +27,8 @@ void UpdateBlueTooth(){
             data += String(c);
         }
     }
+    Serial.println(data);
+    data = 0;
     //count++;
     //Serial.println(count);
 }

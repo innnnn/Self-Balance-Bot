@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -276,5 +277,18 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
         mBluetoothConnection = new BluetoothConnectionService(mainActivity, mBTDevice, textViewShowBluetooth, this);
         bluetoothDeviceArrayList.clear();
         listViewShowDevice.setAdapter(null);
+    }
+
+    // part4: send Message
+    public void bluetoothSendData(String data){
+        if( this.mBluetoothConnection!=null && bluetoothConnect) {
+            try {
+                this.mBluetoothConnection.write(data);
+            } catch (NullPointerException except) {
+                Toast.makeText(mainActivity, "Fial to Send Data", Toast.LENGTH_LONG).show();
+            }
+        } else{
+            Toast.makeText(mainActivity, "Blutooth is not Connected", Toast.LENGTH_LONG).show();
+        }
     }
 }

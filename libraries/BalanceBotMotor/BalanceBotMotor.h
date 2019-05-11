@@ -3,7 +3,7 @@
 
 #include "BalanceBotEncoder.h"
 #include "BalanceBotController.h"
-#include <NumericalTool.h>
+#include "BalanceBotStateFeedbackController"
 #include <Arduino.h>
 
 class BalanceBotMotor{
@@ -11,14 +11,15 @@ class BalanceBotMotor{
     const float voltage2Pwm = 255/12.0;
     
     BalanceBotEncoder encoder; 
-    Differentiator mDifferentiator;
     BalanceBotController psiController;
+    BalanceBotController thetaController;
+    BalanceBotStateFeedbackController stateFeedbackController; 
     
-	  int pwmPin, directionPinA, directionPinB, standbyPin;
+	int pwmPin, directionPinA, directionPinB, standbyPin;
     float angle;
     float speed;
     float dt;           // sampling time
-	  int controlMode;
+	int controlMode;    // 1: psi, 2: psi&theta, 3, state feedback
     
     void UpdateAngle();
     void UpdateSpeed();
@@ -35,7 +36,10 @@ class BalanceBotMotor{
     void SetEncoder(const int side,
                     const int interruptPin, 
                     const int directionPin);
-    void SetControl(int mode, float reference);
+    void SetControlMode(int mode);
+    void SetPsiController(float reference, float kp, float ki, float kd);
+    void SetThetaController(float reference, float kp, float ki, float kd);
+    void SetStateFeedbackController(float k1, float k2, float k3, float k4);
     
     int GetEncoderInterruptPin();
     float GetSpeed();

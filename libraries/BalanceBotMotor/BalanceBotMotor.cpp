@@ -37,10 +37,23 @@ void BalanceBotMotor::SetEncoder(const int side,
     encoder.SetSamplingTime(this->dt);
 }
 
-void BalanceBotMotor::SetControl(int mode, float reference){
+void BalanceBotMotor::SetControlMode(int mode){
+	controlMode = mode;
+}
+void BalanceBotMotor::SetPsiController(float reference, float kp, float ki, float kd){
     psiController.SetSamplingTime(dt);
-    psiController.SetPID(0, 0, 0);     //TODO
     psiController.SetReference(0);
+    psiController.SetPID(kp, ki, kd);
+}
+
+void BalanceBotMotor::SetPsiController(float reference, float kp, float ki, float kd){
+    thetaController.SetSamplingTime(dt);
+    thetaController.SetReference(0);
+    thetaController.SetPID(kp, ki, kd);
+}
+
+void BalancdBotMotor::SetStateFeedbackController(float k1, float k2, float k3, float k4){
+	stateFeedbackController.SetK(k1, k2, k3, k4);
 }
 
 int BalanceBotMotor::GetEncoderInterruptPin(){
@@ -94,7 +107,6 @@ void BalanceBotMotor::UpdateAngle(){
 }
 
 void BalanceBotMotor::UpdateSpeed(){
-    speed = mDifferentiator.differential(angle);
 }
 
 void BalanceBotMotor::UpdateEncoder(){
@@ -102,9 +114,19 @@ void BalanceBotMotor::UpdateEncoder(){
 }
 
 void BalanceBotMotor::UpdateControl(const float psi){
-    //TODO
-    float voltage = psiController.Update(psi);
-    Rotate(voltage * voltage2Pwm);
+	float output = 0.0;
+	
+	switch(controlMode){
+		case 1:
+			output = -psiController.Update(psi) * voltage2Pwm;
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+	}
+	
+    Rotate((int)output);
 }
 
 void BalanceBotMotor::Update(const float psi){
