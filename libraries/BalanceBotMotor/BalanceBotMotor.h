@@ -3,7 +3,7 @@
 
 #include "BalanceBotEncoder.h"
 #include "BalanceBotController.h"
-#include "BalanceBotStateFeedbackController"
+#include "BalanceBotStateFeedbackController.h"
 #include <Arduino.h>
 
 class BalanceBotMotor{

@@ -40,19 +40,20 @@ void BalanceBotMotor::SetEncoder(const int side,
 void BalanceBotMotor::SetControlMode(int mode){
 	controlMode = mode;
 }
+
 void BalanceBotMotor::SetPsiController(float reference, float kp, float ki, float kd){
     psiController.SetSamplingTime(dt);
     psiController.SetReference(0);
     psiController.SetPID(kp, ki, kd);
 }
 
-void BalanceBotMotor::SetPsiController(float reference, float kp, float ki, float kd){
+void BalanceBotMotor::SetThetaController(float reference, float kp, float ki, float kd){
     thetaController.SetSamplingTime(dt);
     thetaController.SetReference(0);
     thetaController.SetPID(kp, ki, kd);
 }
 
-void BalancdBotMotor::SetStateFeedbackController(float k1, float k2, float k3, float k4){
+void BalanceBotMotor::SetStateFeedbackController(float k1, float k2, float k3, float k4){
 	stateFeedbackController.SetK(k1, k2, k3, k4);
 }
 

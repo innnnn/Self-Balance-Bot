@@ -12,5 +12,5 @@ void TimerInterrupt(){
     float psi = ((float)GetPsi())/180*PI;
     motor_A.Update(psi);
     motor_B.Update(psi);
-
+    UpdateBlueTooth();
 }

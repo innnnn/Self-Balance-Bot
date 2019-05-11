@@ -33,7 +33,7 @@ void SetupMotor(){
     motor_B.SetEncoder(1, INTB, DIRB);
     attachInterrupt(digitalPinToInterrupt(motor_B.GetEncoderInterruptPin()), Encoder_B_Interrupt, RISING);
 
-    motor_A.SetControlMode(1);
+    motor_B.SetControlMode(1);
     motor_B.SetPsiController(0, 50.0, 30.0, 1.0);
     
 }
