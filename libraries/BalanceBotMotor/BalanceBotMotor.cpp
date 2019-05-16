@@ -1,11 +1,13 @@
 #include "BalanceBotMotor.h"
 
+// constructor
 BalanceBotMotor::BalanceBotMotor(){
     angle = 0.0;
     speed = 0.0;
     controlMode = 0;
 }
 
+// set function
 void BalanceBotMotor::SetPwmPin(const int pin){
     pwmPin = pin;
     pinMode(pwmPin, OUTPUT);
@@ -57,12 +59,12 @@ void BalanceBotMotor::SetStateFeedbackController(float k1, float k2, float k3, f
 	stateFeedbackController.SetK(k1, k2, k3, k4);
 }
 
+// get funciton
 int BalanceBotMotor::GetEncoderInterruptPin(){
   	return encoder.GetInterruptPin();
 }
 
 float BalanceBotMotor::GetSpeed(){
-    speed = encoder.GetSpeed();
   	return speed;
 } 
 
@@ -70,10 +72,59 @@ float BalanceBotMotor::GetAngle() {
   	return angle;
 }
 
-void BalanceBotMotor::ClearState(){
-	
+// update function
+void BalanceBotMotor::UpdateAngle(){  // motor update
+    angle = encoder.GetAngle();
 }
 
+void BalanceBotMotor::UpdateSpeed(){  // motor update
+	speed = encoder.GetSpeed();
+}
+
+void BalanceBotMotor::UpdateControl(const float psi){  // motor update
+	float output = 0.0;
+	
+	switch(controlMode){
+		case 1:
+			output = -psiController.Update(psi) * voltage2Pwm;
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+	}
+	
+	// Saturation
+	// Max output: 12v
+	// Min output: -12v
+	if(output > MAX_OUTPUT)
+		output = MAX_OUTPUT;
+	else if(output < MIN_OUTPUT)
+		output = MIN_OUTPUT;
+	
+    Rotate((int)output);
+}
+
+void BalanceBotMotor::UpdateEncoder(){  // interrupt
+    encoder.Update();
+}
+
+void BalanceBotMotor::Update(const float psi){  // timer
+    UpdateAngle();
+    UpdateSpeed();
+    UpdateControl(psi);
+}
+
+// reset function
+void BalanceBotMotor::Reset(){
+	angle = 0.0;
+    speed = 0.0;
+    controlMode = 0;
+    
+    encoder.Reset();
+}
+
+// others
 void BalanceBotMotor::Rotate(int pwm){
     //speed: 0 ~ 255
     //direction: -1-> clockwise, 1-> counter-clockwise
@@ -89,53 +140,4 @@ void BalanceBotMotor::Rotate(int pwm){
     digitalWrite(directionPinA, pin1);
     digitalWrite(directionPinB, pin2);
     analogWrite(pwmPin, pwm);
-    
-    /*
-    Serial.println(pwmPin);
-    Serial.println(pwm); 
-    Serial.println(directionPinA); 
-    Serial.println(pin1); 
-    Serial.println(directionPinB); 
-    Serial.println(pin2); 
-    */
-}
-
-void BalanceBotMotor::Brake(){
-  //TODO
-}
-
-void BalanceBotMotor::UpdateAngle(){
-    int encoderPosition = encoder.GetPosition();
-    angle = (2*PI)
-            * ( static_cast<float>(encoderPosition)
-              / static_cast<float>(encoder.GetPPR()));
-}
-
-void BalanceBotMotor::UpdateSpeed(){
-}
-
-void BalanceBotMotor::UpdateEncoder(){
-    encoder.Update();
-}
-
-void BalanceBotMotor::UpdateControl(const float psi){
-	float output = 0.0;
-	
-	switch(controlMode){
-		case 1:
-			output = -psiController.Update(psi) * voltage2Pwm;
-			break;
-		case 2:
-			break;
-		case 3:
-			break;
-	}
-	
-    Rotate((int)output);
-}
-
-void BalanceBotMotor::Update(const float psi){
-    UpdateAngle();
-    UpdateSpeed();
-    UpdateControl(psi);
 }

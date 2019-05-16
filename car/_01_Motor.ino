@@ -35,7 +35,6 @@ void SetupMotor(){
 
     motor_B.SetControlMode(1);
     motor_B.SetPsiController(0, 50.0, 30.0, 1.0);
-    
 }
 
 void Encoder_A_Interrupt(){

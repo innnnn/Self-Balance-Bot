@@ -7,31 +7,41 @@
 class BalanceBotEncoder{
   private:
     int motorSide;
+    // pin
     int interruptPin;
     int directionPin;
-    int position;
-
+    
+    // sampling time
     float dt;
-    float speed;
-
-    float lastAngle;
+    
+    // others
+    int position;      // wheel angle (PPR)
+    float angle;       // wheel angle (rad)
+    float speed;       // wheel speed (rad/s)
+    
    
   public:
-    BalanceBotEncoder(); 
+    // constructor
+	BalanceBotEncoder(); 
+    
+    // set funciton
     void SetMotorSide(const int side);
     void SetInterruptPin(const int pin);
     void SetDirectionPin(const int pin);
-    void SetPosition(const int pos);
     void SetSamplingTime(const float dt);
     
+    // get function
     int GetMotorSide();
     int GetInterruptPin();
     int GetDirectionPin();
-    int GetPosition();
+    float GetAngle();
     float GetSpeed();
-    int GetPPR();
-    void ClearPosition();
+    
+    // update fuction
     void Update();
+    
+    // reset function
+    void Reset();
 };
 
 #endif //BALANCEBOTENCODER_H

@@ -7,27 +7,42 @@
 #include <Arduino.h>
 
 class BalanceBotMotor{
-  private:
     const float voltage2Pwm = 255/12.0;
+	const float MAX_OUTPUT = 12.0;
+	const float MIN_OUTPUT = -12.0;
     
-    BalanceBotEncoder encoder; 
+  private:
+    BalanceBotEncoder encoder;
+    
+    // controller
     BalanceBotController psiController;
     BalanceBotController thetaController;
-    BalanceBotStateFeedbackController stateFeedbackController; 
+    BalanceBotStateFeedbackController stateFeedbackController;
     
-	int pwmPin, directionPinA, directionPinB, standbyPin;
-    float angle;
-    float speed;
-    float dt;           // sampling time
+    // pin
+	int pwmPin;
+	int directionPinA;
+	int directionPinB;
+	int standbyPin;
+	
+	// sampling time
+	float dt;
+	
+	// others
+    float angle;        // wheel angle (rad)
+    float speed;        // wheel speed (rad/s)
 	int controlMode;    // 1: psi, 2: psi&theta, 3, state feedback
     
+    // update function
     void UpdateAngle();
     void UpdateSpeed();
     void UpdateControl(const float psi);
 
-  public:  
+  public:
+  	// constructor
     BalanceBotMotor();
     
+    // set function
     void SetPwmPin(const int pin);
     void SetDirectionPins( const int pinA, 
                                   const int pinB );
@@ -41,19 +56,20 @@ class BalanceBotMotor{
     void SetThetaController(float kp, float ki, float kd, float reference);
     void SetStateFeedbackController(float k1, float k2, float k3, float k4);
     
+    // get funciton
     int GetEncoderInterruptPin();
     float GetSpeed();
     float GetAngle();
     
-    void ClearState();
-    
-    void Rotate(int pwm);
-    void Brake();
-    void UpdateEncoder();
+    // update function
+	void UpdateEncoder();
     void Update(const float psi);
-
-    // PIDController angleController;
-    // PIDController speedController;
+    
+    // reset function
+	void Reset();
+	
+    // others
+    void Rotate(int pwm);
 };
 
 #endif /* BALANCEBOTMOTOR_H */
