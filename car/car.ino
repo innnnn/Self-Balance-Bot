@@ -5,7 +5,6 @@
 # include <Wire.h>
 # include <Kalman.h>
 # include <SoftwareSerial.h>
-# include <string.h>
 SoftwareSerial BTSerial(12, 13);    //tx, rx
 
 // sampling time

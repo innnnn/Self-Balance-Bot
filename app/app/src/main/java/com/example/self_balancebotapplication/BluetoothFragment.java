@@ -277,7 +277,7 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
 
     // part4: send Message
     // send mode:
-    // 1:  Joystick Control Fragment
+    // 1: Joystick Control Fragment
     // 2: PID Control Fragment & State feedback Control Fragment
     public void bluetoothSendData(String data){
         if( this.mBluetoothConnection!=null && bluetoothConnect) {
