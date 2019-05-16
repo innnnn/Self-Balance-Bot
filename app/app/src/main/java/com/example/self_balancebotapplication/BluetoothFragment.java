@@ -31,7 +31,7 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
     MainActivity mainActivity;
 
     // bluetooth
-    // part1: part1: enable bluetooth
+    // part1: enable bluetooth
     BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
     Switch switchBluetooth;
 
@@ -46,10 +46,6 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
     BluetoothDevice mBTDevice;
     TextView textViewShowBluetooth;
     public boolean bluetoothConnect = false;
-
-    public void setActivity(MainActivity mainActivity) {
-        this.mainActivity = mainActivity;
-    }
 
     // Create a BroadcastReceiver for ACTION_FOUND
     private final BroadcastReceiver mBroadcastReceiver1 = new BroadcastReceiver() {
@@ -280,18 +276,23 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
     }
 
     // part4: send Message
+    // send mode:
+    // 1:  Joystick Control Fragment
+    // 2: PID Control Fragment & State feedback Control Fragment
     public void bluetoothSendData(String data){
         if( this.mBluetoothConnection!=null && bluetoothConnect) {
             try {
-                /*for(int i=0; i<data.length(); i++){
-                    this.mBluetoothConnection.write(data.substring(i, i+1));
-                }*/
                 this.mBluetoothConnection.write(data);
             } catch (NullPointerException except) {
                 Toast.makeText(mainActivity, "Fial to Send Data", Toast.LENGTH_LONG).show();
             }
         } else{
-            Toast.makeText(mainActivity, "Blutooth is not Connected", Toast.LENGTH_LONG).show();
+            Toast.makeText(mainActivity, "Blutooth is Not Connected", Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    public void setActivity(MainActivity mainActivity) {
+        this.mainActivity = mainActivity;
     }
 }

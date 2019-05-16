@@ -1,10 +1,10 @@
 #include "BalancebotController.h"
 
 BalanceBotController::BalanceBotController(){
-	reference = 0;
 	Kp = 0;
 	Ki = 0;
 	Kd = 0;
+	reference = 0;
 }
 
 void BalanceBotController::SetSamplingTime(const float dt){

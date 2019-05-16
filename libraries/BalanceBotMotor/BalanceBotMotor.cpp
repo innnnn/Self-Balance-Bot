@@ -41,16 +41,16 @@ void BalanceBotMotor::SetControlMode(int mode){
 	controlMode = mode;
 }
 
-void BalanceBotMotor::SetPsiController(float reference, float kp, float ki, float kd){
+void BalanceBotMotor::SetPsiController(float kp, float ki, float kd, float reference){
     psiController.SetSamplingTime(dt);
-    psiController.SetReference(0);
     psiController.SetPID(kp, ki, kd);
+    psiController.SetReference(0);
 }
 
-void BalanceBotMotor::SetThetaController(float reference, float kp, float ki, float kd){
+void BalanceBotMotor::SetThetaController(float kp, float ki, float kd, float reference){
     thetaController.SetSamplingTime(dt);
-    thetaController.SetReference(0);
     thetaController.SetPID(kp, ki, kd);
+    thetaController.SetReference(0);
 }
 
 void BalanceBotMotor::SetStateFeedbackController(float k1, float k2, float k3, float k4){
@@ -68,6 +68,10 @@ float BalanceBotMotor::GetSpeed(){
 
 float BalanceBotMotor::GetAngle() {
   	return angle;
+}
+
+void BalanceBotMotor::ClearState(){
+	
 }
 
 void BalanceBotMotor::Rotate(int pwm){

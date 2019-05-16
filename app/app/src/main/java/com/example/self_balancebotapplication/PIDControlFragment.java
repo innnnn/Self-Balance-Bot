@@ -50,11 +50,11 @@ public class PIDControlFragment extends Fragment {
 
         buttonSendPID = (Button) view.findViewById(R.id.button_send_pid);
         buttonSendPID.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    send();
-                }
-            });
+            @Override
+            public void onClick(View v) {
+                send();
+            }
+        });
 
         return view;
     }
@@ -79,7 +79,7 @@ public class PIDControlFragment extends Fragment {
                 Toast.makeText(mainActivity, "Please Input All Parameters", Toast.LENGTH_LONG).show();
             }
             else{
-                String data = "1,"                                             // send mode 1
+                String data = "2,"                                             // send mode 2
                         + "2,"                                                 // control mode 2
                         + kp1 + "," + ki1 + "," + kd1 + "," + reference1 + ","  // inclination
                         + kp2 + "," + ki2 + "," + kd2 + "," + reference2 + "#"; // wheel
@@ -94,10 +94,10 @@ public class PIDControlFragment extends Fragment {
             String reference1 = editTextInclinationReference.getText().toString();
 
             if( kp1.isEmpty() || ki1.isEmpty() || kd1.isEmpty() || reference1.isEmpty() ){
-                Toast.makeText(mainActivity, "Please Input All Parameter", Toast.LENGTH_LONG).show();
+                Toast.makeText(mainActivity, "Please Input All Parameters", Toast.LENGTH_LONG).show();
             }
             else{
-                String data = "1,"                                              // send mode 1
+                String data = "2,"                                              // send mode 2
                         + "1,"                                                  // control mode 1
                         + kp1 + "," + ki1 + "," + kd1 + "," + reference1 + "#";  // inclination
                 mainActivity.bluetoothFragment.bluetoothSendData(data);
