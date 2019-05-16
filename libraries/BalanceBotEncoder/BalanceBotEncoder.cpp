@@ -1,10 +1,13 @@
 #include "BalanceBotEncoder.h"
 
+// constructor
 BalanceBotEncoder::BalanceBotEncoder(){
     position = 0;
-    lastAngle = 0;
+    angle = 0;
+    speed = 0;
 }
 
+// set function
 void BalanceBotEncoder::SetMotorSide(const int side){
     motorSide = side;
 }
@@ -18,14 +21,11 @@ void BalanceBotEncoder::SetDirectionPin(const int pin){
     pinMode(directionPin, INPUT);
 }
 
-void BalanceBotEncoder::SetPosition(const int pos){
-    position = pos;
-}
-
 void BalanceBotEncoder::SetSamplingTime(const float dt){
 	this->dt = dt;
 }
 
+// get function
 int BalanceBotEncoder::GetMotorSide(){
     return motorSide;
 }
@@ -38,25 +38,26 @@ int BalanceBotEncoder::GetDirectionPin(){
     return directionPin;
 }
 
-int BalanceBotEncoder::GetPosition(){
-    return position * motorSide;
+float BalanceBotEncoder::GetAngle(){
+	return angle * motorSide;
 }
 
 float BalanceBotEncoder::GetSpeed(){
-    float newAngle = 2 * PI * ((float)position / (float)PPR) * RAD_TO_DEG;
-    speed = (newAngle - lastAngle) / dt;
-    lastAngle = newAngle;
     return speed * motorSide;
 }
 
-int BalanceBotEncoder::GetPPR(){
-    return PPR;
-}
-
-void BalanceBotEncoder::ClearPosition(){
-    position = 0;
-}
-
-void BalanceBotEncoder::Update(){
+// update function
+void BalanceBotEncoder::Update(){  // interrupt
 	digitalRead(directionPin) == HIGH ? position++ : position--;
+	
+	float newAngle = 2 * PI * ((float)position / (float)PPR);
+    speed = (newAngle - angle) / dt;
+    angle = newAngle;
+}
+
+// reset funciton
+void BalanceBotEncoder::Reset(){
+    position = 0;
+    angle = 0;
+    speed = 0;
 }

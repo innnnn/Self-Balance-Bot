@@ -5,23 +5,30 @@
 
 class BalanceBotController{
 	const float ERROR_TOLERANCE = 0.5;
-	const float MAX_OUTPUT = 12.0;
-	const float MIN_OUTPUT = -12.0;
 
 	private:
-		bool steady;
+		// sampling time
 		float dt;
+		
+		// others
 		float Kp, Ki, Kd;  // PID control
-		float reference;
+		float reference;   // desire output
 		float integral;    // record the sum of previous error
 		float preError;    // previous error
 
-	public: 
+	public:
+		// constructor
 		BalanceBotController();
+		
+		// set function
 		void SetSamplingTime(const float dT);
 		void SetPID(const float Kp, const float Ki, const float Kd);
-		void SetReference(const float reference); // the desire output
+		void SetReference(const float reference);
+		
+		// get function
 		bool GetIfSteady();
+		
+		// update
 		float Update(const float feedback);
 };
 

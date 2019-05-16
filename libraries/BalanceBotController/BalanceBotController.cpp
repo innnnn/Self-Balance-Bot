@@ -44,14 +44,6 @@ float BalanceBotController::Update(const float feedback){
 	// Total output
 	float output = pOut + iOut + dOut;
 	
-	// Saturation
-	// Max output: 12v
-	// Min output: -12v
-	if(output > MAX_OUTPUT)
-		output = MAX_OUTPUT;
-	else if(output < MIN_OUTPUT)
-		output = MIN_OUTPUT;
-	
 	// record the prevoius error
 	preError = error;
 	

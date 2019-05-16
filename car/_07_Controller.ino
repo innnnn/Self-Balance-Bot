@@ -1,6 +1,6 @@
 void SetController(){
-    motor_A.ClearState();
-    motor_B.ClearState();
+    motor_A.Reset();
+    motor_B.Reset();
     
     switch( (int)data[1] ){
         case 1:
