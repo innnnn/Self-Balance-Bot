@@ -20,6 +20,8 @@ import java.util.TimerTask;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
     private DrawerLayout drawer;
+
+    // fragment
     public HomeFragment homeFragment = new HomeFragment();
     public BluetoothFragment bluetoothFragment = new BluetoothFragment();
     public JoystickControlFragment joystickControlFragment = new JoystickControlFragment();
@@ -49,16 +51,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         // set the homeFragment as first fragment
-        if(!homeFragment.isAdded()){
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, homeFragment).commit();
-            getSupportFragmentManager().beginTransaction().show(homeFragment).commit();
-            navigationView.setCheckedItem(R.id.nav_home);
-            lastFragment = homeFragment;
-        }
+        // ******* bug !!!!!
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, homeFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(homeFragment).commit();
+        //getSupportFragmentManager().beginTransaction().show(homeFragment).commit();
+        lastFragment = homeFragment;
+        navigationView.setCheckedItem(R.id.nav_home);
 
         // set mainActivity to each fragment
         bluetoothFragment.setActivity(this);
         pidControlFragment.setActivity(this);
+        statefeedbackControlFragment.setActivity(this);
     }
 
     @Override
@@ -90,14 +93,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // replace: destroy old fragment and create an new fragment
         if(currentFragment != lastFragment){
             if(!currentFragment.isAdded()){
-                getSupportFragmentManager().beginTransaction().hide(lastFragment).commit();
                 getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, currentFragment).commit();
+                getSupportFragmentManager().beginTransaction().hide(lastFragment).commit();
                 getSupportFragmentManager().beginTransaction().show(currentFragment).commit();
-                System.out.println("1");
             } else {
                 getSupportFragmentManager().beginTransaction().hide(lastFragment).commit();
                 getSupportFragmentManager().beginTransaction().show(currentFragment).commit();
-                System.out.println("2");
             }
             lastFragment = currentFragment;
         }

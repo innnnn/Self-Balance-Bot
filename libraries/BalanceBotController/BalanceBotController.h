@@ -11,16 +11,16 @@ class BalanceBotController{
 	private:
 		bool steady;
 		float dt;
-		float reference;
 		float Kp, Ki, Kd;  // PID control
+		float reference;
 		float integral;    // record the sum of previous error
 		float preError;    // previous error
 
 	public: 
 		BalanceBotController();
 		void SetSamplingTime(const float dT);
-		void SetReference(const float reference); // the desire output
 		void SetPID(const float Kp, const float Ki, const float Kd);
+		void SetReference(const float reference); // the desire output
 		bool GetIfSteady();
 		float Update(const float feedback);
 };

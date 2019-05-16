@@ -1,9 +1,9 @@
 // Goal: Receive data from serial port and Bluetooth
 
 // For any kinds of input
-String data = "";
-bool isFinished = false;
-//int count = 0;
+String rawData = "";
+int len = 0;
+float *data = new float[10];
 
 void UpdateSerial(){
     if(Serial.available()){
@@ -11,24 +11,44 @@ void UpdateSerial(){
     }
 }
 
-// To do
 void UpdateBlueTooth(){
     while(BTSerial.available()){
         char c = BTSerial.read();
-        Serial.println(c);
         
         if(c=='#'){
-            Serial.println(data);
-            //RemoteControl(data);
-            data = "";
+            rawData += ',';
+            ParseData();
+            
+            if(len>0){
+                switch( (int)data[0] ){
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                }
+            }
+            
+            rawData = "";
+            len = 0;
             break;
         }
         else{
-            data += String(c);
+            rawData += String(c);
         }
     }
-    Serial.println(data);
-    data = "";
-    //count++;
-    //Serial.println(count);
+}
+
+void ParseData(){
+    char *temp = new char[rawData.length()];
+    rawData.toCharArray(temp, rawData.length());
+    char *token;
+    
+    /* get the first token */
+    token = strtok(temp, ",");
+    do{
+        data[len++] = atof(token);
+        token = strtok (NULL, ",");
+    } while (token != NULL);
 }

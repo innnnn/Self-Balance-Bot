@@ -37,13 +37,15 @@ class BalanceBotMotor{
                     const int interruptPin, 
                     const int directionPin);
     void SetControlMode(int mode);
-    void SetPsiController(float reference, float kp, float ki, float kd);
-    void SetThetaController(float reference, float kp, float ki, float kd);
+    void SetPsiController(float kp, float ki, float kd, float reference);
+    void SetThetaController(float kp, float ki, float kd, float reference);
     void SetStateFeedbackController(float k1, float k2, float k3, float k4);
     
     int GetEncoderInterruptPin();
     float GetSpeed();
     float GetAngle();
+    
+    void ClearState();
     
     void Rotate(int pwm);
     void Brake();

@@ -5,6 +5,7 @@
 # include <Wire.h>
 # include <Kalman.h>
 # include <SoftwareSerial.h>
+# include <string.h>
 SoftwareSerial BTSerial(12, 13);    //tx, rx
 
 // sampling time
@@ -23,7 +24,7 @@ const float voltage2Pwm = 255/12.0;
 
 void setup(){
     Serial.begin(9600);
-    BTSerial.begin(115200);
+    BTSerial.begin(57600);
 
     // initialization
     SetupMotor();
