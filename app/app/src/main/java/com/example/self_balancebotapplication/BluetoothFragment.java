@@ -125,10 +125,6 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
         }
     };
 
-    public BluetoothConnectionService getmBluetoothConnection() {
-        return mBluetoothConnection;
-    }
-
     @Override
     public void onDestroy() {
         Log.d(TAG, "onDestroy: called.");

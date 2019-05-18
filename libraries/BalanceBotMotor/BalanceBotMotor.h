@@ -8,8 +8,8 @@
 
 class BalanceBotMotor{
     const float voltage2Pwm = 255/12.0;
-	const float MAX_OUTPUT = 12.0;
-	const float MIN_OUTPUT = -12.0;
+	const int MAX_OUTPUT = 255;
+	const int MIN_OUTPUT = -255;
     
   private:
     BalanceBotEncoder encoder;

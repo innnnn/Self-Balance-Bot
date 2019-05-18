@@ -24,6 +24,7 @@ void UpdateBlueTooth(){
                     case 1:
                         break;
                     case 2:
+                        SetController();
                         break;
                     case 3:
                         break;

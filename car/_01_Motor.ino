@@ -21,9 +21,9 @@ void SetupMotor(){
     attachInterrupt(digitalPinToInterrupt(motor_A.GetEncoderInterruptPin()), Encoder_A_Interrupt, RISING);
 
     motor_A.SetControlMode(1);
-    motor_A.SetPsiController(0, 50.0, 30.0, 1.0);
+    motor_A.SetPsiController(50.0, 30.0, 1.0, 0);
     
-    // 70.0, 30.0, 1.0    
+    // 70.0, 30.0, 1.0
     // right motor
     motor_B.SetPwmPin(PWMB);
     motor_B.SetDirectionPins(BIN1, BIN2);
@@ -34,7 +34,7 @@ void SetupMotor(){
     attachInterrupt(digitalPinToInterrupt(motor_B.GetEncoderInterruptPin()), Encoder_B_Interrupt, RISING);
 
     motor_B.SetControlMode(1);
-    motor_B.SetPsiController(0, 50.0, 30.0, 1.0);
+    motor_B.SetPsiController(50.0, 30.0, 1.0, 0);
 }
 
 void Encoder_A_Interrupt(){

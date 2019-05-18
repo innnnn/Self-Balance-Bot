@@ -22,8 +22,8 @@ class BalanceBotEncoder{
    
   public:
     // constructor
-	BalanceBotEncoder(); 
-    
+    BalanceBotEncoder(); 
+
     // set funciton
     void SetMotorSide(const int side);
     void SetInterruptPin(const int pin);
