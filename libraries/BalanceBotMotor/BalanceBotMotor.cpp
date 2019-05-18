@@ -86,23 +86,16 @@ void BalanceBotMotor::UpdateControl(const float psi){  // motor update
 	
 	switch(controlMode){
 		case 1:
-			output = -psiController.Update(psi) * voltage2Pwm;
+			output = -psiController.Update(psi);
 			break;
 		case 2:
 			break;
 		case 3:
+			//output = stateFeedbackController.Update();
 			break;
 	}
 	
-	// Saturation
-	// Max output: 12v
-	// Min output: -12v
-	if(output > MAX_OUTPUT)
-		output = MAX_OUTPUT;
-	else if(output < MIN_OUTPUT)
-		output = MIN_OUTPUT;
-	
-    Rotate((int)output);
+    Rotate( (int)(output* voltage2Pwm) );
 }
 
 void BalanceBotMotor::UpdateEncoder(){  // interrupt
@@ -126,6 +119,14 @@ void BalanceBotMotor::Reset(){
 
 // others
 void BalanceBotMotor::Rotate(int pwm){
+	// Saturation
+	// Max output: 255
+	// Min output: -255
+	if(pwm > MAX_OUTPUT)
+		pwm = MAX_OUTPUT;
+	else if(pwm < MIN_OUTPUT)
+		pwm = MIN_OUTPUT;
+	
     //speed: 0 ~ 255
     //direction: -1-> clockwise, 1-> counter-clockwise
     boolean pin1 = LOW;   //initial rotate direction: clockwise
