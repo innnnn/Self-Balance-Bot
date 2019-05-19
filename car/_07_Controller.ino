@@ -3,6 +3,10 @@ void SetController(){
     motor_B.Reset();
     
     switch( (int)data[1] ){
+        case 0:
+            motor_A.SetControlMode(0);
+            motor_B.SetControlMode(0);
+            break;
         case 1:
             motor_A.SetControlMode(1);
             motor_A.SetPsiController(data[2], data[3], data[4], data[5]);

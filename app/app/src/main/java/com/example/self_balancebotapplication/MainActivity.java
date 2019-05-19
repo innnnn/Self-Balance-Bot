@@ -115,4 +115,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
+
+    public void processData(String rawData){
+        //String data[] = rawData.split(",");
+        carStateFragment.receiveData(rawData);
+    }
 }
