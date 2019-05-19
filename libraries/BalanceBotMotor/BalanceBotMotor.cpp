@@ -46,13 +46,13 @@ void BalanceBotMotor::SetControlMode(int mode){
 void BalanceBotMotor::SetPsiController(float kp, float ki, float kd, float reference){
     psiController.SetSamplingTime(dt);
     psiController.SetPID(kp, ki, kd);
-    psiController.SetReference(0);
+    psiController.SetReference(reference);
 }
 
 void BalanceBotMotor::SetThetaController(float kp, float ki, float kd, float reference){
     thetaController.SetSamplingTime(dt);
     thetaController.SetPID(kp, ki, kd);
-    thetaController.SetReference(0);
+    thetaController.SetReference(reference);
 }
 
 void BalanceBotMotor::SetStateFeedbackController(float k1, float k2, float k3, float k4){
@@ -85,6 +85,9 @@ void BalanceBotMotor::UpdateControl(const float psi){  // motor update
 	float output = 0.0;
 	
 	switch(controlMode){
+		case 0:
+			output = 0;
+			break;
 		case 1:
 			output = -psiController.Update(psi);
 			break;

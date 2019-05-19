@@ -31,7 +31,7 @@ class BalanceBotMotor{
 	// others
     float angle;        // wheel angle (rad)
     float speed;        // wheel speed (rad/s)
-	int controlMode;    // 1: psi, 2: psi&theta, 3, state feedback
+	int controlMode;    // 0: nothing, 1: psi, 2: psi&theta, 3, state feedback
     
     // update function
     void UpdateAngle();

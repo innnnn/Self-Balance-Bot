@@ -36,8 +36,9 @@ public class BluetoothConnectionService {
 
     // for ui control
     BluetoothFragment bluetoothFragment;
+    MainActivity mainActivity;
 
-    public BluetoothConnectionService(Context context, BluetoothDevice device, TextView textView, BluetoothFragment bluetoothFragment) {
+    public BluetoothConnectionService(Context context, BluetoothDevice device, TextView textView, BluetoothFragment bluetoothFragment, MainActivity mainActivity) {
         mContext = context;
         connectedText = textView;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -46,6 +47,7 @@ public class BluetoothConnectionService {
         new ConnectBT().execute();
 
         this.bluetoothFragment = bluetoothFragment;
+        this.mainActivity = mainActivity;
     }
 
     private class ConnectBT extends AsyncTask<Void, Void, Void> {
@@ -137,6 +139,11 @@ public class BluetoothConnectionService {
                     bytes = mmInStream.read(buffer);
                     String incomingMessage = new String(buffer, 0, bytes);
                     Log.d(TAG, "InputStream: " + incomingMessage);
+
+                    // receive data
+                    /*if( incomingMessage!= null && incomingMessage.length()>0 ){
+                        mainActivity.processData(incomingMessage);
+                    }*/
                 } catch (IOException e) {
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage() );
                     break;

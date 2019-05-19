@@ -1,6 +1,6 @@
 // Goal: Update left speed, right speed, psi
 
-void SetupMsTimer2(){
+void SetupMsTimer(){
     MsTimer2::set(dt * 1000, TimerInterrupt);
     MsTimer2::start();
 }
@@ -13,4 +13,5 @@ void TimerInterrupt(){
     motor_A.Update(psi);
     motor_B.Update(psi);
     UpdateBlueTooth();
+    //BTSerial.print("123#");
 }

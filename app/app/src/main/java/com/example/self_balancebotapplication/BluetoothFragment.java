@@ -266,7 +266,7 @@ public class BluetoothFragment extends Fragment implements AdapterView.OnItemCli
 
         // connect to device
         mBTDevice = mBluetoothAdapter.getRemoteDevice(deviceAddress);
-        mBluetoothConnection = new BluetoothConnectionService(mainActivity, mBTDevice, textViewShowBluetooth, this);
+        mBluetoothConnection = new BluetoothConnectionService(mainActivity, mBTDevice, textViewShowBluetooth, this, mainActivity);
         bluetoothDeviceArrayList.clear();
         listViewShowDevice.setAdapter(null);
     }

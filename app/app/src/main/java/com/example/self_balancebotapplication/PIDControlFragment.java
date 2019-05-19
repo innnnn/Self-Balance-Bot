@@ -30,6 +30,7 @@ public class PIDControlFragment extends Fragment {
     private EditText editTextWheelReference;
 
     private Button buttonSendPID;
+    private Button buttonSendStop;
 
     @Nullable
     @Override
@@ -52,14 +53,21 @@ public class PIDControlFragment extends Fragment {
         buttonSendPID.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                send();
+                sendPID();
             }
         });
 
+        buttonSendStop = (Button) view.findViewById(R.id.button_send_pid_stop);
+        buttonSendStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendStop();
+            }
+        });
         return view;
     }
 
-    private void send(){
+    private void sendPID(){
         // controller mode 2
         if( chackBoxInclination.isChecked() && checkBoxWheel.isChecked() ){
             String kp1 = editTextInclinationKp.getText().toString();
@@ -105,6 +113,12 @@ public class PIDControlFragment extends Fragment {
         } else{
             Toast.makeText(mainActivity, "Please Select  a Control Mode", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void sendStop(){
+        String data = "2,"                                              // send mode 2
+                    + "0#";                                             // control mode 0
+        mainActivity.bluetoothFragment.bluetoothSendData(data);
     }
 
     public void setActivity(MainActivity mainActivity) {

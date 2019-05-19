@@ -28,7 +28,7 @@ void setup(){
     // initialization
     SetupMotor();
     SetupMPU6050();
-    SetupMsTimer2();
+    SetupMsTimer();
 }
 
 void loop(){
