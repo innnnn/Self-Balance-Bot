@@ -21,10 +21,6 @@ void BalanceBotEncoder::SetDirectionPin(const int pin){
     pinMode(directionPin, INPUT);
 }
 
-void BalanceBotEncoder::SetSamplingTime(const float dt){
-	this->dt = dt;
-}
-
 // get function
 int BalanceBotEncoder::GetMotorSide(){
     return motorSide;
@@ -34,12 +30,8 @@ int BalanceBotEncoder::GetInterruptPin(){
     return interruptPin;
 }
 
-int BalanceBotEncoder::GetDirectionPin(){
-    return directionPin;
-}
-
 float BalanceBotEncoder::GetAngle(){
-	return angle * motorSide;
+    return angle * motorSide;
 }
 
 float BalanceBotEncoder::GetSpeed(){
@@ -47,11 +39,14 @@ float BalanceBotEncoder::GetSpeed(){
 }
 
 // update function
-void BalanceBotEncoder::Update(){  // interrupt
-	digitalRead(directionPin) == HIGH ? position++ : position--;
-	
-	float newAngle = 2 * PI * ((float)position / (float)PPR);
-    speed = (newAngle - angle) / dt;
+void BalanceBotEncoder::UpdatePosition(){  // interrupt
+    digitalRead(directionPin) == HIGH ? position++ : position--;
+}
+
+void BalanceBotEncoder::Update(const float samplingTime){  // motor update
+    float newAngle = 2 * PI * ((float)position / (float)PPR);
+    speed = (newAngle - angle) / samplingTime;
+
     angle = newAngle;
 }
 
