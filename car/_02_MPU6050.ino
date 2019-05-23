@@ -1,4 +1,4 @@
-// Goal: psi
+// Goal: Get psi
 
 Kalman kalman; // Create the Kalman instances
 

@@ -21,6 +21,14 @@ public class PIDControlFragment extends Fragment {
     private EditText editTextInclinationKi;
     private EditText editTextInclinationKd;
     private EditText editTextInclinationReference;
+    private Button buttonInclinationKpUp;
+    private Button buttonInclinationKpDown;
+    private Button buttonInclinationKiUp;
+    private Button buttonInclinationKiDown;
+    private Button buttonInclinationKdUp;
+    private Button buttonInclinationKdDown;
+    private Button buttonInclinationReferenceUp;
+    private Button buttonInclinationReferenceDown;
 
     // wheel
     private CheckBox checkBoxWheel;
@@ -28,7 +36,16 @@ public class PIDControlFragment extends Fragment {
     private EditText editTextWheelKi;
     private EditText editTextWheelKd;
     private EditText editTextWheelReference;
+    private Button buttonWheelKpUp;
+    private Button buttonWheelKpDown;
+    private Button buttonWheelKiUp;
+    private Button buttonWheelKiDown;
+    private Button buttonWheelKdUp;
+    private Button buttonWheelKdDown;
+    private Button buttonWheelReferenceUp;
+    private Button buttonWheelReferenceDown;
 
+    // send stop button
     private Button buttonSendPID;
     private Button buttonSendStop;
 
@@ -37,18 +54,21 @@ public class PIDControlFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pid_control, container, false);
 
+        // inclination
         chackBoxInclination = (CheckBox) view.findViewById(R.id.checkBox_inclination);
         editTextInclinationKp = (EditText) view.findViewById(R.id.editText_inclination_kp);
         editTextInclinationKi = (EditText) view.findViewById(R.id.editText_inclination_ki);
         editTextInclinationKd = (EditText) view.findViewById(R.id.editText_inclination_kd);
         editTextInclinationReference = (EditText) view.findViewById(R.id.editText_inclination_reference);
 
+        // wheel
         checkBoxWheel = (CheckBox) view.findViewById(R.id.checkBox_wheel);
         editTextWheelKp = (EditText) view.findViewById(R.id.editText_wheel_kp);
         editTextWheelKi = (EditText) view.findViewById(R.id.editText_wheel_ki);
         editTextWheelKd = (EditText) view.findViewById(R.id.editText_wheel_kd);
         editTextWheelReference = (EditText) view.findViewById(R.id.editText_wheel_reference);
 
+        // send stop button
         buttonSendPID = (Button) view.findViewById(R.id.button_send_pid);
         buttonSendPID.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +107,7 @@ public class PIDControlFragment extends Fragment {
                 Toast.makeText(mainActivity, "Please Input All Parameters", Toast.LENGTH_LONG).show();
             }
             else{
-                String data = "2,"                                             // send mode 2
+                String data = "~2,"                                             // send mode 2
                         + "2,"                                                 // control mode 2
                         + kp1 + "," + ki1 + "," + kd1 + "," + reference1 + ","  // inclination
                         + kp2 + "," + ki2 + "," + kd2 + "," + reference2 + "#"; // wheel
@@ -105,7 +125,7 @@ public class PIDControlFragment extends Fragment {
                 Toast.makeText(mainActivity, "Please Input All Parameters", Toast.LENGTH_LONG).show();
             }
             else{
-                String data = "2,"                                              // send mode 2
+                String data = "~2,"                                              // send mode 2
                         + "1,"                                                  // control mode 1
                         + kp1 + "," + ki1 + "," + kd1 + "," + reference1 + "#";  // inclination
                 mainActivity.bluetoothFragment.bluetoothSendData(data);
@@ -116,7 +136,7 @@ public class PIDControlFragment extends Fragment {
     }
 
     public void sendStop(){
-        String data = "2,"                                              // send mode 2
+        String data = "~2,"                                              // send mode 2
                     + "0#";                                             // control mode 0
         mainActivity.bluetoothFragment.bluetoothSendData(data);
     }

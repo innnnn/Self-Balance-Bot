@@ -7,19 +7,14 @@
 # include <SoftwareSerial.h>
 SoftwareSerial BTSerial(12, 13);    //tx, rx
 
-// sampling time
-// max sampling time: 0.025s
-// max sampling rate: 40Hz
-// sampling time: 0.05s
-// sampling rate: 20Hz
-const float dt = 0.05;
-
 // create new objects(motors)
 BalanceBotMotor motor_A;
 BalanceBotMotor motor_B;
 
-// voltage to pwm
-const float voltage2Pwm = 255/12.0;
+// sampling
+unsigned long previousTime;
+unsigned long currentTime;
+float samplingTime;
 
 void setup(){
     Serial.begin(9600);
@@ -29,9 +24,23 @@ void setup(){
     SetupMotor();
     SetupMPU6050();
     SetupMsTimer();
+
+    // initialize the previous time
+    previousTime = millis();
 }
 
+// update controller
 void loop(){
-    //UpdateSerial();
-    //StableVoltage(-5);
+    float psi = ((float)GetPsi())/180*PI;
+
+    // compute the sampling time
+    currentTime = millis();
+    samplingTime = (currentTime - previousTime)/1000.0;
+
+    // update controller
+    motor_A.Update(psi, samplingTime);
+    motor_B.Update(psi, samplingTime);
+
+    // record the previous time
+    previousTime = currentTime;
 }
