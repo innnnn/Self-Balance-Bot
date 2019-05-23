@@ -4,6 +4,7 @@ bool startReadData = false;
 String rawData = "";
 int len = 0;
 float *data = new float[10];
+int count = 0;
 
 // sampling time
 // max sampling time: 0.025s
@@ -77,5 +78,8 @@ void ParseData(){
 }
 
 void SendData(){
-    
+    float leftWheelAngle = motor_A.GetAngle();
+    float rightWheelAngle = motor_B.GetAngle();
+    String data = "~1," + String(psi) + "," + String(leftWheelAngle) + "," + String(rightWheelAngle) + "#";
+    BTSerial.println(data);
 }
