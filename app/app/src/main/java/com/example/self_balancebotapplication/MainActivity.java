@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawer;
 
     // fragment
+    public Fragment fragment[] = new Fragment[6];
     public HomeFragment homeFragment = new HomeFragment();
     public BluetoothFragment bluetoothFragment = new BluetoothFragment();
     public JoystickControlFragment joystickControlFragment = new JoystickControlFragment();
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CarStateFragment carStateFragment = new CarStateFragment();
     private Fragment lastFragment;
     private Fragment currentFragment;
+    private int currentFragmentIndex;
+    private int previousFragmentIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // new fragment
+        fragment[0] =  new HomeFragment();
+        fragment[1] = new BluetoothFragment();
+        fragment[2] = new JoystickControlFragment();
+        fragment[3] = new PIDControlFragment();
+        fragment[4] = new StatefeedbackControlFragment();
+        fragment[5] = new CarStateFragment();
+
         // set the homeFragment as first fragment
         // ******* bug !!!!!
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, homeFragment).commit();
@@ -62,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         bluetoothFragment.setActivity(this);
         pidControlFragment.setActivity(this);
         statefeedbackControlFragment.setActivity(this);
+        carStateFragment.setActivity(this);
     }
 
     @Override
@@ -100,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().hide(lastFragment).commit();
                 getSupportFragmentManager().beginTransaction().show(currentFragment).commit();
             }
+
             lastFragment = currentFragment;
         }
 
@@ -117,7 +130,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void processData(String rawData){
-        //String data[] = rawData.split(",");
-        carStateFragment.receiveData(rawData);
+        String temp[] = rawData.split(",");
+        float data[] = new float[temp.length];
+        for(int i=0; i<temp.length; i++){
+            System.out.println(temp[i]);
+            data[i] = Float.parseFloat(temp[i]);
+        }
+
+        switch( (int)data[0] ){
+            case 1:
+                carStateFragment.receiveData(temp);
+                break;
+            case 2:
+                break;
+        }
+
+
     }
 }
