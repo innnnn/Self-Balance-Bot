@@ -16,6 +16,8 @@ unsigned long previousTime;
 unsigned long currentTime;
 float samplingTime;
 
+float psi;
+
 void setup(){
     Serial.begin(9600);
     BTSerial.begin(57600);
@@ -31,7 +33,7 @@ void setup(){
 
 // update controller
 void loop(){
-    float psi = ((float)GetPsi())/180*PI;
+    psi = ((float)GetPsi())/180*PI;
 
     // compute the sampling time
     currentTime = millis();
