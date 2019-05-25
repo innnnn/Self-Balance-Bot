@@ -8,9 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-public class CarStateFragment extends Fragment {
+public class CarStateInclinationFragment extends Fragment {
     MainActivity mainActivity;
     boolean show = false;
 
@@ -21,7 +20,7 @@ public class CarStateFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_car_state, container, false);
+        View view = inflater.inflate(R.layout.fragment_car_state_inclination, container, false);
 
         textViewInclination = view.findViewById(R.id.textView_state_inclination);
         textViewInclination.setText("0");
@@ -34,15 +33,17 @@ public class CarStateFragment extends Fragment {
     }
 
     public void receiveData(String[] data){
-        if( data.length==4 && !(this.isHidden()) ){
-            System.out.println("Success");
-            textViewInclination.setText(data[1]);
-            textViewLeftWheel.setText(data[2]);
-            textViewRightWheel.setText(data[3]);
-        } else{
-            Toast.makeText(mainActivity, "Receive Incorrect Data", Toast.LENGTH_LONG).show();
-            System.out.println("Fall");
+        if(false){
+            if( (data.length==4) && show ){
+                System.out.println("Show");
+                textViewInclination.setText(data[1]);
+                textViewLeftWheel.setText(data[2]);
+                textViewRightWheel.setText(data[3]);
+            } else{
+                System.out.println("Hide");
+            }
         }
+
     }
 
     public void setActivity(MainActivity mainActivity) {
