@@ -38,6 +38,9 @@ public class BluetoothConnectionService {
     BluetoothFragment bluetoothFragment;
     MainActivity mainActivity;
 
+    //
+    String rawData = new String("");
+
     public BluetoothConnectionService(Context context, BluetoothDevice device, TextView textView, BluetoothFragment bluetoothFragment, MainActivity mainActivity) {
         mContext = context;
         connectedText = textView;
@@ -97,7 +100,6 @@ public class BluetoothConnectionService {
                 startCommunication(btSocket,dispositivo);
                 connectedText.setText("Connected to : " + mmDevice.getName()+"\n"+ mmDevice.getAddress());
             }
-
         }
     }
 
@@ -137,14 +139,25 @@ public class BluetoothConnectionService {
                 // Read from the InputStream
                 try {
                     bytes = mmInStream.read(buffer);
-                    String incomingMessage = new String(buffer, 0, bytes);
-                    Log.d(TAG, "InputStream: " + incomingMessage);
+                    String temp = new String(buffer, 0, bytes);
+                    rawData += temp;
+                    Log.d(TAG, "InputStream: " + rawData);
 
                     // receive data
-                    /*if( incomingMessage!= null && incomingMessage.length()>0 ){
-                        mainActivity.processData(incomingMessage);
-                    }*/
+                    if( rawData.contains("~") && rawData.contains("#") ){
+                        System.out.println("Successful receive data");
+                        int beginIndex  = rawData.indexOf("~");
+                        int endIndex = rawData.indexOf("#");
+                        System.out.println(rawData);
+                        System.out.println(beginIndex);
+                        System.out.println(endIndex);
+                        String data = rawData.substring(beginIndex+1, endIndex-1);
+                        System.out.println("data = "+ data);
+                        mainActivity.processData(data);
+                        rawData = "";
+                    }
                 } catch (IOException e) {
+
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage() );
                     break;
                 }

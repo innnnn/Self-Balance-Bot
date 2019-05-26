@@ -1,6 +1,5 @@
 package com.example.self_balancebotapplication;
 
-import android.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,11 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.MenuItem;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
@@ -25,9 +20,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public HomeFragment homeFragment = new HomeFragment();
     public BluetoothFragment bluetoothFragment = new BluetoothFragment();
     public JoystickControlFragment joystickControlFragment = new JoystickControlFragment();
-    public PIDControlFragment pidControlFragment = new PIDControlFragment();
+    public PIDControlInclinationFragment pidControlInclinationFragment = new PIDControlInclinationFragment();
+    public PIDControlWheelFragment pidControlWheelFragment = new PIDControlWheelFragment();
     private StatefeedbackControlFragment statefeedbackControlFragment = new StatefeedbackControlFragment();
-    private CarStateFragment carStateFragment = new CarStateFragment();
+    private CarStateInclinationFragment carStateInclinationFragment = new CarStateInclinationFragment();
+    private CarStateWheelFragment carStateWheelFragment = new CarStateWheelFragment();
     private Fragment lastFragment;
     private Fragment currentFragment;
 
@@ -60,8 +57,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // set mainActivity to each fragment
         bluetoothFragment.setActivity(this);
-        pidControlFragment.setActivity(this);
+        pidControlInclinationFragment.setActivity(this);
+        pidControlWheelFragment.setActivity(this);
         statefeedbackControlFragment.setActivity(this);
+        carStateInclinationFragment.setActivity(this);
+        carStateWheelFragment.setActivity(this);
     }
 
     @Override
@@ -77,14 +77,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_joystick_control:
                 currentFragment = joystickControlFragment;
                 break;
-            case R.id.nav_pid_control:
-                currentFragment = pidControlFragment;
+            case R.id.nav_pid_control_inclination:
+                currentFragment = pidControlInclinationFragment;
+                break;
+            case R.id.nav_pid_control_wheel:
+                currentFragment = pidControlWheelFragment;
                 break;
             case R.id.nav_statefeedback_control:
                 currentFragment = statefeedbackControlFragment;
                 break;
-            case R.id.nav_car_state:
-                currentFragment = carStateFragment;
+            case R.id.nav_car_state_inclination:
+                currentFragment = carStateInclinationFragment;
+                break;
+            case R.id.nav_car_state_wheel:
+                currentFragment = carStateWheelFragment;
                 break;
         }
 
@@ -100,6 +106,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().hide(lastFragment).commit();
                 getSupportFragmentManager().beginTransaction().show(currentFragment).commit();
             }
+
+            //
+            if(lastFragment == carStateInclinationFragment){
+                carStateInclinationFragment.setShow(false);
+            } else if(lastFragment == carStateWheelFragment){
+                carStateWheelFragment.setShow(false);
+            }
+
+            if(currentFragment == carStateInclinationFragment){
+                carStateInclinationFragment.setShow(true);
+            } else if(currentFragment == carStateWheelFragment){
+                carStateWheelFragment.setShow(true);
+            }
+
             lastFragment = currentFragment;
         }
 
@@ -117,7 +137,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void processData(String rawData){
-        //String data[] = rawData.split(",");
-        carStateFragment.receiveData(rawData);
+        String temp[] = rawData.split(",");
+        float data[] = new float[temp.length];
+        for(int i=0; i<temp.length; i++){
+            System.out.println(temp[i]);
+            data[i] = Float.parseFloat(temp[i]);
+        }
+
+        switch( (int)data[0] ){
+            case 1:
+                carStateInclinationFragment.receiveData(temp);
+                break;
+            case 2:
+
+                break;
+        }
+
+
     }
 }
