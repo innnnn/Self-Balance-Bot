@@ -144,6 +144,7 @@ public class BluetoothConnectionService {
                     Log.d(TAG, "InputStream: " + rawData);
 
                     // receive data
+                    /*
                     if( rawData.contains("~") && rawData.contains("#") ){
                         System.out.println("Successful receive data");
                         int beginIndex  = rawData.indexOf("~");
@@ -155,7 +156,7 @@ public class BluetoothConnectionService {
                         System.out.println("data = "+ data);
                         mainActivity.processData(data);
                         rawData = "";
-                    }
+                    }*/
                 } catch (IOException e) {
 
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage() );
