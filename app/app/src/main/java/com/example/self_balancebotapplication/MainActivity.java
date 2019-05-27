@@ -12,9 +12,16 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
     private DrawerLayout drawer;
+
+    // update ui component
+    private Timer timer;
+    private TimerTask task;
 
     // fragment
     public HomeFragment homeFragment = new HomeFragment();
@@ -62,6 +69,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         statefeedbackControlFragment.setActivity(this);
         carStateInclinationFragment.setActivity(this);
         carStateWheelFragment.setActivity(this);
+
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        carStateInclinationFragment.updateInformation();
+                    }
+                });
+            }
+        };
+        timer = new Timer();
+        timer.scheduleAtFixedRate(task, 1000, 250);
     }
 
     @Override
@@ -107,19 +128,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager().beginTransaction().show(currentFragment).commit();
             }
 
-            //
-            if(lastFragment == carStateInclinationFragment){
-                carStateInclinationFragment.setShow(false);
-            } else if(lastFragment == carStateWheelFragment){
-                carStateWheelFragment.setShow(false);
-            }
-
-            if(currentFragment == carStateInclinationFragment){
-                carStateInclinationFragment.setShow(true);
-            } else if(currentFragment == carStateWheelFragment){
-                carStateWheelFragment.setShow(true);
-            }
-
             lastFragment = currentFragment;
         }
 
@@ -138,15 +146,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void processData(String rawData){
         String temp[] = rawData.split(",");
-        float data[] = new float[temp.length];
+        System.out.println(temp.length);
+        double data[] = new double[temp.length];
         for(int i=0; i<temp.length; i++){
-            System.out.println(temp[i]);
-            data[i] = Float.parseFloat(temp[i]);
+            data[i] = Double.parseDouble(temp[i]);
+            System.out.println(data[i]);
         }
 
         switch( (int)data[0] ){
             case 1:
-                carStateInclinationFragment.receiveData(temp);
+                carStateInclinationFragment.receiveData(data);
                 break;
             case 2:
 
