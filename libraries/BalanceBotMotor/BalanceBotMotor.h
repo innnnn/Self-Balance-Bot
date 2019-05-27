@@ -7,9 +7,8 @@
 #include <Arduino.h>
 
 class BalanceBotMotor{
-    static const float voltage2Pwm = 255/12.0;
-    const int MAX_OUTPUT = 255;
-    const int MIN_OUTPUT = -255;
+    // constant
+    const float voltage2Pwm = 255/12.0;
 
   private:
     BalanceBotEncoder encoder;
@@ -38,8 +37,6 @@ class BalanceBotMotor{
 
 
   public:
-    // constant
-    const float voltage2Pwm = 255/12.0;
     
 	// constructor
     BalanceBotMotor();
@@ -52,6 +49,7 @@ class BalanceBotMotor{
     void SetEncoder(const int side,
                     const int interruptPin, 
                     const int directionPin);
+    void SetControllerSaturation();
     void SetControlMode(const int mode);
     void SetPsiController(const float kp,
 	                      const float ki,

@@ -2,6 +2,8 @@
 
 // constructor
 BalanceBotController::BalanceBotController(){
+	MAX_OUTPUT = 0;
+	MIN_OUTPUT = 0;
     Kp = 0;
     Ki = 0;
     Kd = 0;
@@ -9,6 +11,11 @@ BalanceBotController::BalanceBotController(){
 }
 
 // set function
+void BalanceBotController::SetSaturation(const float max, const float min){
+	MAX_OUTPUT = max;
+	MIN_OUTPUT = min;
+}
+
 void BalanceBotController::SetPID(const float Kp, const float Ki, const float Kd){
     this->Kp = Kp;
     this->Ki = Ki;
@@ -46,6 +53,12 @@ float BalanceBotController::Update(const float feedback, const float dt){
 
     // Total output
     float output = pOut + iOut + dOut;
+    
+    // Saturation
+	if(output > MAX_OUTPUT)
+		output = MAX_OUTPUT;
+	else if(output < MIN_OUTPUT)
+		output = MIN_OUTPUT;
 	
     // record the prevoius error
     preError = error;

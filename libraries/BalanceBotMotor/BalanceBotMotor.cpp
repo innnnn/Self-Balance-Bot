@@ -34,6 +34,11 @@ void BalanceBotMotor::SetEncoder(const int side,
     encoder.SetDirectionPin(directionPin);
 }
 
+void BalanceBotMotor::SetControllerSaturation(){
+	psiController.SetSaturation(12.0, -12.0);
+	thetaController.SetSaturation(1/180*PI, -1/180*PI);
+}
+
 void BalanceBotMotor::SetControlMode(int mode){
 	controlMode = mode;
 }
@@ -86,6 +91,7 @@ void BalanceBotMotor::UpdateSpeed(){  // motor update
 void BalanceBotMotor::UpdateControl(const float psi,
                                     const float samplingTime){  // motor update
 	float output = 0.0;
+	float desire_psi;
 	
 	switch(controlMode){
 		case 0:
@@ -95,6 +101,8 @@ void BalanceBotMotor::UpdateControl(const float psi,
 			output = -psiController.Update(psi, samplingTime);
 			break;
 		case 2:
+			desire_psi = thetaController.Update(angle, samplingTime);
+			output = -psiController.Update(psi+desire_psi, samplingTime);
 			break;
 		case 3:
 			//output = stateFeedbackController.Update();
@@ -126,15 +134,7 @@ void BalanceBotMotor::Reset(){
 
 // others
 void BalanceBotMotor::Rotate(int pwm){
-	// Saturation
-	// Max output: 255
-	// Min output: -255
-	if(pwm > MAX_OUTPUT)
-		pwm = MAX_OUTPUT;
-	else if(pwm < MIN_OUTPUT)
-		pwm = MIN_OUTPUT;
-	
-    // speed: 0 ~ 255
+    // pwm: 0 ~ 255
     // direction: -1-> clockwise, 1-> counter-clockwise
     boolean pin1 = LOW;   //initial rotate direction: clockwise
     boolean pin2 = HIGH;
