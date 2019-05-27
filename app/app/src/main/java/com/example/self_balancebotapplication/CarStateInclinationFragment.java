@@ -11,11 +11,14 @@ import android.widget.TextView;
 
 public class CarStateInclinationFragment extends Fragment {
     MainActivity mainActivity;
-    boolean show = false;
 
     private TextView textViewInclination;
     private TextView textViewLeftWheel;
     private TextView textViewRightWheel;
+
+    private double psi = 0;
+    private double leftAngle = 0;
+    private double rightAngle = 0;
 
     @Nullable
     @Override
@@ -29,28 +32,28 @@ public class CarStateInclinationFragment extends Fragment {
         textViewRightWheel = view.findViewById(R.id.textView_state_right_wheel);
         textViewRightWheel.setText("0");
 
+
+
         return view;
     }
 
-    public void receiveData(String[] data){
-        if(false){
-            if( (data.length==4) && show ){
-                System.out.println("Show");
-                textViewInclination.setText(data[1]);
-                textViewLeftWheel.setText(data[2]);
-                textViewRightWheel.setText(data[3]);
-            } else{
-                System.out.println("Hide");
-            }
+    public void receiveData(double[] data){
+        if( data.length==4 ){
+            psi = Math.toDegrees(data[1]);
+            leftAngle = Math.toDegrees(data[2]);
+            rightAngle = Math.toDegrees(data[3]);
         }
+    }
 
+    public void updateInformation(){
+        if( (textViewInclination!=null) && (textViewLeftWheel!=null) && (textViewRightWheel!=null) ){
+            textViewInclination.setText(String.format("%.02f (degree)", psi));
+            textViewLeftWheel.setText(String.format("%.02f (degree)", leftAngle));
+            textViewRightWheel.setText(String.format("%.02f (degree)", rightAngle));
+        }
     }
 
     public void setActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-    }
-
-    public void setShow(boolean show){
-        this.show = show;
     }
 }

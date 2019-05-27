@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 public class CarStateWheelFragment extends Fragment {
     MainActivity mainActivity;
-    boolean show = false;
 
     @Nullable
     @Override
@@ -21,9 +20,5 @@ public class CarStateWheelFragment extends Fragment {
 
     public void setActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
-    }
-
-    public void setShow(boolean show){
-        this.show = show;
     }
 }

@@ -10,8 +10,10 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.UUID;
@@ -37,9 +39,6 @@ public class BluetoothConnectionService {
     // for ui control
     BluetoothFragment bluetoothFragment;
     MainActivity mainActivity;
-
-    //
-    String rawData = new String("");
 
     public BluetoothConnectionService(Context context, BluetoothDevice device, TextView textView, BluetoothFragment bluetoothFragment, MainActivity mainActivity) {
         mContext = context;
@@ -138,27 +137,23 @@ public class BluetoothConnectionService {
             while (true) {
                 // Read from the InputStream
                 try {
-                    bytes = mmInStream.read(buffer);
-                    String temp = new String(buffer, 0, bytes);
-                    rawData += temp;
+                    //bytes = mmInStream.read(buffer);
+                    //String temp = new String(buffer, 0, bytes);
+                    BufferedReader r = new BufferedReader(new InputStreamReader(mmInStream));
+                    String rawData = r.readLine();
                     Log.d(TAG, "InputStream: " + rawData);
 
                     // receive data
-                    /*
                     if( rawData.contains("~") && rawData.contains("#") ){
-                        System.out.println("Successful receive data");
                         int beginIndex  = rawData.indexOf("~");
                         int endIndex = rawData.indexOf("#");
-                        System.out.println(rawData);
-                        System.out.println(beginIndex);
-                        System.out.println(endIndex);
                         String data = rawData.substring(beginIndex+1, endIndex-1);
-                        System.out.println("data = "+ data);
+
+                        System.out.println("data =  "+ data);
                         mainActivity.processData(data);
                         rawData = "";
-                    }*/
+                    }
                 } catch (IOException e) {
-
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage() );
                     break;
                 }
