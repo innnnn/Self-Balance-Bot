@@ -37,6 +37,7 @@ void ReceiveData(){
                 if(len>=2){
                     switch( (int)data[0] ){
                         case 1:
+                            RemoteControl();
                             break;
                         case 2:
                             SetController();
