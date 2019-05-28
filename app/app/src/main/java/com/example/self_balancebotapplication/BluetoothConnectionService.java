@@ -10,8 +10,10 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.UUID;
@@ -97,7 +99,6 @@ public class BluetoothConnectionService {
                 startCommunication(btSocket,dispositivo);
                 connectedText.setText("Connected to : " + mmDevice.getName()+"\n"+ mmDevice.getAddress());
             }
-
         }
     }
 
@@ -136,14 +137,22 @@ public class BluetoothConnectionService {
             while (true) {
                 // Read from the InputStream
                 try {
-                    bytes = mmInStream.read(buffer);
-                    String incomingMessage = new String(buffer, 0, bytes);
-                    Log.d(TAG, "InputStream: " + incomingMessage);
+                    //bytes = mmInStream.read(buffer);
+                    //String temp = new String(buffer, 0, bytes);
+                    BufferedReader r = new BufferedReader(new InputStreamReader(mmInStream));
+                    String rawData = r.readLine();
+                    Log.d(TAG, "InputStream: " + rawData);
 
                     // receive data
-                    /*if( incomingMessage!= null && incomingMessage.length()>0 ){
-                        mainActivity.processData(incomingMessage);
-                    }*/
+                    if( rawData.contains("~") && rawData.contains("#") ){
+                        int beginIndex  = rawData.indexOf("~");
+                        int endIndex = rawData.indexOf("#");
+                        String data = rawData.substring(beginIndex+1, endIndex-1);
+
+                        System.out.println("data =  "+ data);
+                        mainActivity.processData(data);
+                        rawData = "";
+                    }
                 } catch (IOException e) {
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage() );
                     break;

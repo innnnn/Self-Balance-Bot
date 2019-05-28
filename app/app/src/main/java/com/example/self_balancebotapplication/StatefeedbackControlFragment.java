@@ -20,28 +20,38 @@ public class StatefeedbackControlFragment extends Fragment {
     private EditText editTextK3;
     private EditText editTextK4;
     private Button buttonSendK;
+    private Button buttonSendStop;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_statefeedback_control, container, false);
 
-        editTextK1 = view.findViewById(R.id.editText_k1);
-        editTextK2 = view.findViewById(R.id.editText_k2);
-        editTextK3 = view.findViewById(R.id.editText_k3);
-        editTextK4 = view.findViewById(R.id.editText_k4);
+        editTextK1 = (EditText) view.findViewById(R.id.editText_k1);
+        editTextK2 = (EditText) view.findViewById(R.id.editText_k2);
+        editTextK3 = (EditText) view.findViewById(R.id.editText_k3);
+        editTextK4 = (EditText) view.findViewById(R.id.editText_k4);
 
-        buttonSendK = view.findViewById(R.id.button_send_k);
+        buttonSendK = (Button) view.findViewById(R.id.button_send_k);
         buttonSendK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                send();
+                sendK();
             }
         });
+
+        buttonSendStop = (Button) view.findViewById(R.id.button_send_statefeedback_stop);
+        buttonSendStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendStop();
+            }
+        });
+
         return view;
     }
 
-    public void send(){
+    public void sendK(){
         String k1 = editTextK1.getText().toString();
         String k2 = editTextK2.getText().toString();
         String k3 = editTextK3.getText().toString();
@@ -51,11 +61,17 @@ public class StatefeedbackControlFragment extends Fragment {
             Toast.makeText(mainActivity, "Please Input All Parameters", Toast.LENGTH_LONG).show();
         }
         else{
-            String data = "2,"                                              // send mode 2
+            String data = "~2,"                                              // send mode 2
                     + "3,"                                                  // control mode 3
                     + k1 + "," + k2 + "," + k3 + "," + k4 + "#";             // state feedback
             mainActivity.bluetoothFragment.bluetoothSendData(data);
         }
+    }
+
+    public void sendStop(){
+        String data = "~2,"                                              // send mode 2
+                + "0#";                                             // control mode 0
+        mainActivity.bluetoothFragment.bluetoothSendData(data);
     }
 
     public void setActivity(MainActivity mainActivity) {
