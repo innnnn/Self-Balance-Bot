@@ -7,67 +7,75 @@
 #include <Arduino.h>
 
 class BalanceBotMotor{
+    // constant
     const float voltage2Pwm = 255/12.0;
-	const int MAX_OUTPUT = 255;
-	const int MIN_OUTPUT = -255;
-    
+
   private:
     BalanceBotEncoder encoder;
-    
+
     // controller
     BalanceBotController psiController;
     BalanceBotController thetaController;
     BalanceBotStateFeedbackController stateFeedbackController;
-    
+
     // pin
-	int pwmPin;
-	int directionPinA;
-	int directionPinB;
-	int standbyPin;
-	
-	// sampling time
-	float dt;
-	
+    int pwmPin;
+    int directionPinA;
+    int directionPinB;
+    int standbyPin;
+
 	// others
     float angle;        // wheel angle (rad)
     float speed;        // wheel speed (rad/s)
-	int controlMode;    // 0: nothing, 1: psi, 2: psi&theta, 3, state feedback
-    
+    int controlMode;    // 0: nothing, 1: psi, 2: psi&theta, 3, state feedback
+
     // update function
     void UpdateAngle();
     void UpdateSpeed();
-    void UpdateControl(const float psi);
+    void UpdateControl(const float psi,
+	                   const float samplingTime);
+
 
   public:
-  	// constructor
-    BalanceBotMotor();
     
+	// constructor
+    BalanceBotMotor();
+
     // set function
     void SetPwmPin(const int pin);
-    void SetDirectionPins( const int pinA, 
-                                  const int pinB );
+    void SetDirectionPins(const int pinA,
+                          const int pinB);
     void SetStandbyPin(const int pin);
-    void SetSamplingTime(const float dt);
     void SetEncoder(const int side,
                     const int interruptPin, 
                     const int directionPin);
-    void SetControlMode(int mode);
-    void SetPsiController(float kp, float ki, float kd, float reference);
-    void SetThetaController(float kp, float ki, float kd, float reference);
-    void SetStateFeedbackController(float k1, float k2, float k3, float k4);
-    
+    void SetControllerSaturation();
+    void SetControlMode(const int mode);
+    void SetPsiController(const float kp,
+	                      const float ki,
+						  const float kd,
+						  const float reference);
+    void SetThetaController(const float kp,
+	                        const float ki,
+							const float kd,
+							const float reference);
+    void SetStateFeedbackController(const float k1,
+	                                const float k2,
+									const float k3,
+									const float k4);
+
     // get funciton
     int GetEncoderInterruptPin();
     float GetSpeed();
     float GetAngle();
-    
+
     // update function
-	void UpdateEncoder();
-    void Update(const float psi);
-    
+    void UpdateEncoder();
+    void Update(const float psi, const float samplingTime);
+
     // reset function
-	void Reset();
-	
+    void Reset();
+
     // others
     void Rotate(int pwm);
 };

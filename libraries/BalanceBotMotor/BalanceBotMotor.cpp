@@ -13,8 +13,8 @@ void BalanceBotMotor::SetPwmPin(const int pin){
     pinMode(pwmPin, OUTPUT);
 }
 
-void BalanceBotMotor::SetDirectionPins( const int pinA, 
-                                             const int pinB ){
+void BalanceBotMotor::SetDirectionPins(const int pinA,
+                                       const int pinB){
 	directionPinA = pinA;
 	directionPinB = pinB;
 	pinMode(directionPinA, OUTPUT);
@@ -26,36 +26,43 @@ void BalanceBotMotor::SetStandbyPin(const int pin){
     pinMode(standbyPin, OUTPUT);
 }
 
-void BalanceBotMotor::SetSamplingTime(const float dt){
-    this->dt = dt;
-}
-
 void BalanceBotMotor::SetEncoder(const int side,
-                                 const int interruptPin, 
+                                 const int interruptPin,
                                  const int directionPin){
     encoder.SetMotorSide(side);
     encoder.SetInterruptPin(interruptPin);
-    encoder.SetDirectionPin(directionPin); 
-    encoder.SetSamplingTime(this->dt);
+    encoder.SetDirectionPin(directionPin);
+}
+
+void BalanceBotMotor::SetControllerSaturation(){
+	psiController.SetSaturation(12.0, -12.0);
+	thetaController.SetSaturation(1/180*PI, -1/180*PI);
 }
 
 void BalanceBotMotor::SetControlMode(int mode){
 	controlMode = mode;
 }
 
-void BalanceBotMotor::SetPsiController(float kp, float ki, float kd, float reference){
-    psiController.SetSamplingTime(dt);
+void BalanceBotMotor::SetPsiController(const float kp,
+                                       const float ki,
+									   const float kd,
+									   const float reference){
     psiController.SetPID(kp, ki, kd);
     psiController.SetReference(reference);
 }
 
-void BalanceBotMotor::SetThetaController(float kp, float ki, float kd, float reference){
-    thetaController.SetSamplingTime(dt);
+void BalanceBotMotor::SetThetaController(const float kp,
+                                         const float ki,
+										 const float kd,
+										 const float reference){
     thetaController.SetPID(kp, ki, kd);
     thetaController.SetReference(reference);
 }
 
-void BalanceBotMotor::SetStateFeedbackController(float k1, float k2, float k3, float k4){
+void BalanceBotMotor::SetStateFeedbackController(const float k1,
+                                                 const float k2,
+												 const float k3,
+												 const float k4){
 	stateFeedbackController.SetK(k1, k2, k3, k4);
 }
 
@@ -81,17 +88,21 @@ void BalanceBotMotor::UpdateSpeed(){  // motor update
 	speed = encoder.GetSpeed();
 }
 
-void BalanceBotMotor::UpdateControl(const float psi){  // motor update
+void BalanceBotMotor::UpdateControl(const float psi,
+                                    const float samplingTime){  // motor update
 	float output = 0.0;
+	float desire_psi;
 	
 	switch(controlMode){
 		case 0:
 			output = 0;
 			break;
 		case 1:
-			output = -psiController.Update(psi);
+			output = -psiController.Update(psi, samplingTime);
 			break;
 		case 2:
+			desire_psi = thetaController.Update(angle, samplingTime);
+			output = -psiController.Update(psi+desire_psi, samplingTime);
 			break;
 		case 3:
 			//output = stateFeedbackController.Update();
@@ -102,13 +113,14 @@ void BalanceBotMotor::UpdateControl(const float psi){  // motor update
 }
 
 void BalanceBotMotor::UpdateEncoder(){  // interrupt
-    encoder.Update();
+    encoder.UpdatePosition();
 }
 
-void BalanceBotMotor::Update(const float psi){  // timer
-    UpdateAngle();
+void BalanceBotMotor::Update(const float psi, const float samplingTime){  // loop function
+    encoder.Update(samplingTime);
+	UpdateAngle();
     UpdateSpeed();
-    UpdateControl(psi);
+    UpdateControl(psi, samplingTime);
 }
 
 // reset function
@@ -122,16 +134,8 @@ void BalanceBotMotor::Reset(){
 
 // others
 void BalanceBotMotor::Rotate(int pwm){
-	// Saturation
-	// Max output: 255
-	// Min output: -255
-	if(pwm > MAX_OUTPUT)
-		pwm = MAX_OUTPUT;
-	else if(pwm < MIN_OUTPUT)
-		pwm = MIN_OUTPUT;
-	
-    //speed: 0 ~ 255
-    //direction: -1-> clockwise, 1-> counter-clockwise
+    // pwm: 0 ~ 255
+    // direction: -1-> clockwise, 1-> counter-clockwise
     boolean pin1 = LOW;   //initial rotate direction: clockwise
     boolean pin2 = HIGH;
     if(pwm < 0){
