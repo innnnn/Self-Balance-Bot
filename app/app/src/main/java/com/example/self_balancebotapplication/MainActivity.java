@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // set mainActivity to each fragment
         bluetoothFragment.setActivity(this);
         pidControlFragment.setActivity(this);
+        joystickControlFragment.setActivity(this);
         statefeedbackControlFragment.setActivity(this);
         carStateInclinationFragment.setActivity(this);
         carStateWheelFragment.setActivity(this);
