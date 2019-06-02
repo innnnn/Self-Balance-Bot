@@ -32,16 +32,14 @@ public class CarStateInclinationFragment extends Fragment {
         textViewRightWheel = view.findViewById(R.id.textView_state_right_wheel);
         textViewRightWheel.setText("0");
 
-
-
         return view;
     }
 
     public void receiveData(double[] data){
-        if( data.length==4 ){
-            psi = Math.toDegrees(data[1]);
-            leftAngle = Math.toDegrees(data[2]);
-            rightAngle = Math.toDegrees(data[3]);
+        if( data.length==5 ){
+            psi = Math.toDegrees(data[2]);
+            leftAngle = Math.toDegrees(data[3]);
+            rightAngle = Math.toDegrees(data[4]);
         }
     }
 

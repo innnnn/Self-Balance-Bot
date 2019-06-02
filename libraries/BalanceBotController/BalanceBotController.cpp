@@ -27,9 +27,8 @@ void BalanceBotController::SetReference(const float reference){
 }
 
 // get function
-String BalanceBotController::GetPID(){
-	String data;
-	return data;
+String BalanceBotController::GetInformation(){
+	return String(Kp, 1) + "," + String(Ki, 0) + "," + String(Kd, 2) + "," + String(reference, 3);
 }
 
 float BalanceBotController::GetReference(){

@@ -35,8 +35,8 @@ void BalanceBotMotor::SetEncoder(const int side,
 }
 
 void BalanceBotMotor::SetControllerSaturation(){
-	psiController.SetSaturation(12.0, -12.0);
-	thetaController.SetSaturation(1/180*PI, -1/180*PI);
+	psiController.SetSaturation(12.0, -12.0);     // voltage : 12 ~ -12 (v)
+	thetaController.SetSaturation(0.02, -0.02);   // theta : 0.02 ~ -0.02 (rad) or (1.1459 ~ -1.1459(degree))
 }
 
 void BalanceBotMotor::SetControlMode(int mode){
@@ -79,6 +79,18 @@ float BalanceBotMotor::GetAngle() {
   	return angle;
 }
 
+int BalanceBotMotor::GetControlleMode(){
+	return controlMode;
+}
+
+String BalanceBotMotor::GetPsiControllerInformation(){
+	return psiController.GetInformation();
+}
+
+String BalanceBotMotor::GetThetaControllerInformation(){
+	return thetaController.GetInformation();
+}
+
 // update function
 void BalanceBotMotor::UpdateAngle(){  // motor update
     angle = encoder.GetAngle();
@@ -102,7 +114,9 @@ void BalanceBotMotor::UpdateControl(const float psi,
 			break;
 		case 2:
 			desire_psi = thetaController.Update(angle, samplingTime);
-			output = -psiController.Update(psi+desire_psi, samplingTime);
+			//Serial.println(desire_psi);
+			output = -psiController.Update(desire_psi + psi, samplingTime);
+			//Serial.println(output);
 			break;
 		case 3:
 			//output = stateFeedbackController.Update();

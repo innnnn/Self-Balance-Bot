@@ -98,6 +98,12 @@ public class BluetoothConnectionService {
                 bluetoothFragment.bluetoothConnect = true;
                 startCommunication(btSocket,dispositivo);
                 connectedText.setText("Connected to : " + mmDevice.getName()+"\n"+ mmDevice.getAddress());
+
+                // request for information of car
+                // 1. psi controller kp, ki, kd, reference
+                String data = "~2,"
+                            + "1#";
+                mainActivity.bluetoothFragment.bluetoothSendData(data);
             }
         }
     }
@@ -147,11 +153,10 @@ public class BluetoothConnectionService {
                     if( rawData.contains("~") && rawData.contains("#") ){
                         int beginIndex  = rawData.indexOf("~");
                         int endIndex = rawData.indexOf("#");
-                        String data = rawData.substring(beginIndex+1, endIndex-1);
+                        String data = rawData.substring(beginIndex+1, endIndex);
 
                         System.out.println("data =  "+ data);
                         mainActivity.processData(data);
-                        rawData = "";
                     }
                 } catch (IOException e) {
                     Log.e(TAG, "write: Error reading Input Stream. " + e.getMessage() );
@@ -198,3 +203,12 @@ public class BluetoothConnectionService {
             mConnectedThread.write(bytes);
     }
 }
+
+/*
+Send mode:
+1: Send parameter to car, such as kp, ki, kd, etc.
+2: Request for information of car state, such as kp, ki, kd in car.
+
+Item mode:
+
+ */

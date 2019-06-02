@@ -13,7 +13,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-public class PIDControlInclinationFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
+public class PIDControlFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
     MainActivity mainActivity;
 
     // left motor
@@ -51,18 +51,36 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
     private Button buttonReferenceRightUp;
 
     // radio button
+    private RadioButton radioButtonPsi;
+    private RadioButton radioButtonTheta;
+    public RadioGroup radioGroupController;
+
     private RadioButton radioButtonSame;
     private RadioButton radioButtonDifferent;
-    private RadioGroup radioGroup;
+    private RadioGroup radioGroupValue;
 
     // bottom
     private Button buttonSendPid;
     private Button buttonStopPid;
 
+    // kp, ki, kd, reference
+    String kpLeft;
+    String kiLeft;
+    String kdLeft;
+    String referenceLeft;
+
+    String kpRight;
+    String kiRight;
+    String kdRight;
+    String referenceRight;
+
+    // update information
+    public boolean needUpdate = false;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_pid_control_inclination, container, false);
+        View view = inflater.inflate(R.layout.fragment_pid_control, container, false);
 
         // left motor
         editTextKpLeft = view.findViewById(R.id.editText_inclination_kp_left);
@@ -70,7 +88,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonKpLeftDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKpLeft.setText(String.format("%.2f", Double.parseDouble(editTextKpLeft.getText().toString()) - 0.01));
+                editTextKpLeft.setText(String.format("%.1f", Double.parseDouble(editTextKpLeft.getText().toString()) - 0.1));
                 if (radioButtonSame.isChecked()) {
                     editTextKpRight.setText(editTextKpLeft.getText());
                 }
@@ -80,7 +98,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonKpLeftUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKpLeft.setText(String.format("%.2f", Double.parseDouble(editTextKpLeft.getText().toString()) + 0.01));
+                editTextKpLeft.setText(String.format("%.1f", Double.parseDouble(editTextKpLeft.getText().toString()) + 0.1));
                 if (radioButtonSame.isChecked()) {
                     editTextKpRight.setText(editTextKpLeft.getText());
                 }
@@ -92,7 +110,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonKiLeftDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKiLeft.setText(String.format("%.2f", Double.parseDouble(editTextKiLeft.getText().toString()) - 0.01));
+                editTextKiLeft.setText(String.format("%.0f", Double.parseDouble(editTextKiLeft.getText().toString()) - 1));
                 if (radioButtonSame.isChecked()) {
                     editTextKiRight.setText(editTextKiLeft.getText());
                 }
@@ -102,7 +120,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonKiLeftUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKiLeft.setText(String.format("%.2f", Double.parseDouble(editTextKiLeft.getText().toString()) + 0.01));
+                editTextKiLeft.setText(String.format("%.0f", Double.parseDouble(editTextKiLeft.getText().toString()) + 1));
                 if (radioButtonSame.isChecked()) {
                     editTextKiRight.setText(editTextKiLeft.getText());
                 }
@@ -136,7 +154,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonReferenceLeftDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextReferenceLeft.setText(String.format("%.2f", Double.parseDouble(editTextReferenceLeft.getText().toString()) - 0.01));
+                editTextReferenceLeft.setText(String.format("%.3f", Double.parseDouble(editTextReferenceLeft.getText().toString()) - 0.005));
                 if (radioButtonSame.isChecked()) {
                     editTextReferenceRight.setText(editTextReferenceLeft.getText());
                 }
@@ -146,7 +164,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonReferenceLeftUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextReferenceLeft.setText(String.format("%.2f", Double.parseDouble(editTextReferenceLeft.getText().toString()) + 0.01));
+                editTextReferenceLeft.setText(String.format("%.3f", Double.parseDouble(editTextReferenceLeft.getText().toString()) + 0.005));
                 if (radioButtonSame.isChecked()) {
                     editTextReferenceRight.setText(editTextReferenceLeft.getText());
                 }
@@ -159,7 +177,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonKpRightDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKpRight.setText(String.format("%.2f", Double.parseDouble(editTextKpRight.getText().toString()) - 0.01));
+                editTextKpRight.setText(String.format("%.1f", Double.parseDouble(editTextKpRight.getText().toString()) - 0.1));
                 if (radioButtonSame.isChecked()) {
                     editTextKpLeft.setText(editTextKpRight.getText());
                 }
@@ -169,7 +187,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonKpRightUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKpRight.setText(String.format("%.2f", Double.parseDouble(editTextKpRight.getText().toString()) + 0.01));
+                editTextKpRight.setText(String.format("%.1f", Double.parseDouble(editTextKpRight.getText().toString()) + 0.1));
                 if (radioButtonSame.isChecked()) {
                     editTextKpLeft.setText(editTextKpRight.getText());
                 }
@@ -181,7 +199,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonKiRightDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKiRight.setText(String.format("%.2f", Double.parseDouble(editTextKiRight.getText().toString()) - 0.01));
+                editTextKiRight.setText(String.format("%.0f", Double.parseDouble(editTextKiRight.getText().toString()) - 1));
                 if (radioButtonSame.isChecked()) {
                     editTextKiLeft.setText(editTextKiRight.getText());
                 }
@@ -191,7 +209,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonKiRightUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKiRight.setText(String.format("%.2f", Double.parseDouble(editTextKiRight.getText().toString()) + 0.01));
+                editTextKiRight.setText(String.format("%.0f", Double.parseDouble(editTextKiRight.getText().toString()) + 1));
                 if (radioButtonSame.isChecked()) {
                     editTextKiLeft.setText(editTextKiRight.getText());
                 }
@@ -225,7 +243,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonReferenceRightDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextReferenceRight.setText(String.format("%.2f", Double.parseDouble(editTextReferenceRight.getText().toString()) - 0.01));
+                editTextReferenceRight.setText(String.format("%.3f", Double.parseDouble(editTextReferenceRight.getText().toString()) - 0.005));
                 if (radioButtonSame.isChecked()) {
                     editTextReferenceLeft.setText(editTextReferenceRight.getText());
                 }
@@ -235,7 +253,7 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         buttonReferenceRightUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextReferenceRight.setText(String.format("%.2f", Double.parseDouble(editTextReferenceRight.getText().toString()) + 0.01));
+                editTextReferenceRight.setText(String.format("%.3f", Double.parseDouble(editTextReferenceRight.getText().toString()) + 0.005));
                 if (radioButtonSame.isChecked()) {
                     editTextReferenceLeft.setText(editTextReferenceRight.getText());
                 }
@@ -243,10 +261,15 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
         });
 
         // radio button
-        radioButtonSame = view.findViewById(R.id.radioButton_inclination_same);
-        radioButtonDifferent = view.findViewById(R.id.radioButton_inclination_different);
-        radioGroup = view.findViewById(R.id.radioGroup_inclination);
-        radioGroup.setOnCheckedChangeListener(this);
+        radioButtonPsi = view.findViewById(R.id.radioButton_psi);
+        radioButtonTheta = view.findViewById(R.id.radioButton_theta);
+        radioGroupController = view.findViewById(R.id.radioGroup_controller);
+        radioGroupController.setOnCheckedChangeListener(this);
+
+        radioButtonSame = view.findViewById(R.id.radioButton_same);
+        radioButtonDifferent = view.findViewById(R.id.radioButton_different);
+        radioGroupValue = view.findViewById(R.id.radioGroup_value);
+        radioGroupValue.setOnCheckedChangeListener(this);
 
         // bottom
         buttonSendPid = view.findViewById(R.id.button_send_pid_inclination);
@@ -269,34 +292,54 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        if (checkedId == R.id.radioButton_inclination_same) {
+        if (checkedId == R.id.radioButton_same) {
             editTextKpRight.setText(editTextKpLeft.getText());
             editTextKiRight.setText(editTextKiLeft.getText());
             editTextKdRight.setText(editTextKdLeft.getText());
             editTextReferenceRight.setText(editTextReferenceLeft.getText());
+        } else if (checkedId == R.id.radioButton_psi || checkedId == R.id.radioButton_theta){
+            requestForInformaiton();
         }
     }
 
     private void send() {
-        String kpLeft = editTextKpLeft.getText().toString();
-        String kiLeft = editTextKiLeft.getText().toString();
-        String kdLeft = editTextKdLeft.getText().toString();
-        String referenceLeft = editTextReferenceLeft.getText().toString();
+        kpLeft = editTextKpLeft.getText().toString();
+        kiLeft = editTextKiLeft.getText().toString();
+        kdLeft = editTextKdLeft.getText().toString();
+        referenceLeft = editTextReferenceLeft.getText().toString();
 
-        String kpRight = editTextKpRight.getText().toString();
-        String kiRight = editTextKiRight.getText().toString();
-        String kdRight = editTextKdRight.getText().toString();
-        String referenceRight = editTextReferenceRight.getText().toString();
+        kpRight = editTextKpRight.getText().toString();
+        kiRight = editTextKiRight.getText().toString();
+        kdRight = editTextKdRight.getText().toString();
+        referenceRight = editTextReferenceRight.getText().toString();
 
         if (kpLeft.isEmpty() || kiLeft.isEmpty() || kdLeft.isEmpty() || referenceLeft.isEmpty() || kpRight.isEmpty() || kiRight.isEmpty() || kdRight.isEmpty() || referenceRight.isEmpty()) {
             Toast.makeText(mainActivity, "Please Input All Parameters", Toast.LENGTH_LONG).show();
         } else {
-            String data = "~2,"                                                             // send mode 2
-                    + "1,"                                                              // control mode 1
-                    + kpLeft + "," + kiLeft + "," + kdLeft + "," + referenceLeft + ","   // left motor
-                    + kpRight + "," + kiRight + "," + kdRight + "," + referenceRight + "#";    // right motor
-
-            System.out.println(data);
+            String data = "";
+            if( radioButtonPsi.isChecked() && radioButtonSame.isChecked() ){
+                data = "~1,"                                                              // send mode 1
+                     + "2,"                                                               // item mode 2
+                     + "1,"                                                               // control 1
+                     + kpLeft + "," + kiLeft + "," + kdLeft + "," + referenceLeft + "#";
+            } else if( radioButtonPsi.isChecked() && radioButtonDifferent.isChecked() ){
+                data = "~1,"                                                              // send mode 1
+                     + "2,"                                                               // item mode 2
+                     + "2,"                                                               // control 2
+                     + kpLeft + "," + kiLeft + "," + kdLeft + "," + referenceLeft + ","
+                     + kpRight + "," + kiRight + "," + kdRight + "," + referenceRight + "#";
+            } else if( radioButtonTheta.isChecked() && radioButtonSame.isChecked() ){
+                data = "~1,"                                                              // send mode 1
+                     + "2,"                                                               // item mode 2
+                     + "3,"                                                               // control 3
+                     + kpLeft + "," + kiLeft + "," + kdLeft + "," + referenceLeft + "#";
+            } else if( radioButtonTheta.isChecked() && radioButtonDifferent.isChecked() ){
+                data = "~1,"                                                              // send mode 1
+                     + "2,"                                                               // item mode 2
+                     + "4,"                                                               // control 5
+                     + kpLeft + "," + kiLeft + "," + kdLeft + "," + referenceLeft + ","
+                     + kpRight + "," + kiRight + "," + kdRight + "," + referenceRight + "#";
+            }
             mainActivity.bluetoothFragment.bluetoothSendData(data);
         }
     }
@@ -306,6 +349,59 @@ public class PIDControlInclinationFragment extends Fragment implements RadioGrou
                     + "0#";                                             // control mode 0
         System.out.println(data);
         mainActivity.bluetoothFragment.bluetoothSendData(data);
+    }
+
+    public void receiveData(String[] data){
+        if( data.length==10 ){
+            kpLeft = data[2];
+            kiLeft = data[3];
+            kdLeft = data[4];
+            referenceLeft = data[5];
+
+            kpRight = data[6];
+            kiRight = data[7];
+            kdRight = data[8];
+            referenceRight = data[9];
+        }
+    }
+
+    public void requestForInformaiton(){
+        if (radioButtonPsi.isChecked()) {  // request for psi: kp, ki, kd, reference
+            String data = "~2,"
+                    + "1#";
+            mainActivity.bluetoothFragment.bluetoothSendData(data);
+        } else if (radioButtonTheta.isChecked()) {  // request for theta: kp, ki, kd, reference
+            String data = "~2,"
+                    + "2#";
+            mainActivity.bluetoothFragment.bluetoothSendData(data);
+        }
+    }
+
+    public void updateInformation(){
+        if( editTextKpLeft!=null && editTextKiLeft!=null && editTextKdLeft!=null && editTextReferenceLeft!=null && editTextKpRight!=null && editTextKiRight!=null && editTextKdRight!=null && editTextReferenceRight!=null){
+            editTextKpLeft.setText(kpLeft);
+            editTextKiLeft.setText(kiLeft);
+            editTextKdLeft.setText(kdLeft);
+            editTextReferenceLeft.setText(referenceLeft);
+
+            editTextKpRight.setText(kpRight);
+            editTextKiRight.setText(kiRight);
+            editTextKdRight.setText(kdRight);
+            editTextReferenceRight.setText(referenceRight);
+            needUpdate = false;
+        }
+    }
+
+    public void checkInformation(double []data){
+        double error = 0.0001;
+        if( Math.abs(data[2]-Double.parseDouble(kpLeft))<error || Math.abs(data[3]-Double.parseDouble(kiLeft))<error || Math.abs(data[4]-Double.parseDouble(kdLeft))<error || Math.abs(data[5]-Double.parseDouble(referenceLeft))<error
+                || Math.abs(data[6]-Double.parseDouble(kpRight))<error || Math.abs(data[7]-Double.parseDouble(kiRight))<error || Math.abs(data[8]-Double.parseDouble(kdRight))<error || Math.abs(data[9]-Double.parseDouble(referenceRight))<error ){
+            //Toast.makeText(mainActivity, "Successfully Set the Parameters", Toast.LENGTH_LONG).show();
+            System.out.println("Right");
+        } else {
+            //Toast.makeText(mainActivity, "Fail to Set the Parameters! Please Try Again!", Toast.LENGTH_LONG).show();
+            System.out.println("Error");
+        }
     }
 
     public void setActivity(MainActivity mainActivity) {

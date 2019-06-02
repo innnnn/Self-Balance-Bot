@@ -16,6 +16,8 @@ unsigned long previousTime;
 unsigned long currentTime;
 float samplingTime;
 
+// controll
+boolean onControl = true;
 float psi;
 
 void setup(){
@@ -33,16 +35,19 @@ void setup(){
 
 // update controller
 void loop(){
-    psi = ((float)GetPsi())/180*PI;
+    if(onControl){
+        psi = ((float)GetPsi())/180*PI;
 
-    // compute the sampling time
-    currentTime = millis();
-    samplingTime = (currentTime - previousTime)/1000.0;
+        // compute the sampling time
+        currentTime = millis();
+        samplingTime = (currentTime - previousTime)/1000.0;
 
-    // update controller
-    motor_A.Update(psi, samplingTime);
-    motor_B.Update(psi, samplingTime);
+        // update controller
+        motor_A.Update(psi, samplingTime);
+        motor_B.Update(psi, samplingTime);
 
-    // record the previous time
-    previousTime = currentTime;
+        // record the previous time
+        previousTime = currentTime;
+        
+    }
 }

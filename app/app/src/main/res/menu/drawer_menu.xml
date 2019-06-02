@@ -19,14 +19,9 @@
             android:title="JoyStick Control" />
 
         <item
-            android:id="@+id/nav_pid_control_inclination"
+            android:id="@+id/nav_pid_control"
             android:icon="@drawable/ic_pid_control"
-            android:title="PID Control for Inclination" />
-
-        <item
-            android:id="@+id/nav_pid_control_wheel"
-            android:icon="@drawable/ic_pid_control"
-            android:title="PID Control for Wheel" />
+            android:title="PID Control" />
 
         <item
             android:id="@+id/nav_statefeedback_control"

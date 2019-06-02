@@ -23,7 +23,7 @@ class BalanceBotController{
 	void SetReference(const float reference);
 
 	// get function
-	String GetPID();
+	String GetInformation();
 	float GetReference();
 
 	// update
