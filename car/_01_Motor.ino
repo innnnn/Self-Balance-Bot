@@ -22,9 +22,10 @@ void SetupMotor(){
     attachInterrupt(digitalPinToInterrupt(motor_A.GetEncoderInterruptPin()), Encoder_A_Interrupt, RISING);
 
     motor_A.SetControllerSaturation();
-    motor_A.SetControlMode(1);                      // psi
-    motor_A.SetPsiController(95.3, 805, 1.2, 0.03);  // KP, KI, KD, Reference
-    
+    motor_A.SetControlMode(2);                      // psi
+    motor_A.SetPsiController(95.3, 600, 1.1, 0.015);  // KP, KI, KD, Reference
+    motor_A.SetThetaController(0.1, 0, 0, 0);
+
     // right motor
     motor_B.SetPwmPin(PWMB);
     motor_B.SetDirectionPins(BIN1, BIN2);
@@ -34,8 +35,9 @@ void SetupMotor(){
     attachInterrupt(digitalPinToInterrupt(motor_B.GetEncoderInterruptPin()), Encoder_B_Interrupt, RISING);
 
     motor_B.SetControllerSaturation();
-    motor_B.SetControlMode(1);                      // psi
-    motor_B.SetPsiController(95.3, 805, 1.2, 0.03);  // KP, KI, KD, Reference
+    motor_B.SetControlMode(2);                      // psi
+    motor_B.SetPsiController(95.3, 600, 1.1, 0.015);  // KP, KI, KD, Reference
+    motor_B.SetThetaController(0.1, 0, 0, 0);
 }
 
 void Encoder_A_Interrupt(){

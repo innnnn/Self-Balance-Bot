@@ -68,6 +68,9 @@ class BalanceBotMotor{
     int GetEncoderInterruptPin();
     float GetSpeed();
     float GetAngle();
+    int GetControlleMode();
+    String GetPsiControllerInformation();
+    String GetThetaControllerInformation();
 
     // update function
     void UpdateEncoder();

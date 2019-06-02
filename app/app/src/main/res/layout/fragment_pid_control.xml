@@ -6,6 +6,30 @@
     android:layout_height="match_parent">
 
 
+    <RadioGroup
+        android:id="@+id/radioGroup_value"
+        android:layout_width="100dp"
+        android:layout_height="55dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/button_send_pid_inclination"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup_controller">
+
+        <RadioButton
+            android:id="@+id/radioButton_same"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:checked="true"
+            android:text="Same" />
+
+        <RadioButton
+            android:id="@+id/radioButton_different"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="Different" />
+    </RadioGroup>
+
     <Button
         android:id="@+id/button_stop_pid_inclination"
         android:layout_width="72dp"
@@ -24,7 +48,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/button_stop_pid_inclination"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/radioGroup_inclination" />
+        app:layout_constraintStart_toEndOf="@+id/radioGroup_value" />
 
     <Button
         android:id="@+id/button_inclination_kp_left_up"
@@ -138,9 +162,9 @@
     <EditText
         android:id="@+id/editText_inclination_reference_right"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_marginEnd="43dp"
-        android:layout_marginBottom="26dp"
+        android:layout_marginBottom="35dp"
         android:ems="10"
         android:gravity="center"
         android:inputType="text"
@@ -154,7 +178,7 @@
     <EditText
         android:id="@+id/editText_inclination_kd_right"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_marginEnd="43dp"
         android:ems="10"
         android:gravity="center"
@@ -169,7 +193,7 @@
     <EditText
         android:id="@+id/editText_inclination_kp_left"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_marginEnd="43dp"
         android:ems="10"
         android:gravity="center"
@@ -184,7 +208,7 @@
     <EditText
         android:id="@+id/editText_inclination_ki_right"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_marginEnd="43dp"
         android:ems="10"
         android:gravity="center"
@@ -217,7 +241,7 @@
     <EditText
         android:id="@+id/editText_inclination_kp_right"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_marginEnd="43dp"
         android:ems="10"
         android:gravity="center"
@@ -232,9 +256,9 @@
     <EditText
         android:id="@+id/editText_inclination_reference_left"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_marginEnd="43dp"
-        android:layout_marginBottom="26dp"
+        android:layout_marginBottom="35dp"
         android:ems="10"
         android:gravity="center"
         android:inputType="text"
@@ -248,7 +272,7 @@
     <EditText
         android:id="@+id/editText_inclination_kd_left"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_marginEnd="43dp"
         android:ems="10"
         android:gravity="center"
@@ -281,7 +305,7 @@
     <EditText
         android:id="@+id/editText_inclination_ki_left"
         android:layout_width="80dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:layout_marginEnd="43dp"
         android:ems="10"
         android:gravity="center"
@@ -296,9 +320,10 @@
     <TextView
         android:id="@+id/textView25"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="26dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="35dp"
         android:text="Reference"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editText_inclination_reference_left"
         app:layout_constraintHorizontal_bias="0.5"
@@ -308,8 +333,9 @@
     <TextView
         android:id="@+id/textView26"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:text="KP"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/textView28"
         app:layout_constraintEnd_toStartOf="@+id/editText_inclination_kp_left"
         app:layout_constraintHorizontal_bias="0.5"
@@ -319,8 +345,9 @@
     <TextView
         android:id="@+id/textView27"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:text="KD"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/textView25"
         app:layout_constraintEnd_toStartOf="@+id/editText_inclination_kd_left"
         app:layout_constraintHorizontal_bias="0.5"
@@ -330,8 +357,9 @@
     <TextView
         android:id="@+id/textView28"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:text="KI"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/textView27"
         app:layout_constraintEnd_toStartOf="@+id/editText_inclination_ki_left"
         app:layout_constraintHorizontal_bias="0.5"
@@ -365,8 +393,9 @@
     <TextView
         android:id="@+id/textView21"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:text="KP"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/textView22"
         app:layout_constraintEnd_toStartOf="@+id/editText_inclination_kp_right"
         app:layout_constraintHorizontal_bias="0.5"
@@ -376,8 +405,9 @@
     <TextView
         android:id="@+id/textView22"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:text="KI"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/textView23"
         app:layout_constraintEnd_toStartOf="@+id/editText_inclination_ki_right"
         app:layout_constraintHorizontal_bias="0.5"
@@ -387,8 +417,9 @@
     <TextView
         android:id="@+id/textView23"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
+        android:layout_height="44dp"
         android:text="KD"
+        android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/textView24"
         app:layout_constraintEnd_toStartOf="@+id/editText_inclination_kd_right"
         app:layout_constraintHorizontal_bias="0.5"
@@ -398,9 +429,10 @@
     <TextView
         android:id="@+id/textView24"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="26dp"
+        android:layout_height="44dp"
+        android:layout_marginBottom="35dp"
         android:text="Reference"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/editText_inclination_reference_right"
         app:layout_constraintHorizontal_bias="0.5"
@@ -409,27 +441,28 @@
 
 
     <RadioGroup
-        android:id="@+id/radioGroup_inclination"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:id="@+id/radioGroup_controller"
+        android:layout_width="100dp"
+        android:layout_height="55dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/button_send_pid_inclination"
+        app:layout_constraintEnd_toStartOf="@+id/radioGroup_value"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent">
 
         <RadioButton
-            android:id="@+id/radioButton_inclination_same"
+            android:id="@+id/radioButton_psi"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="0dp"
             android:checked="true"
-            android:text="Same" />
+            android:text="Psi" />
 
         <RadioButton
-            android:id="@+id/radioButton_inclination_different"
+            android:id="@+id/radioButton_theta"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Different" />
+            android:text="Theta" />
     </RadioGroup>
+
+
 </android.support.constraint.ConstraintLayout>

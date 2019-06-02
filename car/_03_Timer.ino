@@ -3,14 +3,14 @@
 bool startReadData = false;
 String rawData = "";
 int len = 0;
-float *data = new float[10];
+float *data = new float[12];
 int count = 0;
 
 // sampling time
 // max sampling time: 0.025s
 // max sampling rate: 40Hz
 void SetupMsTimer(){
-    MsTimer2::set(200, TimerInterrupt);  // 0.2s update
+    MsTimer2::set(100, TimerInterrupt);  // 0.1s update
     MsTimer2::start();
 }
 
@@ -26,24 +26,27 @@ void TimerInterrupt(){
 void ReceiveData(){
     while(BTSerial.available()){
         char c = BTSerial.read();
-        Serial.println(c);
 
         if(startReadData){
             if(c=='#'){
-                Serial.println(rawData);
+                //Serial.println(rawData);
                 rawData += ',';
                 ParseData();
             
                 if(len>=2){
-                    switch( (int)data[0] ){
-                        case 1:
-                            RemoteControl();
-                            break;
-                        case 2:
-                            SetController();
-                            break;
-                        case 3:
-                            break;
+                    if( ((int)data[0]) == 1 ){
+                        switch( (int)data[1] ){
+                            case 1:
+                                break;
+                            case 2:
+                                SetController();
+                                break;
+                            case 3:
+                                break;
+                        }
+                    }
+                    else if( ((int)data[0]) == 2 ){
+                        SendParticularData((int)data[1]);
                     }
                 }
                 else{
@@ -79,8 +82,27 @@ void ParseData(){
 }
 
 void SendData(){
-    float leftWheelAngle = motor_A.GetAngle();
-    float rightWheelAngle = motor_B.GetAngle();
-    String data = "~1," + String(psi) + "," + String(leftWheelAngle) + "," + String(rightWheelAngle) + "#";
+    //float leftWheelAngle = motor_A.GetAngle();
+    //float rightWheelAngle = motor_B.GetAngle();
+    String data = "~1,1," + String(psi, 3) + "," + String(motor_A.GetAngle(), 3) + "," + String(motor_B.GetAngle(), 3) + "#";
+    BTSerial.println(data);
+}
+
+void SendParticularData(int mode){
+    String data = "";
+    switch(mode){
+        case 1:
+            data = "~1,2,"
+                 + motor_A.GetPsiControllerInformation() + ","
+                 + motor_B.GetPsiControllerInformation() + "#";
+            break;
+        case 2:
+            data = "~1,2,"
+                 + motor_A.GetThetaControllerInformation() + ","
+                 + motor_B.GetThetaControllerInformation() + "#";
+            break;
+        case 3:
+            break;
+    }
     BTSerial.println(data);
 }
