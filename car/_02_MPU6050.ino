@@ -11,6 +11,8 @@ double kalAngle; // Calculated angle using a Kalman filter
 uint32_t timer;
 uint8_t i2cData[14]; // Buffer for I2C data
 
+MPU6050 accelgyro;
+
 void SetupMPU6050(){
     Wire.begin();
     #if ARDUINO >= 157
@@ -32,6 +34,14 @@ void SetupMPU6050(){
         while (1);
     }
 
+    // calibration: offset
+    accelgyro.setXAccelOffset(844);
+    accelgyro.setYAccelOffset(511);
+    accelgyro.setZAccelOffset(1829);
+    accelgyro.setXGyroOffset(16);
+    accelgyro.setYGyroOffset(-24);
+    accelgyro.setZGyroOffset(5);
+    
     delay(100); // Wait for sensor to stabilize
 
     /* Set kalman and gyro starting angle */
