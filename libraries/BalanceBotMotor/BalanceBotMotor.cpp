@@ -114,9 +114,8 @@ void BalanceBotMotor::UpdateControl(const float psi,
 			break;
 		case 2:
 			desire_psi = thetaController.Update(angle, samplingTime);
-			//Serial.println(desire_psi);
-			output = -psiController.Update(desire_psi + psi, samplingTime);
-			//Serial.println(output);
+			psiController.SetReference(desire_psi);
+			output = -psiController.Update(psi, samplingTime);
 			break;
 		case 3:
 			//output = stateFeedbackController.Update();
