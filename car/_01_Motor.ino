@@ -19,12 +19,14 @@ void SetupMotor(){
     motor_A.SetStandbyPin(STBY);
     
     motor_A.SetEncoder(-1, INTA, DIRA);
-    attachInterrupt(digitalPinToInterrupt(motor_A.GetEncoderInterruptPin()), Encoder_A_Interrupt, RISING);
+    attachInterrupt(digitalPinToInterrupt(motor_A.GetEncoderInterruptPin()), Encoder_A_Interrupt, RISING);  // fixed
 
     motor_A.SetControllerSaturation();
-    motor_A.SetControlMode(2);                      // psi
-    motor_A.SetPsiController(95.3, 600, 1.1, 0.015);  // KP, KI, KD, Reference
-    motor_A.SetThetaController(0.1, 0, 0, 0);
+    motor_A.SetControlMode(1);                      // psi
+    motor_A.SetPsiController(95.3, 600, 1.1, 0.005);  // KP, KI, KD, Reference
+
+    
+    //motor_A.SetThetaController(0.1, 0, 0, 0);
 
     // right motor
     motor_B.SetPwmPin(PWMB);
@@ -35,9 +37,9 @@ void SetupMotor(){
     attachInterrupt(digitalPinToInterrupt(motor_B.GetEncoderInterruptPin()), Encoder_B_Interrupt, RISING);
 
     motor_B.SetControllerSaturation();
-    motor_B.SetControlMode(2);                      // psi
-    motor_B.SetPsiController(95.3, 600, 1.1, 0.015);  // KP, KI, KD, Reference
-    motor_B.SetThetaController(0.1, 0, 0, 0);
+    motor_B.SetControlMode(1);                      // psi
+    motor_B.SetPsiController(95.3, 600, 1.1, 0.005);  // KP, KI, KD, Reference
+    //motor_B.SetThetaController(0.1, 0, 0, 0);
 }
 
 void Encoder_A_Interrupt(){
