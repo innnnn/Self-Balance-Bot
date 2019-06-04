@@ -48,6 +48,5 @@ void loop(){
 
         // record the previous time
         previousTime = currentTime;
-        
     }
 }
