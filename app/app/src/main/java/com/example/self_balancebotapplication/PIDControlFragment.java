@@ -352,16 +352,16 @@ public class PIDControlFragment extends Fragment implements RadioGroup.OnChecked
     }
 
     public void receiveData(String[] data){
-        if( data.length==10 ){
+        if( data.length==6 ){
             kpLeft = data[2];
             kiLeft = data[3];
             kdLeft = data[4];
             referenceLeft = data[5];
 
-            kpRight = data[6];
-            kiRight = data[7];
-            kdRight = data[8];
-            referenceRight = data[9];
+            kpRight = data[2];
+            kiRight = data[3];
+            kdRight = data[4];
+            referenceRight = data[5];
         }
     }
 

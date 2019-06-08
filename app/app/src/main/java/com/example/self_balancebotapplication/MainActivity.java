@@ -1,7 +1,6 @@
 package com.example.self_balancebotapplication;
 
 import android.content.pm.ActivityInfo;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -30,8 +29,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public JoystickControlFragment joystickControlFragment = new JoystickControlFragment();
     public PIDControlFragment pidControlFragment = new PIDControlFragment();
     private StatefeedbackControlFragment statefeedbackControlFragment = new StatefeedbackControlFragment();
-    private CarStateInclinationFragment carStateInclinationFragment = new CarStateInclinationFragment();
-    private CarStateWheelFragment carStateWheelFragment = new CarStateWheelFragment();
+    private CarStateFragment carStateFragment = new CarStateFragment();
+    private DebugFragment debugFragment = new DebugFragment();
     private Fragment lastFragment;
     private Fragment currentFragment;
 
@@ -67,8 +66,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         pidControlFragment.setActivity(this);
         joystickControlFragment.setActivity(this);
         statefeedbackControlFragment.setActivity(this);
-        carStateInclinationFragment.setActivity(this);
-        carStateWheelFragment.setActivity(this);
+        carStateFragment.setActivity(this);
+        debugFragment.setActivity(this);
 
         task = new TimerTask() {
             @Override
@@ -76,7 +75,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        carStateInclinationFragment.updateInformation();
+                        carStateFragment.updateInformation();
+                        debugFragment.updateInformation();
 
                         if(pidControlFragment.needUpdate){
                             pidControlFragment.updateInformation();
@@ -108,11 +108,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_statefeedback_control:
                 currentFragment = statefeedbackControlFragment;
                 break;
-            case R.id.nav_car_state_inclination:
-                currentFragment = carStateInclinationFragment;
+            case R.id.nav_car_state:
+                currentFragment = carStateFragment;
                 break;
-            case R.id.nav_car_state_wheel:
-                currentFragment = carStateWheelFragment;
+            case R.id.nav_debug:
+                currentFragment = debugFragment;
                 break;
         }
 
@@ -157,11 +157,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if( ((int)dataD[0])==1 ){
             switch( (int)dataD[1] ){
                 case 1:
-                    carStateInclinationFragment.receiveData(dataD);
+                    carStateFragment.receiveData(dataD);
                     break;
                 case 2:
                     pidControlFragment.receiveData(dataS);
                     pidControlFragment.needUpdate = true;
+                    break;
+                case 3:
+                    debugFragment.receiveData(dataS);
                     break;
             }
         } else if( ((int)dataD[0])==2 ){

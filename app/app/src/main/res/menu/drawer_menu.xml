@@ -29,14 +29,14 @@
             android:title="State Feedback Control" />
 
         <item
-            android:id="@+id/nav_car_state_inclination"
+            android:id="@+id/nav_car_state"
             android:icon="@drawable/ic_car_state"
-            android:title="Car State for Inclination" />
+            android:title="Car State" />
 
         <item
-            android:id="@+id/nav_car_state_wheel"
+            android:id="@+id/nav_debug"
             android:icon="@drawable/ic_car_state"
-            android:title="Car State for Wheel" />
+            android:title="Debug" />
     </group>
 
 
