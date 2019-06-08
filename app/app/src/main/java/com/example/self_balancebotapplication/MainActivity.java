@@ -27,11 +27,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public HomeFragment homeFragment = new HomeFragment();
     public BluetoothFragment bluetoothFragment = new BluetoothFragment();
     public JoystickControlFragment joystickControlFragment = new JoystickControlFragment();
-    public PIDControlInclinationFragment pidControlInclinationFragment = new PIDControlInclinationFragment();
-    public PIDControlWheelFragment pidControlWheelFragment = new PIDControlWheelFragment();
+    public PIDControlFragment pidControlFragment = new PIDControlFragment();
     private StatefeedbackControlFragment statefeedbackControlFragment = new StatefeedbackControlFragment();
-    private CarStateInclinationFragment carStateInclinationFragment = new CarStateInclinationFragment();
-    private CarStateWheelFragment carStateWheelFragment = new CarStateWheelFragment();
+    private CarStateFragment carStateFragment = new CarStateFragment();
+    private DebugFragment debugFragment = new DebugFragment();
     private Fragment lastFragment;
     private Fragment currentFragment;
 
@@ -64,12 +63,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // set mainActivity to each fragment
         bluetoothFragment.setActivity(this);
+        pidControlFragment.setActivity(this);
         joystickControlFragment.setActivity(this);
-        pidControlInclinationFragment.setActivity(this);
-        pidControlWheelFragment.setActivity(this);
         statefeedbackControlFragment.setActivity(this);
-        carStateInclinationFragment.setActivity(this);
-        carStateWheelFragment.setActivity(this);
+        carStateFragment.setActivity(this);
+        debugFragment.setActivity(this);
 
         task = new TimerTask() {
             @Override
@@ -77,7 +75,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        carStateInclinationFragment.updateInformation();
+                        carStateFragment.updateInformation();
+                        debugFragment.updateInformation();
+
+                        if(pidControlFragment.needUpdate){
+                            pidControlFragment.updateInformation();
+                        }
                     }
                 });
             }
@@ -99,20 +102,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_joystick_control:
                 currentFragment = joystickControlFragment;
                 break;
-            case R.id.nav_pid_control_inclination:
-                currentFragment = pidControlInclinationFragment;
-                break;
-            case R.id.nav_pid_control_wheel:
-                currentFragment = pidControlWheelFragment;
+            case R.id.nav_pid_control:
+                currentFragment = pidControlFragment;
                 break;
             case R.id.nav_statefeedback_control:
                 currentFragment = statefeedbackControlFragment;
                 break;
-            case R.id.nav_car_state_inclination:
-                currentFragment = carStateInclinationFragment;
+            case R.id.nav_car_state:
+                currentFragment = carStateFragment;
                 break;
-            case R.id.nav_car_state_wheel:
-                currentFragment = carStateWheelFragment;
+            case R.id.nav_debug:
+                currentFragment = debugFragment;
                 break;
         }
 
@@ -146,23 +146,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void processData(String rawData){
-        String temp[] = rawData.split(",");
-        System.out.println(temp.length);
-        double data[] = new double[temp.length];
-        for(int i=0; i<temp.length; i++){
-            data[i] = Double.parseDouble(temp[i]);
-            System.out.println(data[i]);
+        String dataS[] = rawData.split(",");
+        //System.out.println(temp.length);
+        double dataD[] = new double[dataS.length];
+        for(int i=0; i<dataS.length; i++){
+            dataD[i] = Double.parseDouble(dataS[i]);
+            //System.out.println(dataD[i]);
         }
 
-        switch( (int)data[0] ){
-            case 1:
-                carStateInclinationFragment.receiveData(data);
-                break;
-            case 2:
-
-                break;
+        if( ((int)dataD[0])==1 ){
+            switch( (int)dataD[1] ){
+                case 1:
+                    carStateFragment.receiveData(dataD);
+                    break;
+                case 2:
+                    pidControlFragment.receiveData(dataS);
+                    pidControlFragment.needUpdate = true;
+                    break;
+                case 3:
+                    debugFragment.receiveData(dataS);
+                    break;
+            }
+        } else if( ((int)dataD[0])==2 ){
+            switch( (int)dataD[1] ){
+                case 1:
+                case 2:
+                    pidControlFragment.checkInformation(dataD);
+                    break;
+            }
         }
-
-
     }
 }
