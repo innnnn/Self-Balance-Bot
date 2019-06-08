@@ -10,7 +10,7 @@ int count = 0;
 // max sampling time: 0.025s
 // max sampling rate: 40Hz
 void SetupMsTimer(){
-    MsTimer2::set(100, TimerInterrupt);  // 0.1s update
+    MsTimer2::set(250, TimerInterrupt);  // 0.1s update
     MsTimer2::start();
 }
 
@@ -73,7 +73,7 @@ void ParseData(){
     rawData.toCharArray(temp, rawData.length());
     char *token;
     
-    /* get the first token */
+    // get the first token 
     token = strtok(temp, ",");
     do{
         data[len++] = atof(token);
@@ -82,9 +82,7 @@ void ParseData(){
 }
 
 void SendData(){
-    //float leftWheelAngle = motor_A.GetAngle();
-    //float rightWheelAngle = motor_B.GetAngle();
-    String data = "~1,1," + String(psi, 3) + "," + String(motor_A.GetAngle(), 3) + "," + String(motor_B.GetAngle(), 3) + "#";
+    String data = "~1,1," + String(psi, 3) + "," + String(thetaL, 3) + "," + String(thetaR, 3) + "," + String(phi, 3) + "," + String(x) + "," + String(y) + "," + String(samplingTime, 4) + "#";
     BTSerial.println(data);
 }
 
@@ -92,14 +90,10 @@ void SendParticularData(int mode){
     String data = "";
     switch(mode){
         case 1:
-            data = "~1,2,"
-                 + motor_A.GetPsiControllerInformation() + ","
-                 + motor_B.GetPsiControllerInformation() + "#";
+            data = "~1,2," + psiController.GetInformation() + "#";
             break;
         case 2:
-            data = "~1,2,"
-                 + motor_A.GetThetaControllerInformation() + ","
-                 + motor_B.GetThetaControllerInformation() + "#";
+            data = "~1,2," + posController.GetInformation() + "#";
             break;
         case 3:
             break;

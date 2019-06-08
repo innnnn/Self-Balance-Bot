@@ -2,24 +2,31 @@
 
 // constructor
 BalanceBotController::BalanceBotController(){
-	MAX_OUTPUT = 0;
-	MIN_OUTPUT = 0;
+    MAX_OUTPUT = 0;
+    MIN_OUTPUT = 0;
     Kp = 0;
     Ki = 0;
     Kd = 0;
     reference = 0;
+    integral = 0;
+    preError = 0;
+    steady = false;
 }
 
 // set function
 void BalanceBotController::SetSaturation(const float max, const float min){
-	MAX_OUTPUT = max;
-	MIN_OUTPUT = min;
+    MAX_OUTPUT = max;
+    MIN_OUTPUT = min;
 }
 
-void BalanceBotController::SetPID(const float Kp, const float Ki, const float Kd){
-    this->Kp = Kp;
-    this->Ki = Ki;
-    this->Kd = Kd;
+void BalanceBotController::SetToleratedError(const float error){
+    toleratedError = error;
+}
+
+void BalanceBotController::SetPID(const float kp, const float ki, const float kd){
+    Kp = kp;
+    Ki = ki;
+    Kd = kd;
 }
 
 void BalanceBotController::SetReference(const float reference){
@@ -27,19 +34,23 @@ void BalanceBotController::SetReference(const float reference){
 }
 
 // get function
-String BalanceBotController::GetInformation(){
-	return String(Kp, 1) + "," + String(Ki, 0) + "," + String(Kd, 2) + "," + String(reference, 3);
+float BalanceBotController::GetReference(){
+    return reference;
 }
 
-float BalanceBotController::GetReference(){
-	return reference;
+String BalanceBotController::GetInformation(){
+    return String(Kp, 1) + "," + String(Ki, 0) + "," + String(Kd, 2) + "," + String(reference, 3);
+}
+
+String BalanceBotController::GetErrorIntegral(){  // for debug
+    return String(integral, 5);
 }
 
 // update
 float BalanceBotController::Update(const float feedback, const float dt){
     float error = reference - feedback;
 
-    // Proportional termW
+    // Proportional term
     float pOut = Kp * error;
 
     // Integral term
@@ -52,15 +63,21 @@ float BalanceBotController::Update(const float feedback, const float dt){
 
     // Total output
     float output = pOut + iOut + dOut;
-    
+
     // Saturation
-	if(output > MAX_OUTPUT)
-		output = MAX_OUTPUT;
-	else if(output < MIN_OUTPUT)
-		output = MIN_OUTPUT;
+    if(output > MAX_OUTPUT)
+        output = MAX_OUTPUT;
+    else if(output < MIN_OUTPUT)
+        output = MIN_OUTPUT;
 	
     // record the prevoius error
     preError = error;
 
+    steady = ( abs(preError) < toleratedError )? true : false;
+
     return output;
+}
+
+bool BalanceBotController::isSteady(){
+    return steady;
 }

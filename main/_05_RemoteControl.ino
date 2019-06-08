@@ -31,6 +31,6 @@ float maxPowerRemap = 255/100;
 //}
 
 void RemoteControl(){
-  motor_A.Rotate(data[1]);
-  motor_B.Rotate(data[2]);
+  motorA.Rotate(data[1]);
+  motorB.Rotate(data[2]);
 }
