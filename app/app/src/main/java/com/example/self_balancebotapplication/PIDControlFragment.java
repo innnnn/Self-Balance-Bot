@@ -16,63 +16,37 @@ import android.widget.Toast;
 public class PIDControlFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
     MainActivity mainActivity;
 
-    // left motor
-    private EditText editTextKpLeft;
-    private Button buttonKpLeftDown;
-    private Button buttonKpLeftUp;
+    // motor
+    private EditText editTextKp;
+    private Button buttonKpDown;
+    private Button buttonKpUp;
 
-    private EditText editTextKiLeft;
-    private Button buttonKiLeftDown;
-    private Button buttonKiLeftUp;
+    private EditText editTextKi;
+    private Button buttonKiDown;
+    private Button buttonKiUp;
 
-    private EditText editTextKdLeft;
-    private Button buttonKdLeftDown;
-    private Button buttonKdLeftUp;
+    private EditText editTextKd;
+    private Button buttonKdDown;
+    private Button buttonKdUp;
 
-    private EditText editTextReferenceLeft;
-    private Button buttonReferenceLeftDown;
-    private Button buttonReferenceLeftUp;
-
-    // right motor
-    private EditText editTextKpRight;
-    private Button buttonKpRightDown;
-    private Button buttonKpRightUp;
-
-    private EditText editTextKiRight;
-    private Button buttonKiRightDown;
-    private Button buttonKiRightUp;
-
-    private EditText editTextKdRight;
-    private Button buttonKdRightDown;
-    private Button buttonKdRightUp;
-
-    private EditText editTextReferenceRight;
-    private Button buttonReferenceRightDown;
-    private Button buttonReferenceRightUp;
+    private EditText editTextReference;
+    private Button buttonReferenceDown;
+    private Button buttonReferenceUp;
 
     // radio button
     private RadioButton radioButtonPsi;
     private RadioButton radioButtonTheta;
     public RadioGroup radioGroupController;
 
-    private RadioButton radioButtonSame;
-    private RadioButton radioButtonDifferent;
-    private RadioGroup radioGroupValue;
-
     // bottom
     private Button buttonSendPid;
     private Button buttonStopPid;
 
     // kp, ki, kd, reference
-    String kpLeft;
-    String kiLeft;
-    String kdLeft;
-    String referenceLeft;
-
-    String kpRight;
-    String kiRight;
-    String kdRight;
-    String referenceRight;
+    String kp;
+    String ki;
+    String kd;
+    String reference;
 
     // update information
     public boolean needUpdate = false;
@@ -82,181 +56,68 @@ public class PIDControlFragment extends Fragment implements RadioGroup.OnChecked
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pid_control, container, false);
 
-        // left motor
-        editTextKpLeft = view.findViewById(R.id.editText_inclination_kp_left);
-        buttonKpLeftDown = view.findViewById(R.id.button_inclination_kp_left_down);
-        buttonKpLeftDown.setOnClickListener(new View.OnClickListener() {
+        // motor
+        editTextKp = view.findViewById(R.id.editText_inclination_kp);
+        buttonKpDown = view.findViewById(R.id.button_inclination_kp_down);
+        buttonKpDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKpLeft.setText(String.format("%.1f", Double.parseDouble(editTextKpLeft.getText().toString()) - 0.1));
-                if (radioButtonSame.isChecked()) {
-                    editTextKpRight.setText(editTextKpLeft.getText());
-                }
+                editTextKp.setText(String.format("%.1f", Double.parseDouble(editTextKp.getText().toString()) - 0.1));
             }
         });
-        buttonKpLeftUp = view.findViewById(R.id.button_inclination_kp_left_up);
-        buttonKpLeftUp.setOnClickListener(new View.OnClickListener() {
+        buttonKpUp = view.findViewById(R.id.button_inclination_kp_up);
+        buttonKpUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKpLeft.setText(String.format("%.1f", Double.parseDouble(editTextKpLeft.getText().toString()) + 0.1));
-                if (radioButtonSame.isChecked()) {
-                    editTextKpRight.setText(editTextKpLeft.getText());
-                }
+                editTextKp.setText(String.format("%.1f", Double.parseDouble(editTextKp.getText().toString()) + 0.1));
             }
         });
 
-        editTextKiLeft = view.findViewById(R.id.editText_inclination_ki_left);
-        buttonKiLeftDown = view.findViewById(R.id.button_inclination_ki_left_down);
-        buttonKiLeftDown.setOnClickListener(new View.OnClickListener() {
+        editTextKi = view.findViewById(R.id.editText_inclination_ki);
+        buttonKiDown = view.findViewById(R.id.button_inclination_ki_down);
+        buttonKiDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKiLeft.setText(String.format("%.0f", Double.parseDouble(editTextKiLeft.getText().toString()) - 1));
-                if (radioButtonSame.isChecked()) {
-                    editTextKiRight.setText(editTextKiLeft.getText());
-                }
+                editTextKi.setText(String.format("%.0f", Double.parseDouble(editTextKi.getText().toString()) - 1));
             }
         });
-        buttonKiLeftUp = view.findViewById(R.id.button_inclination_ki_left_up);
-        buttonKiLeftUp.setOnClickListener(new View.OnClickListener() {
+        buttonKiUp = view.findViewById(R.id.button_inclination_ki_up);
+        buttonKiUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKiLeft.setText(String.format("%.0f", Double.parseDouble(editTextKiLeft.getText().toString()) + 1));
-                if (radioButtonSame.isChecked()) {
-                    editTextKiRight.setText(editTextKiLeft.getText());
-                }
+                editTextKi.setText(String.format("%.0f", Double.parseDouble(editTextKi.getText().toString()) + 1));
             }
         });
 
-        editTextKdLeft = view.findViewById(R.id.editText_inclination_kd_left);
-        buttonKdLeftDown = view.findViewById(R.id.button_inclination_kd_left_down);
-        buttonKdLeftDown.setOnClickListener(new View.OnClickListener() {
+        editTextKd = view.findViewById(R.id.editText_inclination_kd);
+        buttonKdDown = view.findViewById(R.id.button_inclination_kd_down);
+        buttonKdDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKdLeft.setText(String.format("%.2f", Double.parseDouble(editTextKdLeft.getText().toString()) - 0.01));
-                if (radioButtonSame.isChecked()) {
-                    editTextKdRight.setText(editTextKdLeft.getText());
-                }
+                editTextKd.setText(String.format("%.2f", Double.parseDouble(editTextKd.getText().toString()) - 0.01));
             }
         });
-        buttonKdLeftUp = view.findViewById(R.id.button_inclination_kd_left_up);
-        buttonKdLeftUp.setOnClickListener(new View.OnClickListener() {
+        buttonKdUp = view.findViewById(R.id.button_inclination_kd_up);
+        buttonKdUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextKdLeft.setText(String.format("%.2f", Double.parseDouble(editTextKdLeft.getText().toString()) + 0.01));
-                if (radioButtonSame.isChecked()) {
-                    editTextKdRight.setText(editTextKdLeft.getText());
-                }
+                editTextKd.setText(String.format("%.2f", Double.parseDouble(editTextKd.getText().toString()) + 0.01));
             }
         });
 
-        editTextReferenceLeft = view.findViewById(R.id.editText_inclination_reference_left);
-        buttonReferenceLeftDown = view.findViewById(R.id.button_inclination_reference_left_down);
-        buttonReferenceLeftDown.setOnClickListener(new View.OnClickListener() {
+        editTextReference = view.findViewById(R.id.editText_inclination_reference);
+        buttonReferenceDown = view.findViewById(R.id.button_inclination_reference_down);
+        buttonReferenceDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextReferenceLeft.setText(String.format("%.3f", Double.parseDouble(editTextReferenceLeft.getText().toString()) - 0.005));
-                if (radioButtonSame.isChecked()) {
-                    editTextReferenceRight.setText(editTextReferenceLeft.getText());
-                }
+                editTextReference.setText(String.format("%.3f", Double.parseDouble(editTextReference.getText().toString()) - 0.005));
             }
         });
-        buttonReferenceLeftUp = view.findViewById(R.id.button_inclination_reference_left_up);
-        buttonReferenceLeftUp.setOnClickListener(new View.OnClickListener() {
+        buttonReferenceUp = view.findViewById(R.id.button_inclination_reference_up);
+        buttonReferenceUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                editTextReferenceLeft.setText(String.format("%.3f", Double.parseDouble(editTextReferenceLeft.getText().toString()) + 0.005));
-                if (radioButtonSame.isChecked()) {
-                    editTextReferenceRight.setText(editTextReferenceLeft.getText());
-                }
-            }
-        });
-
-        // right motor
-        editTextKpRight = view.findViewById(R.id.editText_inclination_kp_right);
-        buttonKpRightDown = view.findViewById(R.id.button_inclination_kp_right_down);
-        buttonKpRightDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTextKpRight.setText(String.format("%.1f", Double.parseDouble(editTextKpRight.getText().toString()) - 0.1));
-                if (radioButtonSame.isChecked()) {
-                    editTextKpLeft.setText(editTextKpRight.getText());
-                }
-            }
-        });
-        buttonKpRightUp = view.findViewById(R.id.button_inclination_kp_right_up);
-        buttonKpRightUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTextKpRight.setText(String.format("%.1f", Double.parseDouble(editTextKpRight.getText().toString()) + 0.1));
-                if (radioButtonSame.isChecked()) {
-                    editTextKpLeft.setText(editTextKpRight.getText());
-                }
-            }
-        });
-
-        editTextKiRight = view.findViewById(R.id.editText_inclination_ki_right);
-        buttonKiRightDown = view.findViewById(R.id.button_inclination_ki_right_down);
-        buttonKiRightDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTextKiRight.setText(String.format("%.0f", Double.parseDouble(editTextKiRight.getText().toString()) - 1));
-                if (radioButtonSame.isChecked()) {
-                    editTextKiLeft.setText(editTextKiRight.getText());
-                }
-            }
-        });
-        buttonKiRightUp = view.findViewById(R.id.button_inclination_ki_right_up);
-        buttonKiRightUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTextKiRight.setText(String.format("%.0f", Double.parseDouble(editTextKiRight.getText().toString()) + 1));
-                if (radioButtonSame.isChecked()) {
-                    editTextKiLeft.setText(editTextKiRight.getText());
-                }
-            }
-        });
-
-        editTextKdRight = view.findViewById(R.id.editText_inclination_kd_right);
-        buttonKdRightDown = view.findViewById(R.id.button_inclination_kd_right_down);
-        buttonKdRightDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTextKdRight.setText(String.format("%.2f", Double.parseDouble(editTextKdRight.getText().toString()) - 0.01));
-                if (radioButtonSame.isChecked()) {
-                    editTextKdLeft.setText(editTextKdRight.getText());
-                }
-            }
-        });
-        buttonKdRightUp = view.findViewById(R.id.button_inclination_kd_right_up);
-        buttonKdRightUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTextKdRight.setText(String.format("%.2f", Double.parseDouble(editTextKdRight.getText().toString()) + 0.01));
-                if (radioButtonSame.isChecked()) {
-                    editTextKdLeft.setText(editTextKdRight.getText());
-                }
-            }
-        });
-
-        editTextReferenceRight = view.findViewById(R.id.editText_inclination_reference_right);
-        buttonReferenceRightDown = view.findViewById(R.id.button_inclination_reference_right_down);
-        buttonReferenceRightDown.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTextReferenceRight.setText(String.format("%.3f", Double.parseDouble(editTextReferenceRight.getText().toString()) - 0.005));
-                if (radioButtonSame.isChecked()) {
-                    editTextReferenceLeft.setText(editTextReferenceRight.getText());
-                }
-            }
-        });
-        buttonReferenceRightUp = view.findViewById(R.id.button_inclination_reference_right_up);
-        buttonReferenceRightUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editTextReferenceRight.setText(String.format("%.3f", Double.parseDouble(editTextReferenceRight.getText().toString()) + 0.005));
-                if (radioButtonSame.isChecked()) {
-                    editTextReferenceLeft.setText(editTextReferenceRight.getText());
-                }
+                editTextReference.setText(String.format("%.3f", Double.parseDouble(editTextReference.getText().toString()) + 0.005));
             }
         });
 
@@ -266,10 +127,6 @@ public class PIDControlFragment extends Fragment implements RadioGroup.OnChecked
         radioGroupController = view.findViewById(R.id.radioGroup_controller);
         radioGroupController.setOnCheckedChangeListener(this);
 
-        radioButtonSame = view.findViewById(R.id.radioButton_same);
-        radioButtonDifferent = view.findViewById(R.id.radioButton_different);
-        radioGroupValue = view.findViewById(R.id.radioGroup_value);
-        radioGroupValue.setOnCheckedChangeListener(this);
 
         // bottom
         buttonSendPid = view.findViewById(R.id.button_send_pid_inclination);
@@ -292,53 +149,31 @@ public class PIDControlFragment extends Fragment implements RadioGroup.OnChecked
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
-        if (checkedId == R.id.radioButton_same) {
-            editTextKpRight.setText(editTextKpLeft.getText());
-            editTextKiRight.setText(editTextKiLeft.getText());
-            editTextKdRight.setText(editTextKdLeft.getText());
-            editTextReferenceRight.setText(editTextReferenceLeft.getText());
-        } else if (checkedId == R.id.radioButton_psi || checkedId == R.id.radioButton_theta){
+        if (checkedId == R.id.radioButton_psi || checkedId == R.id.radioButton_theta){
             requestForInformaiton();
         }
     }
 
     private void send() {
-        kpLeft = editTextKpLeft.getText().toString();
-        kiLeft = editTextKiLeft.getText().toString();
-        kdLeft = editTextKdLeft.getText().toString();
-        referenceLeft = editTextReferenceLeft.getText().toString();
+        kp = editTextKp.getText().toString();
+        ki = editTextKi.getText().toString();
+        kd = editTextKd.getText().toString();
+        reference = editTextReference.getText().toString();
 
-        kpRight = editTextKpRight.getText().toString();
-        kiRight = editTextKiRight.getText().toString();
-        kdRight = editTextKdRight.getText().toString();
-        referenceRight = editTextReferenceRight.getText().toString();
-
-        if (kpLeft.isEmpty() || kiLeft.isEmpty() || kdLeft.isEmpty() || referenceLeft.isEmpty() || kpRight.isEmpty() || kiRight.isEmpty() || kdRight.isEmpty() || referenceRight.isEmpty()) {
+        if (kp.isEmpty() || ki.isEmpty() || kd.isEmpty() || reference.isEmpty() ) {
             Toast.makeText(mainActivity, "Please Input All Parameters", Toast.LENGTH_LONG).show();
         } else {
             String data = "";
-            if( radioButtonPsi.isChecked() && radioButtonSame.isChecked() ){
+            if( radioButtonPsi.isChecked() ){
                 data = "~1,"                                                              // send mode 1
-                     + "2,"                                                               // item mode 2
-                     + "1,"                                                               // control 1
-                     + kpLeft + "," + kiLeft + "," + kdLeft + "," + referenceLeft + "#";
-            } else if( radioButtonPsi.isChecked() && radioButtonDifferent.isChecked() ){
+                        + "2,"                                                               // item mode 2
+                        + "1,"                                                               // control 1
+                        + kp + "," + ki + "," + kd + "," + reference + "#";
+            }else if( radioButtonTheta.isChecked() ){
                 data = "~1,"                                                              // send mode 1
-                     + "2,"                                                               // item mode 2
-                     + "2,"                                                               // control 2
-                     + kpLeft + "," + kiLeft + "," + kdLeft + "," + referenceLeft + ","
-                     + kpRight + "," + kiRight + "," + kdRight + "," + referenceRight + "#";
-            } else if( radioButtonTheta.isChecked() && radioButtonSame.isChecked() ){
-                data = "~1,"                                                              // send mode 1
-                     + "2,"                                                               // item mode 2
-                     + "3,"                                                               // control 3
-                     + kpLeft + "," + kiLeft + "," + kdLeft + "," + referenceLeft + "#";
-            } else if( radioButtonTheta.isChecked() && radioButtonDifferent.isChecked() ){
-                data = "~1,"                                                              // send mode 1
-                     + "2,"                                                               // item mode 2
-                     + "4,"                                                               // control 5
-                     + kpLeft + "," + kiLeft + "," + kdLeft + "," + referenceLeft + ","
-                     + kpRight + "," + kiRight + "," + kdRight + "," + referenceRight + "#";
+                        + "2,"                                                               // item mode 2
+                        + "3,"                                                               // control 3
+                        + kp + "," + ki + "," + kd + "," + reference + "#";
             }
             mainActivity.bluetoothFragment.bluetoothSendData(data);
         }
@@ -346,22 +181,17 @@ public class PIDControlFragment extends Fragment implements RadioGroup.OnChecked
 
     public void stop() {
         String data = "~2,"                                              // send mode 2
-                    + "0#";                                             // control mode 0
+                + "0#";                                             // control mode 0
         System.out.println(data);
         mainActivity.bluetoothFragment.bluetoothSendData(data);
     }
 
     public void receiveData(String[] data){
         if( data.length==6 ){
-            kpLeft = data[2];
-            kiLeft = data[3];
-            kdLeft = data[4];
-            referenceLeft = data[5];
-
-            kpRight = data[2];
-            kiRight = data[3];
-            kdRight = data[4];
-            referenceRight = data[5];
+            kp = data[2];
+            ki = data[3];
+            kd = data[4];
+            reference = data[5];
         }
     }
 
@@ -378,24 +208,19 @@ public class PIDControlFragment extends Fragment implements RadioGroup.OnChecked
     }
 
     public void updateInformation(){
-        if( editTextKpLeft!=null && editTextKiLeft!=null && editTextKdLeft!=null && editTextReferenceLeft!=null && editTextKpRight!=null && editTextKiRight!=null && editTextKdRight!=null && editTextReferenceRight!=null){
-            editTextKpLeft.setText(kpLeft);
-            editTextKiLeft.setText(kiLeft);
-            editTextKdLeft.setText(kdLeft);
-            editTextReferenceLeft.setText(referenceLeft);
+        if( editTextKp!=null && editTextKi!=null && editTextKd!=null && editTextReference!=null ){
+            editTextKp.setText(kp);
+            editTextKi.setText(ki);
+            editTextKd.setText(kd);
+            editTextReference.setText(reference);
 
-            editTextKpRight.setText(kpRight);
-            editTextKiRight.setText(kiRight);
-            editTextKdRight.setText(kdRight);
-            editTextReferenceRight.setText(referenceRight);
             needUpdate = false;
         }
     }
 
     public void checkInformation(double []data){
         double error = 0.0001;
-        if( Math.abs(data[2]-Double.parseDouble(kpLeft))<error || Math.abs(data[3]-Double.parseDouble(kiLeft))<error || Math.abs(data[4]-Double.parseDouble(kdLeft))<error || Math.abs(data[5]-Double.parseDouble(referenceLeft))<error
-                || Math.abs(data[6]-Double.parseDouble(kpRight))<error || Math.abs(data[7]-Double.parseDouble(kiRight))<error || Math.abs(data[8]-Double.parseDouble(kdRight))<error || Math.abs(data[9]-Double.parseDouble(referenceRight))<error ){
+        if( Math.abs(data[2]-Double.parseDouble(kp))<error || Math.abs(data[3]-Double.parseDouble(ki))<error || Math.abs(data[4]-Double.parseDouble(kd))<error || Math.abs(data[5]-Double.parseDouble(reference))<error ){
             //Toast.makeText(mainActivity, "Successfully Set the Parameters", Toast.LENGTH_LONG).show();
             System.out.println("Right");
         } else {
