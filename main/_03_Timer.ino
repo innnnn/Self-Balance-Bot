@@ -82,7 +82,7 @@ void ParseData(){
 }
 
 void SendData(){
-    String data = "~1,1," + String(psi, 3) + "," + String(thetaL, 3) + "," + String(thetaR, 3) + "," + String(phi, 3) + "," + String(x) + "," + String(y) + "," + String(samplingTime, 4) + "#";
+    String data = "~1,1," + String(psi, 3) + "," + String(speedL, 3) + "," + String(speedR, 3) + "," + String(output, 3) + "," + String(x) + "," + String(y) + "," + String(samplingTime, 4) + "#";
     BTSerial.println(data);
 }
 

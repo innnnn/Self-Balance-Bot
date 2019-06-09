@@ -31,9 +31,13 @@ BalanceBotController posController;
 float psi;
 float thetaL;
 float thetaR;
+float speedL;
+float speedR;
 float phi;
 float x;
 float y;
+float xSpeed;
+float ySpeed;
 
 // sampling
 unsigned long previousTime;
@@ -42,16 +46,19 @@ float samplingTime;
 float output;
 float output_psi;
 float output_pos;
+float desire_psi;
+
+bool flag = false;
 
 void setup(){
     Serial.begin(9600);
     BTSerial.begin(57600);
-
+    
     // initialization
     SetupCar();
     SetupMPU6050();
     SetupMsTimer();
-
+    
     // initialize the previous time
     previousTime = millis();
 }
@@ -62,68 +69,34 @@ void loop(){
     currentTime = millis();
     samplingTime = (currentTime - previousTime)/1000.0;
 
-    // update current state
+    // in case for samplingTime = 0
+    if( samplingTime < 0.001 )
+        samplingTime = 0.001;
+
+    // update the current state
     psi = ((float)GetPsi())/180*PI;
     encoderA.Update(samplingTime);
     encoderB.Update(samplingTime);
     thetaL = encoderA.GetAngle();
     thetaR = encoderB.GetAngle();
+    speedL = encoderA.GetSpeed();
+    speedR = encoderB.GetSpeed();
     phi = R/W*(thetaL - thetaR);
     x = R*(thetaL + thetaR)*sin(phi)/2;
     y = -R*(thetaL + thetaR)*cos(phi)/2;
+    xSpeed = R*(speedL + speedR)*sin(phi)/2;
+    ySpeed = -R*(speedL + speedR)*cos(phi)/2;
 
-
-    // update controller
-    /*
-    output_psi = -psiController.Update(psi, samplingTime);
-    if( abs(psi)<0.025 && !posController.isSteady() ){
-        output = output_psi;
-    }
-    else{
-       output = -psiController.Update(psi, samplingTime);
-    }*/
-    //output = -psiController.Update(psi, samplingTime);
-    
-    float desire_psi = posController.Update(y, samplingTime);
-    //Serial.println(desire_psi);
+    // update the controller
+    desire_psi = -posController.Update(y, samplingTime);
     psiController.SetReference(desire_psi);
     output = -psiController.Update(psi, samplingTime);
-    
+
+    // move the car
     motorA.Rotate( output );
     motorB.Rotate( output );
-    
+
+
     // record the previous time
     previousTime = currentTime;
 }
-
-      /* 
-      desire_psi = thetaController.Update(angle, samplingTime);
-      psiController.SetReference(desire_psi);
-      output = -psiController.Update(psi, samplingTime);
-      */
-      
-      /* parallel
-      output_psi = -psiController.Update(psi, samplingTime);
-      //Serial.println(output_psi);
-      output_theta = -thetaController.Update(angle, samplingTime);
-      //Serial.println(output_theta);
-      output = 0.5 * output_psi + 0.5 * output_theta;
-      */
-      
-      /*
-      if( abs(psi)<0.02 && !thetaController.isSteady() )
-        output = thetaController.Update(angle, samplingTime);
-      else
-        output = -psiController.Update(psi, samplingTime);
-      */
-      
-      /*
-      if( abs(psi)<0.02 && !thetaController.isSteady() ){
-        desire_psi = thetaController.Update(angle, samplingTime);
-      }
-      else{
-        desire_psi = 0;
-      }
-      psiController.SetReference(desire_psi);
-      output = -psiController.Update(psi, samplingTime);
-      */
