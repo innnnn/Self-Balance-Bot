@@ -16,7 +16,7 @@ import android.widget.Toast;
 public class PIDControlFragment extends Fragment implements RadioGroup.OnCheckedChangeListener {
     MainActivity mainActivity;
 
-    // left motor
+    // motor
     private EditText editTextKp;
     private Button buttonKpDown;
     private Button buttonKpUp;
@@ -56,7 +56,7 @@ public class PIDControlFragment extends Fragment implements RadioGroup.OnChecked
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pid_control, container, false);
 
-        // left motor
+        // motor
         editTextKp = view.findViewById(R.id.editText_inclination_kp);
         buttonKpDown = view.findViewById(R.id.button_inclination_kp_down);
         buttonKpDown.setOnClickListener(new View.OnClickListener() {
