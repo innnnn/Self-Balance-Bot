@@ -34,8 +34,11 @@ class BalanceBotController{
     // update
     float Update(const float feedback, const float dt);
 
-    // chech the 
-    bool isSteady();
+    // chech
+    bool IsSteady();
+    
+    // clear
+    void ClearIntegral();
 };
 
 #endif //BALANCEBOTCONTROLLER_H

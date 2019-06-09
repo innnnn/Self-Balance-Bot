@@ -9,7 +9,7 @@ BalanceBotController::BalanceBotController(){
     Kd = 0;
     reference = 0;
     integral = 0;
-    preError = 0;
+    //preError = 0;
     steady = false;
 }
 
@@ -78,6 +78,10 @@ float BalanceBotController::Update(const float feedback, const float dt){
     return output;
 }
 
-bool BalanceBotController::isSteady(){
+bool BalanceBotController::IsSteady(){
     return steady;
+}
+
+void BalanceBotController::ClearIntegral(){
+    integral = 0;
 }
