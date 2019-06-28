@@ -1,62 +1,90 @@
-// Goal: Bluetooth
-
-bool startReadData = false;
-String rawData = "";
-int len = 0;
-float *data = new float[12];
-int count = 0;
+// Goal: Receive and Send Data through Serial & Bluetooth
 
 // sampling time
 // max sampling time: 0.025s
 // max sampling rate: 40Hz
-void SetupMsTimer(){
-    MsTimer2::set(250, TimerInterrupt);  // 0.1s update
+void setupMsTimer2(){
+    MsTimer2::set(100, TimerInterrupt);  // 0.1 second update
     MsTimer2::start();
 }
 
 void TimerInterrupt(){
     sei();
 
-    ReceiveData();
-    SendData();
+    receiveDataBluetooth();
+    
+    //Game3
+    //ReceiveDataSerial();
+    
+    sendData();
 }
 
-// start: "~"
-// end: "#"
-void ReceiveData(){
+// start: "~", end: "#"
+void receiveDataBluetooth(){
     while(BTSerial.available()){
         char c = BTSerial.read();
 
         if(startReadData){
-            if(c=='#'){
+            if(c=='#'){  // end of data
                 //Serial.println(rawData);
                 rawData += ',';
-                ParseData();
-            
-                if(len>=2){
+                commaNumber++;
+                parseData();
+                
+                if( len>=2 && commaNumber==len ){
                     if( ((int)data[0]) == 1 ){
                         switch( (int)data[1] ){
                             case 1:
+                                joystickControl();
                                 break;
                             case 2:
-                                SetController();
-                                break;
-                            case 3:
+                                setController();
                                 break;
                         }
+                    } else if ( ((int)data[0]) == 2 ) {
+                        sendParticularData((int)data[1]);
                     }
-                    else if( ((int)data[0]) == 2 ){
-                        SendParticularData((int)data[1]);
-                    }
-                }
-                else{
-                    BTSerial.println("");
                 }
                 
                 startReadData = false;
                 rawData = "";
+                commaNumber = 0;
                 len = 0;
                 break;
+            } else {
+                if( c == '-' || c == ',' || c == '.' || isDigit(c) ){
+                    rawData += String(c);
+                    if(c == ','){
+                        commaNumber++;
+                    }
+                } else {
+                    startReadData = false;
+                    rawData = "";
+                    commaNumber = 0;
+                    len = 0;
+                    break;
+                }
+            }
+        } else if (c=='~') {  // start receiving data
+            startReadData = true;
+        }
+    }
+}
+
+void receiveDataSerial(){
+    while(Serial.available()){
+        char c = Serial.read();
+
+        if(startReadData){
+            if(c=='#'){
+                char m = rawData[0];
+                char c = rawData[1];
+
+                if( posController.isSteady() && phiController.isSteady() ){
+                    Move = m;
+                    Color = c;
+                    startTurn = true;
+                }
             }
             else{
                 rawData += String(c);
@@ -68,12 +96,12 @@ void ReceiveData(){
     }
 }
 
-void ParseData(){
+void parseData(){
     char *temp = new char[rawData.length()];
     rawData.toCharArray(temp, rawData.length());
     char *token;
     
-    // get the first token 
+    // get the first token
     token = strtok(temp, ",");
     do{
         data[len++] = atof(token);
@@ -81,19 +109,19 @@ void ParseData(){
     } while (token != NULL);
 }
 
-void SendData(){
-    String data = "~1,1," + String(psi, 3) + "," + String(speedL, 3) + "," + String(speedR, 3) + "," + String(output, 3) + "," + String(x) + "," + String(y) + "," + String(samplingTime, 4) + "#";
+void sendData(){
+    String data = "~1,4," + psiController.getErrorIntegral() + "#";
     BTSerial.println(data);
 }
 
-void SendParticularData(int mode){
+void sendParticularData(int mode){
     String data = "";
     switch(mode){
         case 1:
-            data = "~1,2," + psiController.GetInformation() + "#";
+            data = "~1,2," + psiController.getInformation() + "#";
             break;
         case 2:
-            data = "~1,2," + posController.GetInformation() + "#";
+            data = "~1,2," + posController.getInformation() + "#";
             break;
         case 3:
             break;

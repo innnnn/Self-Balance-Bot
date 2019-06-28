@@ -75,18 +75,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        carStateFragment.updateInformation();
+                        //carStateFragment.updateInformation();
                         debugFragment.updateInformation();
+                        joystickControlFragment.updateInformation();
 
                         if(pidControlFragment.needUpdate){
                             pidControlFragment.updateInformation();
+                        }
+                        /* send joystick value */
+                        if(bluetoothFragment.getmBluetoothConnection()!=null && bluetoothFragment.bluetoothConnect){
+                            System.out.println(joystickControlFragment.getValue());
+                            bluetoothFragment.bluetoothSendData( joystickControlFragment.getValue() );
                         }
                     }
                 });
             }
         };
         timer = new Timer();
-        timer.scheduleAtFixedRate(task, 1000, 250);
+        timer.scheduleAtFixedRate(task, 1000, 150);
     }
 
     @Override
@@ -162,9 +168,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case 2:
                     pidControlFragment.receiveData(dataS);
                     pidControlFragment.needUpdate = true;
+                    debugFragment.receiveData(dataS);
                     break;
                 case 3:
                     debugFragment.receiveData(dataS);
+                    break;
+                case 4:
+                    joystickControlFragment.receiveData(dataS);
                     break;
             }
         } else if( ((int)dataD[0])==2 ){
