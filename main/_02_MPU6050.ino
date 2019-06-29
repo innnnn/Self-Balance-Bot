@@ -13,7 +13,7 @@ uint8_t i2cData[14]; // Buffer for I2C data
 
 MPU6050 accelgyro;
 
-void SetupMPU6050(){
+void setupMPU6050(){
     Wire.begin();
     #if ARDUINO >= 157
         Wire.setClock(400000UL); // Set I2C frequency to 400kHz
@@ -34,7 +34,7 @@ void SetupMPU6050(){
         while (1);
     }
 
-    // calibration: offset
+    // calibration
     accelgyro.setXAccelOffset(844);
     accelgyro.setYAccelOffset(511);
     accelgyro.setZAccelOffset(1829);

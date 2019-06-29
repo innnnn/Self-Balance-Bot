@@ -1,6 +1,6 @@
 // Goal: Setup motor, encoder, controller
 
-void SetupCar(){
+void setupCar(){
 /*-- pin setup ------------------------------------------------------------------*/
 // If batterys are at backward & user see the car from the backward
 // motor A(right motor) connected between A01 and A02
@@ -14,38 +14,44 @@ void SetupCar(){
     const int DIRA = A3, DIRB = 8;              // Encoder direction
 
     // left motor
-    motorA.SetPin(PWMA, AIN1, AIN2, STBY);
+    motorL.setPin(PWMA, AIN1, AIN2, STBY);
 
     // right motor
-    motorB.SetPin(PWMB, BIN1, BIN2, STBY);
+    motorR.setPin(PWMB, BIN1, BIN2, STBY);
 
     // left encoder
-    encoderA.SetMotorSide(-1);
-    encoderA.SetPin(INTA, DIRA);
-    attachInterrupt(digitalPinToInterrupt(encoderA.GetInterruptPin()), EncoderAInterrupt, RISING);
+    encoderL.setMotorSide(-1);
+    encoderL.setPin(INTA, DIRA);
+    attachInterrupt(digitalPinToInterrupt(encoderL.getInterruptPin()), encoderLInterrupt, RISING);
     
     // right encoder
-    encoderB.SetMotorSide(1);
-    encoderB.SetPin(INTB, DIRB);
-    attachInterrupt(digitalPinToInterrupt(encoderB.GetInterruptPin()), EncoderBInterrupt, RISING);
+    encoderR.setMotorSide(1);
+    encoderR.setPin(INTB, DIRB);
+    attachInterrupt(digitalPinToInterrupt(encoderR.getInterruptPin()), encoderRInterrupt, RISING);
 
     // psi controller
-    psiController.SetSaturation(12.0, -12.0);  // 12v ~ -12v
-    psiController.SetToleratedError(0.02);     // 0.02rad
-    psiController.SetPID(95.3, 600, 1.1);      // KP, KI, KD  80, 500, 0.5
-    psiController.SetReference(0.0);           // Reference
+    psiController.setSaturation(12.0, -12.0);  // 12v ~ -12v
+    psiController.setToleratedError(0.02);     // 0.02rad
+    psiController.setPID(93.5, 600, 1.1);      // KP, KI, KD
+    psiController.setReference(0.0);           // Reference
 
-    // pos Controller
-    posController.SetSaturation(0.02, -0.02);  // 0.02 ~ -0.02rad
-    posController.SetToleratedError(5);        // 5cm
-    posController.SetPID(0.001, 0, 0);            // KP, KI, KD
-    posController.SetReference(50);           // Reference
+    // pos controller
+    posController.setSaturation(0.02, -0.02);  // 0.02rad ~ -0.02rad
+    posController.setToleratedError(W);        // W cm
+    posController.setPID(0.001);               // KP  0.001
+    posController.setReference(0.0);           // Reference
+
+    // phi controller
+    phiController.setSaturation(3, -3);        // 3v ~ -3v
+    phiController.setToleratedError(0.0262);   // 0.0262rad -> 1.5degree
+    phiController.setPID(1);                   // KP  1
+    psiController.setReference(0.0);           // Reference
 }
 
-void EncoderAInterrupt(){
-    encoderA.UpdatePPR();
+void encoderLInterrupt(){
+    encoderL.updatePPR();
 }
 
-void EncoderBInterrupt(){
-    encoderB.UpdatePPR();
+void encoderRInterrupt(){
+    encoderR.updatePPR();
 }

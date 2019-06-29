@@ -12,34 +12,48 @@ import android.widget.TextView;
 public class DebugFragment extends Fragment {
     MainActivity mainActivity;
 
-    private String leftErrorIntegral = "0";
-    private String rightErrorIntegral = "0";
+    private TextView textViewKp;
+    private TextView textViewKi;
+    private TextView textViewKd;
+    private TextView textViewReference;
 
-    private TextView textViewLeftErrorIntegral;
-    private TextView textViewRightErrorIntegral;
+    private String kp;
+    private String ki;
+    private String kd;
+    private String reference;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_debug, container, false);
 
-        textViewLeftErrorIntegral = view.findViewById(R.id.textView_x);
-        textViewRightErrorIntegral = view.findViewById(R.id.textView_y);
+        textViewKp = view.findViewById(R.id.textView_debug_kp);
+        textViewKp.setText(kp);
+        textViewKi = view.findViewById(R.id.textView_debug_ki);
+        textViewKi.setText(ki);
+        textViewKd = view.findViewById(R.id.textView_debug_kd);
+        textViewKd.setText(kd);
+        textViewReference = view.findViewById(R.id.textView_debug_reference);
+        textViewReference.setText(reference);
 
         return view;
     }
 
     public void receiveData(String[] data){
-        if( data.length==4 ){
-            leftErrorIntegral = data[2];
-            rightErrorIntegral = data[3];
+        if( data.length==6 ){
+            kp = data[2];
+            ki = data[3];
+            kd = data[4];
+            reference = data[5];
         }
     }
 
     public void updateInformation(){
-        if( (textViewLeftErrorIntegral!=null) && (textViewRightErrorIntegral!=null) ){
-            textViewLeftErrorIntegral.setText(leftErrorIntegral);
-            textViewRightErrorIntegral.setText(rightErrorIntegral);
+        if( (textViewKp!=null) && (textViewKi!=null) && (textViewKd!=null) && (textViewReference!=null) ){
+            textViewKp.setText(kp);
+            textViewKi.setText(ki);
+            textViewKd.setText(kd);
+            textViewReference.setText(reference);
         }
     }
 

@@ -172,8 +172,8 @@ public class PIDControlFragment extends Fragment implements RadioGroup.OnChecked
             }else if( radioButtonTheta.isChecked() ){
                 data = "~1,"                                                              // send mode 1
                         + "2,"                                                               // item mode 2
-                        + "3,"                                                               // control 3
-                        + kp + "," + ki + "," + kd + "," + reference + "#";
+                        + "2,"                                                               // control 3
+                        + kp + "," + reference + "#";
             }
             mainActivity.bluetoothFragment.bluetoothSendData(data);
         }

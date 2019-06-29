@@ -12,40 +12,41 @@ import android.widget.TextView;
 public class CarStateFragment extends Fragment {
     MainActivity mainActivity;
 
-    private TextView textViewInclination;
-    private TextView textViewLeftWheel;
-    private TextView textViewRightWheel;
+    private TextView textViewPsi;
+    private TextView textViewOutput;
+    private TextView textViewThetaL;
+    private TextView textViewThetaR;
+    private TextView textViewTheta;
+    private TextView textViewPhi;
+    private TextView textViewIndex;
 
     private double psi = 0;
-    private double leftAngle = 0;
-    private double rightAngle = 0;
-
-    private String phi = "0";
-    private String x = "0";
-    private String y = "0";
-    private String samplingTime = "0";
-
-    private TextView textViewPhi;
-    private TextView textViewX;
-    private TextView textViewY;
-    private TextView textViewSamplingTime;
+    private double output = 0;
+    private double thetaL = 0;
+    private double thetaR = 0;
+    private double theta = 0;
+    private double phi = 0;
+    private double index = 0;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_car_state, container, false);
 
-        textViewInclination = view.findViewById(R.id.textView_state_inclination);
-        textViewInclination.setText("0");
-        textViewLeftWheel = view.findViewById(R.id.textView_state_left_wheel);
-        textViewLeftWheel.setText("0");
-        textViewRightWheel = view.findViewById(R.id.textView_state_right_wheel);
-        textViewRightWheel.setText("0");
-
-        textViewX = view.findViewById(R.id.textView_x);
-        textViewY = view.findViewById(R.id.textView_y);
+        textViewPsi = view.findViewById(R.id.textView_state_psi);
+        textViewPsi.setText("0");
+        textViewOutput = view.findViewById(R.id.textView_state_output);
+        textViewOutput.setText("0");
+        textViewThetaL = view.findViewById(R.id.textView_thetaL);
+        textViewThetaL.setText("0");
+        textViewThetaR = view.findViewById(R.id.textView_thetaR);
+        textViewThetaR.setText("0");
+        textViewTheta = view.findViewById(R.id.textView_theta);
+        textViewTheta.setText("0");
         textViewPhi = view.findViewById(R.id.textView_phi);
-        textViewSamplingTime = view.findViewById(R.id.textView_samplingTime);
+        textViewPhi.setText("0");
+        textViewIndex = view.findViewById(R.id.textView_index);
+        textViewIndex.setText("0");
 
         return view;
     }
@@ -53,26 +54,25 @@ public class CarStateFragment extends Fragment {
     public void receiveData(double[] data){
         if( data.length==9 ){
             psi = Math.toDegrees(data[2]);
-            leftAngle = Math.toDegrees(data[3]);
-            rightAngle = Math.toDegrees(data[4]);
-
-            phi = String.format("%f", data[5]);
-            x = String.format("%f", data[6]);
-            y = String.format("%f", data[7]);
-            samplingTime = String.format("%f", data[8]);
+            output = data[3];
+            thetaL = data[4];
+            thetaR = data[5];
+            theta = data[6];
+            phi = data[7];
+            index = data[8];
         }
     }
 
     public void updateInformation(){
-        if( (textViewInclination!=null) && (textViewLeftWheel!=null) && (textViewRightWheel!=null) && (textViewPhi!=null) && (textViewX!=null) && (textViewY!=null) ){
-            textViewInclination.setText(String.format("%.02f (degree)", psi));
-            textViewLeftWheel.setText(String.format("%.02f (degree)", leftAngle));
-            textViewRightWheel.setText(String.format("%.02f (degree)", rightAngle));
-
-            textViewPhi.setText(phi);
-            textViewX.setText(x);
-            textViewY.setText(y);
-            textViewSamplingTime.setText(samplingTime);
+//        if( (textViewPsi!=null) && (textViewOutput!=null) && (textViewThetaL!=null) && (textViewThetaR!=null) && (textViewPhi!=null) && (textViewOutputDiff!=null) && (textViewMode!=null) ){
+        if( (textViewPsi!=null) && (textViewOutput!=null) && (textViewThetaL!=null) && (textViewThetaR!=null) && (textViewTheta!=null) && (textViewPhi!=null) && (textViewIndex!=null) ){
+            textViewPsi.setText(String.format("%.02f  (degree)", psi));
+            textViewOutput.setText(String.format("%.02f  (voltage)", output));
+            textViewThetaL.setText(String.format("%.02f (rad)", thetaL));
+            textViewThetaR.setText(String.format("%.02f (rad)", thetaR));
+            textViewTheta.setText(String.format("%.02f  (cm)", theta));
+            textViewPhi.setText(String.format("%.02f (rad)", phi));
+            textViewIndex.setText(String.format("%.02f (cm)", index));
         }
     }
 

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.jmedeisis.bugstick.Joystick;
@@ -15,8 +16,10 @@ import com.jmedeisis.bugstick.JoystickListener;
 public class JoystickControlFragment extends Fragment {
     MainActivity mainActivity;
 
-    TextView yTextView ;
-    TextView xTextView ;
+    TextView yTextView;
+    TextView xTextView;
+
+    TextView iTextValue;
 
     String xNoneString;
     String xValueString;
@@ -27,6 +30,15 @@ public class JoystickControlFragment extends Fragment {
     Joystick joystick_l;
 
     private int joy_value[];
+
+    private int straight = 0;
+    private int phi = 0;
+    private String i_value = "0";
+
+    private Switch switchOffRoad;
+
+    private Switch switchClear;
+
 
     @Nullable
     @Override
@@ -39,6 +51,9 @@ public class JoystickControlFragment extends Fragment {
 
         yTextView = (TextView) view.findViewById(R.id.y_value);
         xTextView = (TextView) view.findViewById(R.id.x_value);
+
+        iTextValue = (TextView) view.findViewById(R.id.textView_I_value);
+        iTextValue.setText("0");
 
         xNoneString = "0 : X";
         xValueString = "%1$.0f : X";
@@ -59,7 +74,7 @@ public class JoystickControlFragment extends Fragment {
             public void onDrag(float degrees, float offset) {
                 float value = (float) (offset * 100 * Math.cos(Math.toRadians(degrees)));
                 xTextView.setText(String.format(xValueString, value));
-                joy_value[1] = (int)value;
+                joy_value[1] = (int) value;
 
                 sendValue();
             }
@@ -83,7 +98,7 @@ public class JoystickControlFragment extends Fragment {
             public void onDrag(float degrees, float offset) {
                 float value = (float) (offset * 100 * Math.sin(Math.toRadians(degrees)));
                 yTextView.setText(String.format(yValueString, value));
-                joy_value[0] = (int)value;
+                joy_value[0] = (int) value;
 
                 sendValue();
             }
@@ -97,41 +112,81 @@ public class JoystickControlFragment extends Fragment {
             }
         });
 
+        switchOffRoad = view.findViewById(R.id.switch_off_road);
+        switchOffRoad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String data;
+                if (switchOffRoad.isChecked()) {
+                    data = "~2# ";
+                    mainActivity.bluetoothFragment.bluetoothSendData(data);
+                } else {
+                    data = "~3# ";
+                    mainActivity.bluetoothFragment.bluetoothSendData(data);
+                }
+            }
+        });
+
+        switchClear = view.findViewById(R.id.switch_clear);
+        switchClear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String data;
+                if (switchClear.isChecked()) {
+                    data = "~1# ";
+                    mainActivity.bluetoothFragment.bluetoothSendData(data);
+                }
+            }
+        });
+
         return view;
     }
 
-    public int[] getJoy_value() {
-        return joy_value;
+    public void receiveData(String[] data){
+        if( data.length==3 ){
+            i_value = data[2];
+        }
     }
+
+    public void updateInformation(){
+        if( iTextValue != null ){
+            iTextValue.setText(i_value);
+        }
+    }
+
 
     public void setActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
-    public void sendValue(){
-        String data;
-        int common = joy_value[0];
-        int diff = joy_value[1];
-        float left_motor, right_motor;
+    public void sendValue() {
+        straight = joy_value[0];
+        phi     = joy_value[1];
+//        int common = joy_value[0];
+//        int diff = joy_value[1];
+//        float left_motor, right_motor;
 
-        if(joy_value[0] >= 0){
-            left_motor = (float) (common + diff / 2.0);
-            right_motor = (float) (common - diff / 2.0);
-        }else{
-            left_motor = (float) (common - diff / 2.0);
-            right_motor = (float) (common + diff / 2.0);
-        }
+//        if(joy_value[0] >= 0){
+//            left_motor = (float) (common + diff / 2.0);
+//            right_motor = (float) (common - diff / 2.0);
+//        }else{
+//            left_motor = (float) (common - diff / 2.0);
+//            right_motor = (float) (common + diff / 2.0);
+//        }
+//        System.out.println(straight + ", " + phi);
 //        System.out.println(left_motor + ", " + right_motor);
 
         //mapping
-        if(left_motor > 0) left_motor = (float) (left_motor * (231/150.0) + 25);
-        if(left_motor < 0) left_motor = (float) (left_motor * (231/150.0) - 25);
-        if(right_motor > 0) right_motor = (float) (right_motor * (231/150.0) + 25);
-        if(right_motor < 0) right_motor = (float) (right_motor * (231/150.0) - 25);
+//        if(left_motor > 0) left_motor = (float) (left_motor * (231/150.0) + 25);
+//        if(left_motor < 0) left_motor = (float) (left_motor * (231/150.0) - 25);
+//        if(right_motor > 0) right_motor = (float) (right_motor * (231/150.0) + 25);
+//        if(right_motor < 0) right_motor = (float) (right_motor * (231/150.0) - 25);
 
-        data = "~" + (int)left_motor + "," + (int)right_motor + "#";
-        System.out.println(data);
+//        data = "~" + (int)left_motor + "," + (int)right_motor + "#";
+//        System.out.println(data);
+    }
 
-        mainActivity.bluetoothFragment.bluetoothSendData(data);
+    public String getValue() {
+        return "~" + straight + "," + phi + "#";
     }
 }
