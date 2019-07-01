@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //carStateFragment.updateInformation();
+                        carStateFragment.updateInformation();
                         debugFragment.updateInformation();
                         joystickControlFragment.updateInformation();
 
@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         }
                         /* send joystick value */
                         if(bluetoothFragment.getmBluetoothConnection()!=null && bluetoothFragment.bluetoothConnect){
-                            System.out.println(joystickControlFragment.getValue());
                             bluetoothFragment.bluetoothSendData( joystickControlFragment.getValue() );
                         }
                     }
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if( ((int)dataD[0])==1 ){
             switch( (int)dataD[1] ){
                 case 1:
-                    carStateFragment.receiveData(dataD);
+                    joystickControlFragment.receiveData(dataS);
                     break;
                 case 2:
                     pidControlFragment.receiveData(dataS);
@@ -171,10 +170,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     debugFragment.receiveData(dataS);
                     break;
                 case 3:
-                    debugFragment.receiveData(dataS);
+                    carStateFragment.receiveData(dataD);
                     break;
                 case 4:
-                    joystickControlFragment.receiveData(dataS);
+                    debugFragment.receiveData(dataS);
                     break;
             }
         } else if( ((int)dataD[0])==2 ){

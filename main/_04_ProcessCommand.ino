@@ -1,7 +1,7 @@
 // Goal: Process the Command which is reveived from Car ang Rpi
 
 void joystickControl(){
-    if( abs(data[2])<=0.04 && abs(data[3])<=PI/2 ){
+    if( fabs(data[2])<=maxPsi && fabs(data[3])<=maxPhi ){
         desirePsi = data[2];
         desirePhi = data[3];
     }

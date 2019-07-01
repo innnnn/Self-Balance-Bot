@@ -1,6 +1,6 @@
 // Goal: system id need constant 5v input
 
-void StableVoltage(const int voltage){
-    motorL.rotate( (int)(voltage) );
-    motorR.rotate( (int)(voltage) );
+void stableVoltage(const int voltage){
+    motorL.rotate( (int)(voltage/12.0*255) );
+    motorR.rotate( (int)(voltage/12.0*255) );
 }

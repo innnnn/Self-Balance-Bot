@@ -29,25 +29,20 @@ public class JoystickControlFragment extends Fragment {
     Joystick joystick_r;
     Joystick joystick_l;
 
-    private int joy_value[];
-
-    private int straight = 0;
-    private int phi = 0;
+    private double psi = 0;
+    private double phi = 0;
     private String i_value = "0";
 
     private Switch switchOffRoad;
+    private double maxPsi = 0.03;
+    private double maxPhi = 3*Math.PI/4;
 
     private Switch switchClear;
-
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_joystick_control, container, false);
-
-        joy_value = new int[2];
-        joy_value[0] = 0;
-        joy_value[1] = 0;
 
         yTextView = (TextView) view.findViewById(R.id.y_value);
         xTextView = (TextView) view.findViewById(R.id.x_value);
@@ -56,59 +51,48 @@ public class JoystickControlFragment extends Fragment {
         iTextValue.setText("0");
 
         xNoneString = "0 : X";
-        xValueString = "%1$.0f : X";
+        xValueString = "%.04f : X";
         yNoneString = "Y : 0";
-        yValueString = "Y : %1$.0f";
+        yValueString = "Y : %.04f";
 
         joystick_r = (Joystick) view.findViewById(R.id.joystick_r);
         joystick_l = (Joystick) view.findViewById(R.id.joystick_l);
 
-
+        // phi
         joystick_r.setJoystickListener(new JoystickListener() {
             @Override
-            public void onDown() {
-
-            }
+            public void onDown() {}
 
             @Override
             public void onDrag(float degrees, float offset) {
-                float value = (float) (offset * 100 * Math.cos(Math.toRadians(degrees)));
-                xTextView.setText(String.format(xValueString, value));
-                joy_value[1] = (int) value;
-
-                sendValue();
+                float value = (float) (offset * Math.cos(Math.toRadians(degrees)));
+                phi = -value * maxPhi ;
+                xTextView.setText(String.format(xValueString, phi));
             }
 
             @Override
             public void onUp() {
                 xTextView.setText(xNoneString);
-                joy_value[1] = 0;
-
-                sendValue();
+                phi = 0;
             }
         });
 
-
+        // psi
         joystick_l.setJoystickListener(new JoystickListener() {
             @Override
-            public void onDown() {
-            }
+            public void onDown() {}
 
             @Override
             public void onDrag(float degrees, float offset) {
-                float value = (float) (offset * 100 * Math.sin(Math.toRadians(degrees)));
-                yTextView.setText(String.format(yValueString, value));
-                joy_value[0] = (int) value;
-
-                sendValue();
+                float value = (float) (offset * Math.sin(Math.toRadians(degrees)));
+                psi = -value * maxPsi;
+                yTextView.setText(String.format(yValueString, psi));
             }
 
             @Override
             public void onUp() {
                 yTextView.setText(yNoneString);
-                joy_value[0] = 0;
-
-                sendValue();
+                psi = 0;
             }
         });
 
@@ -118,11 +102,9 @@ public class JoystickControlFragment extends Fragment {
             public void onClick(View v) {
                 String data;
                 if (switchOffRoad.isChecked()) {
-                    data = "~2# ";
-                    mainActivity.bluetoothFragment.bluetoothSendData(data);
+                    maxPsi = 0.04;
                 } else {
-                    data = "~3# ";
-                    mainActivity.bluetoothFragment.bluetoothSendData(data);
+                    maxPsi = 0.03;
                 }
             }
         });
@@ -142,6 +124,7 @@ public class JoystickControlFragment extends Fragment {
         return view;
     }
 
+    // integral term
     public void receiveData(String[] data){
         if( data.length==3 ){
             i_value = data[2];
@@ -154,39 +137,11 @@ public class JoystickControlFragment extends Fragment {
         }
     }
 
-
     public void setActivity(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
-    public void sendValue() {
-        straight = joy_value[0];
-        phi     = joy_value[1];
-//        int common = joy_value[0];
-//        int diff = joy_value[1];
-//        float left_motor, right_motor;
-
-//        if(joy_value[0] >= 0){
-//            left_motor = (float) (common + diff / 2.0);
-//            right_motor = (float) (common - diff / 2.0);
-//        }else{
-//            left_motor = (float) (common - diff / 2.0);
-//            right_motor = (float) (common + diff / 2.0);
-//        }
-//        System.out.println(straight + ", " + phi);
-//        System.out.println(left_motor + ", " + right_motor);
-
-        //mapping
-//        if(left_motor > 0) left_motor = (float) (left_motor * (231/150.0) + 25);
-//        if(left_motor < 0) left_motor = (float) (left_motor * (231/150.0) - 25);
-//        if(right_motor > 0) right_motor = (float) (right_motor * (231/150.0) + 25);
-//        if(right_motor < 0) right_motor = (float) (right_motor * (231/150.0) - 25);
-
-//        data = "~" + (int)left_motor + "," + (int)right_motor + "#";
-//        System.out.println(data);
-    }
-
     public String getValue() {
-        return "~" + straight + "," + phi + "#";
+        return "~1,1," + String.format("%.04f", psi) + "," + String.format("%.04f", phi) + "#";
     }
 }

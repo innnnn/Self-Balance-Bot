@@ -9,7 +9,7 @@ class PosController{
     float MAX_OUTPUT;
     float MIN_OUTPUT;
     float toleratedError;
-	float Kp;          // PID control
+    float Kp;          // PID control
     float reference;   // desire output
     bool steady;       // check the system is steady or not
 
@@ -25,13 +25,11 @@ class PosController{
     void setReference(const float reference);
 
     // get function
+    bool getSteady();
     String getInformation();
 
     // update
-    float update(const float feedback);
-
-    // chech
-    bool isSteady();
+    float update(const float feedback, const float speed);
 };
 
 #endif //POSCONTROLLER_H

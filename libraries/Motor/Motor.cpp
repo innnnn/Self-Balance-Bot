@@ -14,9 +14,9 @@ void Motor::setPin(const int pwmPin,
     this->directionPinA = directionPinA;
     this->directionPinB = directionPinB;
     pinMode(this->directionPinA, OUTPUT);
-	pinMode(this->directionPinB, OUTPUT);
+    pinMode(this->directionPinB, OUTPUT);
 
-	this->standbyPin = standbyPin;
+    this->standbyPin = standbyPin;
     pinMode(this->standbyPin, OUTPUT);
 }
 

@@ -9,7 +9,7 @@ class PhiController{
     float MAX_OUTPUT;
     float MIN_OUTPUT;
     float toleratedError;
-	float Kp;          // PID control
+    float Kp;          // PID control
     float reference;   // desire output
     bool steady;       // check the system is steady or not
 
@@ -24,13 +24,11 @@ class PhiController{
     void setReference(const float reference);
 
     // get function
+    bool getSteady();
     String getInformation();
 
     // update
     float update(const float feedback);
-
-    // chech
-    bool isSteady();
 };
 
 #endif //PHICONTROLLER_H

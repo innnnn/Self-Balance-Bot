@@ -26,6 +26,10 @@ void PhiController::setReference(const float reference){
 }
 
 // get function
+bool PhiController::getSteady(){
+    return steady;
+}
+
 String PhiController::getInformation(){
     return String(Kp, 1) + "," + String(reference, 3);
 }
@@ -37,17 +41,14 @@ float PhiController::update(const float feedback){
     // Proportional term
     float output = Kp * error;
 
-    steady = ( abs(error) < toleratedError )? true : false;
-
     // Saturation
     if(output > MAX_OUTPUT)
         output = MAX_OUTPUT;
     else if(output < MIN_OUTPUT)
         output = MIN_OUTPUT;
 
-    return output;
-}
+    // check stable or not
+    steady = ( fabs(error) < toleratedError )? true : false;
 
-bool PhiController::isSteady(){
-    return steady;
+    return output;
 }

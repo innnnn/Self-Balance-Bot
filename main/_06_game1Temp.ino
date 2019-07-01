@@ -7,18 +7,21 @@ bool desirePhiTFArray[]     = {false, false, false, false, false, false,       t
 //float desirePhiTF = false;
 float offset = 0;
 
-void Game1Temp(){
-    if( !posController.isSteady() || !phiController.isSteady() ){
+void game1Temp(){
+    if( !posController.getSteady() || !phiController.getSteady() ){
         startTime = currentTime;
-        if( !posController.isSteady() && (currentTime - gameTime)/1000 > 10 ){
-            offset = -0.002;
+        if( !posController.getSteady() && (currentTime - gameTime)/1000 > 10 ){
+            offset = -0.005;
             offsetTime = currentTime;
         } else {
             offset = 0;
         }
     }
-    
+
     steadyTime = (currentTime - startTime)/1000;
+    Serial.println(currentTime0);
+    Serial.println(startTime);
+    Serial.println(steadyTime);
     if(steadyTime > 0.5){
         startTime = currentTime;
         gameTime = currentTime;
@@ -33,6 +36,7 @@ void Game1Temp(){
         psiController.clearIntegral();
 
         // positionController
+        /*
         if( index==0 ){
             posController.setSaturation(0.04, -0.005);
         } else if( index==4 ){
@@ -46,10 +50,10 @@ void Game1Temp(){
             phiController.setPID(0.5);
         } else{
             phiController.setPID(1);
-        }
+        }*/
     }
     
-    //desirePsi = positionController.Update(theta, Speed);
+    desirePsi = posController.update(theta, Speed);
     if( (currentTime - offsetTime) >50 ){
         offset = 0;
     }
