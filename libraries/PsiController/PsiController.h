@@ -9,7 +9,7 @@ class PsiController{
     float MAX_OUTPUT;
     float MIN_OUTPUT;
     float toleratedError;
-	float Kp, Ki, Kd;  // PID control
+    float Kp, Ki, Kd;  // PID control
     float reference;   // desire output
     float integral;    // record the sum of previous error
     float preError;    // previous error
@@ -27,14 +27,12 @@ class PsiController{
     void setReference(const float reference);
 
     // get function
+    bool getSteady();
     String getInformation();
     String getErrorIntegral();
 
     // update
     float update(const float feedback, const float dt);
-
-    // chech
-    bool isSteady();
 
     // clear
     void  clearIntegral();

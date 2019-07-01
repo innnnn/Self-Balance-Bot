@@ -32,6 +32,10 @@ void PsiController::setReference(const float reference){
 }
 
 // get function
+bool PsiController::getSteady(){
+    return steady;
+}
+
 String PsiController::getInformation(){
     return String(Kp, 1) + "," + String(Ki, 0) + "," + String(Kd, 2) + "," + String(reference, 3);
 }
@@ -70,10 +74,6 @@ float PsiController::update(const float feedback, const float dt){
     steady = ( abs(preError) < toleratedError )? true : false;
 
     return output;
-}
-
-bool PsiController::isSteady(){
-    return steady;
 }
 
 void PsiController::clearIntegral(){

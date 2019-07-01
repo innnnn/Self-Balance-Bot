@@ -9,7 +9,7 @@ class PosController{
     float MAX_OUTPUT;
     float MIN_OUTPUT;
     float toleratedError;
-	float Kp;          // PID control
+    float Kp;          // PID control
     float reference;   // desire output
     bool steady;       // check the system is steady or not
 

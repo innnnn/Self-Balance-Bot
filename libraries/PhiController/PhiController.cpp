@@ -26,6 +26,10 @@ void PhiController::setReference(const float reference){
 }
 
 // get function
+bool PhiController::getSteady(){
+    return steady;
+}
+
 String PhiController::getInformation(){
     return String(Kp, 1) + "," + String(reference, 3);
 }
@@ -46,8 +50,4 @@ float PhiController::update(const float feedback){
         output = MIN_OUTPUT;
 
     return output;
-}
-
-bool PhiController::isSteady(){
-    return steady;
 }
