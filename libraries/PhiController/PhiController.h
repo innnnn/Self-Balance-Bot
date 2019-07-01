@@ -24,7 +24,7 @@ class PhiController{
     void setReference(const float reference);
 
     // get function
-    bool getSteasy();
+    bool getSteady();
     String getInformation();
 
     // update

@@ -71,7 +71,8 @@ float PsiController::update(const float feedback, const float dt){
     // record the prevoius error
     preError = error;
 
-    steady = ( abs(preError) < toleratedError )? true : false;
+    // check stable or not
+    steady = ( fabs(preError) < toleratedError )? true : false;
 
     return output;
 }

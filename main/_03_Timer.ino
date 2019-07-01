@@ -4,14 +4,14 @@
 // max sampling time: 0.025s
 // max sampling rate: 40Hz
 void setupMsTimer2(){
-    MsTimer2::set(100, TimerInterrupt);  // 0.1 second update
+    MsTimer2::set(200, TimerInterrupt);  // 0.1 second update
     MsTimer2::start();
 }
 
 void TimerInterrupt(){
     sei();
 
-    receiveDataBluetooth();
+    //receiveDataBluetooth();
     
     //Game3
     //ReceiveDataSerial();
@@ -26,12 +26,10 @@ void receiveDataBluetooth(){
 
         if(startReadData){
             if(c=='#'){  // end of data
-                //Serial.println(rawData);
-                rawData += ',';
-                commaNumber++;
-                parseData();
+                data[len++] = rawData.toFloat();
+                rawData = "";
                 
-                if( len>=2 && commaNumber==len ){
+                if( len>=2 ){
                     if( ((int)data[0]) == 1 ){
                         switch( (int)data[1] ){
                             case 1:
@@ -47,20 +45,17 @@ void receiveDataBluetooth(){
                 }
                 
                 startReadData = false;
-                rawData = "";
-                commaNumber = 0;
                 len = 0;
                 break;
             } else {
-                if( c == '-' || c == ',' || c == '.' || isDigit(c) ){
+                if( c == '-' || c == '.' || isDigit(c) ){
                     rawData += String(c);
-                    if(c == ','){
-                        commaNumber++;
-                    }
+                } else if (c == ','){
+                    data[len++] = rawData.toFloat();
+                    rawData = "";
                 } else {
                     startReadData = false;
                     rawData = "";
-                    commaNumber = 0;
                     len = 0;
                     break;
                 }
@@ -80,10 +75,11 @@ void receiveDataSerial(){
                 char m = rawData[0];
                 char c = rawData[1];
 
-                if( posController.isSteady() && phiController.isSteady() ){
+                if( posController.getSteady() && phiController.getSteady() ){
                     Move = m;
                     Color = c;
                     startTurn = true;
+                    startReadData = false;
                 }
             }
             else{
@@ -110,7 +106,11 @@ void parseData(){
 }
 
 void sendData(){
-    String data = "~1,4," + psiController.getErrorIntegral() + "#";
+    //String data = "~1,1," + psiController.getErrorIntegral() + "#";
+    String data = "~1,3," + String(psi, 3) + "," + String(output, 1) + ","
+                          + String(thetaL) + "," + String(thetaR) + ","
+                          + String(theta) + "," + String(phi, 2) + ","
+                          + String(index) + "#";
     BTSerial.println(data);
 }
 

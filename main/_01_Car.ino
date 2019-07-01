@@ -43,8 +43,9 @@ void setupCar(){
 
     // phi controller
     phiController.setSaturation(3, -3);        // 3v ~ -3v
-    phiController.setToleratedError(0.0262);   // 0.0262rad -> 1.5degree
-    phiController.setPID(1);                   // KP  1
+    phiController.setToleratedError(0.0873);   // 0.0873rad -> 5degree
+    //phiController.setToleratedError(0.0262);   // 0.0262rad -> 1.5degree
+    phiController.setPID(100);                 // KP  100
     psiController.setReference(0.0);           // Reference
 }
 

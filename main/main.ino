@@ -32,9 +32,15 @@ PosController posController;
 PsiController psiController;
 PhiController phiController;
 
-// parameter
+// main parameter
 float psi = 0;
 
+// sampling
+unsigned long previousTime;
+unsigned long currentTime;
+float samplingTime;
+
+// angle and speed
 float thetaL;
 float thetaR;
 float theta;
@@ -46,15 +52,6 @@ float phi = 0;
 float speedX;
 float speedY;
 
-// sampling
-unsigned long previousTime;
-unsigned long currentTime;
-float samplingTime;
-
-unsigned long startTime;
-unsigned long gameTime;
-unsigned long steadyTime;
-unsigned long offsetTime;
 
 // output voltage
 float output;
@@ -66,15 +63,23 @@ float desirePos = 0;
 float desirePsi = 0;
 float desirePhi = 0;
 
-bool steady = false;
-int index = -1;
-
 // 03_Timer
 bool startReadData = false;
 String rawData = "";
-int commaNumber = 0;
 int len = 0;
 float *data = new float[12];
+
+// game1
+unsigned long startTime;
+unsigned long gameTime;
+unsigned long steadyTime;
+unsigned long offsetTime;
+bool steady = false;
+int index = -1;
+
+// game2
+const float maxPsi = 0.04;
+const float maxPhi = 3*PI/4 + 0.0001;
 
 // game3
 bool startTurn = false;
@@ -82,16 +87,6 @@ bool startMove = false;
 
 char Move = "A";
 char Color = "A";
-
-// game2
-double sendPsi;
-double sendPhi;
-double maxPsi = 0.03;
-double maxPhi = 3*PI/4;
-
-// bug!!!!
-// abs in arduino: return int
-//#define abs(x) ((x)>0?(x):-(x))
 
 void setup(){
     Serial.begin(9600);
@@ -118,7 +113,7 @@ void loop(){
         samplingTime = 0.001;
 
     // update the current state
-    psi = ((float)GetPsi())/180*PI;  //rad
+    psi = ((float)getPsi())/180*PI;  //rad
     
     encoderL.update(samplingTime);
     encoderR.update(samplingTime);
@@ -135,21 +130,14 @@ void loop(){
     speedY = -R*(speedL + speedR)*cos(phi)/2;
 
     // game mode
-    //Game1();
-    //Game2();
-    Game2Temp();
-    //Game1Temp();
-    //Game3();
-    
+    //game2WithStationKeeping();
+    game1Temp();
+    //game3();
+
+    // move the car
     motorL.rotate( outputL );
     motorR.rotate( outputR );
 
-    // game2
-    if( abs(desirePhi)<0.001 ){
-        encoderL.reset();
-        encoderR.reset();
-    }
-    
     // record the previous time
     previousTime = currentTime;
 }

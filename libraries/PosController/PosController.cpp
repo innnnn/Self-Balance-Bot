@@ -26,12 +26,16 @@ void PosController::setReference(const float reference){
 }
 
 // get function
+bool PosController::getSteady(){
+    return steady;
+}
+
 String PosController::getInformation(){
     return String(Kp, 1) + "," + String(reference, 3);
 }
 
 // update
-float PosController::update(const float feedback){
+float PosController::update(const float feedback, const float speed){
     float error = reference - feedback;
 
     // Proportional term
@@ -43,7 +47,8 @@ float PosController::update(const float feedback){
     else if(output < MIN_OUTPUT)
         output = MIN_OUTPUT;
 
-    steady = ( abs(error) < toleratedError )? true : false;
+    // check stable or not
+    steady = ( fabs(error) < toleratedError )? true : false;
     
     /*
 	if( error>0 && steady && speed<0 )
@@ -52,8 +57,4 @@ float PosController::update(const float feedback){
 	    output *= 1.5;
     */
     return output;
-}
-
-bool PosController::isSteady(){
-    return steady;
 }

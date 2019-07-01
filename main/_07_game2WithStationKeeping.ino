@@ -1,7 +1,9 @@
+// Goal: Joystick Remote Control with Station Keeping
+
 bool stationKeep = true;
 
-void Game2Temp(){
-    if( psi < PI/4 && psi > - PI/4 ){  // not falling
+void game2WithStationKeeping(){
+    if( fabs(psi)<PI/4 ){  // not falling
         // chech station keeping
         if( desirePsi!=0 || desirePhi!=0 ){
             stationKeep = false;
@@ -13,7 +15,7 @@ void Game2Temp(){
         }
 
         if( stationKeep ){
-            desirePsi = posController.update(theta);
+            desirePsi = posController.update(theta, Speed);
         }
         
         // set psi reference
@@ -27,6 +29,13 @@ void Game2Temp(){
         // calculate the left, right motor output
         outputL = output + outputDiff;
         outputR = output - outputDiff;
+
+        // if desirePhi<0.001, which means the car turns right or left
+        // reset the encoder
+        if( fabs(desirePhi)<0.0001 ){
+            encoderL.reset();
+            encoderR.reset();
+        }
     } else {
         outputL = 0;
         outputR = 0;

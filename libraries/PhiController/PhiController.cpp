@@ -41,13 +41,14 @@ float PhiController::update(const float feedback){
     // Proportional term
     float output = Kp * error;
 
-    steady = ( abs(error) < toleratedError )? true : false;
-
     // Saturation
     if(output > MAX_OUTPUT)
         output = MAX_OUTPUT;
     else if(output < MIN_OUTPUT)
         output = MIN_OUTPUT;
+
+    // check stable or not
+    steady = ( fabs(error) < toleratedError )? true : false;
 
     return output;
 }

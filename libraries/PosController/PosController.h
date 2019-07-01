@@ -25,13 +25,11 @@ class PosController{
     void setReference(const float reference);
 
     // get function
+    bool getSteady();
     String getInformation();
 
     // update
-    float update(const float feedback);
-
-    // chech
-    bool isSteady();
+    float update(const float feedback, const float speed);
 };
 
 #endif //POSCONTROLLER_H
