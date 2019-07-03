@@ -4,19 +4,17 @@
 // max sampling time: 0.025s
 // max sampling rate: 40Hz
 void setupMsTimer2(){
-    MsTimer2::set(200, TimerInterrupt);  // 0.1 second update
+    MsTimer2::set(100, TimerInterrupt);  // 0.1 second update
     MsTimer2::start();
 }
 
 void TimerInterrupt(){
     sei();
 
-    //receiveDataBluetooth();
+    receiveDataBluetooth();
     
     //Game3
     //ReceiveDataSerial();
-    
-    sendData();
 }
 
 // start: "~", end: "#"
@@ -71,7 +69,7 @@ void receiveDataSerial(){
         char c = Serial.read();
 
         if(startReadData){
-            if(c=='#'){
+            if(c=='#'){/*
                 char m = rawData[0];
                 char c = rawData[1];
 
@@ -80,7 +78,11 @@ void receiveDataSerial(){
                     Color = c;
                     startTurn = true;
                     startReadData = false;
-                }
+                }*/
+                rawData = "~1,4," + rawData + "#";
+                BTSerial.println(rawData);
+                rawData = "";
+                startReadData = false;
             }
             else{
                 rawData += String(c);
@@ -124,6 +126,7 @@ void sendParticularData(int mode){
             data = "~1,2," + posController.getInformation() + "#";
             break;
         case 3:
+            data = "~1,2," + phiController.getInformation() + "#";
             break;
     }
     BTSerial.println(data);
