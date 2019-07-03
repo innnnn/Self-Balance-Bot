@@ -41,20 +41,21 @@ float PosController::update(const float feedback, const float speed){
     // Proportional term
     float output = Kp * error;
 
-    // Saturation
-    if(output > MAX_OUTPUT)
-        output = MAX_OUTPUT;
-    else if(output < MIN_OUTPUT)
-        output = MIN_OUTPUT;
-
     // check stable or not
     steady = ( fabs(error) < toleratedError )? true : false;
-    
-    /*
+
+    /* 
 	if( error>0 && steady && speed<0 )
 		output *= 1.3;
 	else if( error>0 && !steady && speed<0 )
 	    output *= 1.5;
     */
+
+    // Saturation
+    if(output > MAX_OUTPUT)
+        output = MAX_OUTPUT;
+    else if(output < MIN_OUTPUT)
+        output = MIN_OUTPUT;
+    
     return output;
 }

@@ -1,68 +1,50 @@
-/*
-//int index = -1;
-float offsetPos = 5;
-float offsetPhi = -0.1047;
-//                                         0,              1,             2,              3,             4,              5,              6,        7
-float desireDistanceArray[] = {100+offsetPos,              0, 100+offsetPos,              0, 100+offsetPos,              0,              0, 100*sqrt(2) };
-float desirePhiArray[]      = {            0, PI/2+offsetPhi,             0, PI/2+offsetPhi,             0, PI/2+offsetPhi, PI/4-offsetPhi,        0};
-bool desirePhiTFArray[]     = {        false,          false,         false,          false,         false,          false,          false,     false};
-float desirePhiTF = false;
+float offsetPhi = 0.1;
+
+//                                 0,     1,     2,     3,     4,     5,          6,          7,
+float desireDistanceArray[] = { -100,  -100,  -200,  -200,  -300,  -300, -300-50*PI, -300-50*PI};
+float desirePhiArray[]      = {    0,  PI/2-offsetPhi,  PI/2-offsetPhi,    PI-2*offsetPhi,    PI-2*offsetPhi,  2*PI-4*offsetPhi,       2*PI-4*offsetPhi,         PI};
+bool desirePhiTFArray[]     = {false, false, false, false, false, false,       true,      false};
+//float desirePhiTF = false;
 float offset = 0;
 
-void Game1(){
-    if( !positionController.IsSteady() || !phiController.IsSteady() ){
+void game1(){
+    if( !posController.getSteady() || !phiController.getSteady() ){
         startTime = currentTime;
-        if( !positionController.IsSteady() && (currentTime - gameTime)/1000 > 10 ){
+        if( !posController.getSteady() && (currentTime - gameTime)/1000 > 2.5 ){
             offset = -0.002;
+            offsetTime = currentTime;
         } else {
             offset = 0;
         }
     }
     
-    steadyTime = (currentTime - startTime)/1000;
-    if(steadyTime > 1.5){
+    steadyTime = (currentTime - startTime)/1000.0;
+    if(steadyTime > 2){
         startTime = currentTime;
         gameTime = currentTime;
-        index ++;
-        positionController.SetReference(desireDistanceArray[index]);
-        desirePhi = desirePhiArray[index];
-        
-        phiController.SetReference(desirePhi);
-        desirePhiTF = desirePhiTFArray[index];
-        
-        psiController.ClearIntegral();
-        encoderL.Reset();
-        encoderR.Reset();
-    }
+        offset = 0;
+  
+        if(index<7){
+            index ++;
+        }
     
-    switch(index){
-        case -1:
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-            desirePsi = -positionController.Update(y, speedY);
-            //Serial.println(desirePsi, 4);
-            psiController.SetReference(desirePsi + offset);
-            break;
-        default:
-            phiController.SetPID(150);
-            phiController.SetSaturation(10, -10);
-            desirePsi = -positionController.Update(-theta, -Speed);
-            psiController.SetReference(desirePsi + offset);
-            break;
+        posController.setReference(desireDistanceArray[index]);
+        phiController.setReference(desirePhiArray[index]);
+   
+        psiController.clearIntegral();
     }
-    output = -psiController.Update(psi, samplingTime);
-
-    if(desirePhiTF){
-        desirePhi = theta/100.0;
-        phiController.SetReference(desirePhi);
+        
+    desirePsi = posController.update(theta, Speed);
+    if( (currentTime - offsetTime) >125 ){
+        offset = 0;
     }
-    outputDiff = phiController.Update(phi);
+    psiController.setReference(desirePsi + offset);
+        
+    output = -psiController.update(psi, samplingTime);
+    if(desirePhiTFArray[index]){
+        phiController.setReference(2*PI-4*offsetPhi + (theta+300)/100 );
+    }
+    outputDiff = phiController.update(phi);
     outputL = output + outputDiff;
     outputR = output - outputDiff;
-} */
+}

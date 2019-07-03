@@ -52,16 +52,11 @@ float phi = 0;
 float speedX;
 float speedY;
 
-
 // output voltage
 float output;
 float outputDiff;
 float outputR;
 float outputL;
-
-float desirePos = 0;
-float desirePsi = 0;
-float desirePhi = 0;
 
 // 03_Timer
 bool startReadData = false;
@@ -72,21 +67,22 @@ float *data = new float[12];
 // game1
 unsigned long startTime;
 unsigned long gameTime;
-unsigned long steadyTime;
+float steadyTime;
 unsigned long offsetTime;
 bool steady = false;
 int index = -1;
 
 // game2
-const float maxPsi = 0.04;
-const float maxPhi = 3*PI/4 + 0.0001;
+float desirePos = 0;
+float desirePsi = 0;
+float desirePhi = 0;
 
 // game3
 bool startTurn = false;
 bool startMove = false;
-
 char Move = "A";
 char Color = "A";
+
 
 void setup(){
     Serial.begin(9600);
@@ -128,12 +124,18 @@ void loop(){
     phi = R*(thetaL - thetaR)/W;
     speedX = R*(speedL + speedR)*sin(phi)/2;
     speedY = -R*(speedL + speedR)*cos(phi)/2;
-
-    // game mode
-    //game2WithStationKeeping();
-    game1Temp();
-    //game3();
-
+    
+    // check the car is balancing or not
+    if( fabs(psi)<PI/4 ){  
+        // game mode
+        game1();
+        //game2();
+        //game3();
+    } else { // the car is falling down
+        outputL = 0;
+        outputR = 0;
+    }
+    
     // move the car
     motorL.rotate( outputL );
     motorR.rotate( outputR );
